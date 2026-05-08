@@ -11,7 +11,7 @@ import { supabase } from "@/lib/supabase";
 
 // --- 3D Floating Fashion Gallery ---
 function FloatingImage({ url, position, scale, speed, offset }: { url: string, position: [number, number, number], scale: number, speed: number, offset: number }) {
-  const ref = useRef<any>();
+  const ref = useRef<any>(null);
   const { mouse, viewport } = useThree();
 
   useFrame((state) => {
@@ -30,7 +30,7 @@ function FloatingImage({ url, position, scale, speed, offset }: { url: string, p
       url={url}
       transparent
       position={position}
-      scale={[scale, scale * 1.5, 1]}
+      scale={[scale, scale * 1.5]}
       zoom={1}
       grayscale={0.2}
     />
