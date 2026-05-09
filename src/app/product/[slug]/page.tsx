@@ -16,6 +16,20 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState("");
   const [isAdding, setIsAdding] = useState(false);
+  const [isZoomedMobile, setIsZoomedMobile] = useState(false);
+
+  const handleDragEnd = (e: any, info: any) => {
+    if (!product || !product.images) return;
+    const swipeThreshold = 50;
+    const currentIndex = product.images.indexOf(mainImage);
+    if (info.offset.x < -swipeThreshold) {
+      const nextIndex = (currentIndex + 1) % product.images.length;
+      setMainImage(product.images[nextIndex]);
+    } else if (info.offset.x > swipeThreshold) {
+      const prevIndex = (currentIndex - 1 + product.images.length) % product.images.length;
+      setMainImage(product.images[prevIndex]);
+    }
+  };
 
   useEffect(() => {
     async function fetchProduct() {
@@ -102,10 +116,16 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             {/* Main Image */}
             <div className="w-full flex-1 flex flex-col gap-4">
               <motion.div 
+                key={mainImage}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative aspect-[3/4] w-full bg-[#111] overflow-hidden cursor-crosshair group"
+                className="relative aspect-[3/4] w-full bg-[#111] overflow-hidden cursor-crosshair group touch-pan-y"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                onDoubleClick={() => setIsZoomedMobile(!isZoomedMobile)}
                 onMouseMove={(e) => {
                   const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
                   const x = ((e.clientX - left) / width) * 100;
@@ -118,7 +138,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                   src={mainImage} 
                   alt={product.product_name} 
                   style={{ transformOrigin: 'var(--x, 50%) var(--y, 50%)' }}
-                  className="w-full h-full object-cover transition-all duration-300 ease-out group-hover:scale-[2]" 
+                  className={`w-full h-full object-cover transition-all duration-300 ease-out group-hover:scale-[2] pointer-events-none ${isZoomedMobile ? 'scale-[2]' : 'scale-100'}`} 
                 />
               </motion.div>
 

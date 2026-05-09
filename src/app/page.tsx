@@ -43,7 +43,7 @@ function FloatingGallery() {
   // Scale X positions for narrow mobile screens
   const xMultiplier = Math.min(1, viewport.width / 15);
   // Scale sizes slightly down for mobile
-  const scaleMultiplier = viewport.width < 10 ? 0.7 : 1;
+  const scaleMultiplier = viewport.width < 10 ? 0.4 : 1;
 
   const images = [
     { url: "/images/gallery/1.png", pos: [-4 * xMultiplier, 1, -2], scale: 3 * scaleMultiplier, speed: 0.5, offset: 0 },
@@ -160,21 +160,21 @@ export default function Home() {
       <div className="relative z-20 bg-[#050505] w-full">
         <section className="w-full px-6 md:px-8 py-24 md:py-32 bg-[#050505] border-t border-white/10 overflow-hidden">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 border-b border-white/10 pb-8">
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">
-                Season<br/>One.
+            <div className="flex flex-row justify-between items-end mb-16 md:mb-24 border-b border-white/10 pb-8">
+              <h2 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-none">
+                Drop<br/>One.
               </h2>
-              <Link href="/shop" className="group flex items-center gap-2 text-[10px] md:text-xs uppercase tracking-[0.2em] hover:text-gray-400 transition-colors mt-8 md:mt-0">
+              <Link href="/shop" className="group flex items-center gap-2 text-[10px] md:text-xs uppercase tracking-[0.2em] hover:text-gray-400 transition-colors">
                 View Entire Drop <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             
-            <div className="flex flex-col md:flex-row items-center justify-center gap-16 md:gap-32 px-4 md:px-0">
-              <div className="w-[85%] md:w-2/5">
+            <div className="flex flex-row items-center justify-center gap-8 md:gap-32 px-4 md:px-0">
+              <div className="w-2/5">
                 {products[0] && <FashionCard product={products[0]} isLarge={true} />}
               </div>
 
-              <div className="w-[85%] md:w-1/3 flex flex-col gap-16">
+              <div className="w-1/3 flex flex-col gap-8 md:gap-16">
                 {products[1] && <FashionCard product={products[1]} />}
                 {products[2] && <FashionCard product={products[2]} />}
               </div>
