@@ -217,7 +217,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                 {/* Bullet Points */}
                 <div className="pt-8 border-t border-white/10">
                   <ul className="space-y-2 text-sm text-gray-400">
-                    {(product.details || ["100% Premium Material", "Designed in House", "Standard Fit", "Dry Clean Recommended"]).map((detail: string, idx: number) => (
+                    {(product.details || ["Premium Terry Cotton Fabric", "240 GSM Heavyweight Quality", "Oversized Relaxed Fit", "Soft & Breathable Material"]).map((detail: string, idx: number) => (
                       <li key={idx} className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
                         {detail}
