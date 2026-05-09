@@ -36,7 +36,7 @@ export default function ContactPage() {
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest font-medium">
           <Link href="/shop" className="hover:text-gray-400 transition-colors">Shop</Link>
-          <Link href="/collections" className="hover:text-gray-400 transition-colors">Collections</Link>
+          <Link href="/shop" className="hover:text-gray-400 transition-colors">Collections</Link>
           <Link href="/about" className="hover:text-gray-400 transition-colors">About</Link>
           <Link href="/contact" className="text-white transition-colors border-b border-white pb-1">Contact</Link>
         </div>

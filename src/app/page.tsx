@@ -139,9 +139,9 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2, delay: 1 }}
-            className="mt-4 text-sm tracking-[0.4em] uppercase font-medium mix-blend-difference"
+            className="mt-4 text-sm md:text-base tracking-[0.4em] uppercase font-medium mix-blend-difference text-center max-w-2xl px-6"
           >
-            Life runs on bad decisions
+            Life runs on bad decisions and broken algorithms
           </motion.p>
         </div>
 
@@ -163,12 +163,12 @@ export default function Home() {
               </Link>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-24">
-              <div className="md:col-span-7">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-16 md:gap-32">
+              <div className="w-full md:w-2/5">
                 {products[0] && <FashionCard product={products[0]} isLarge={true} />}
               </div>
 
-              <div className="md:col-span-5 flex flex-col gap-24 md:mt-32">
+              <div className="w-full md:w-1/3 flex flex-col gap-16">
                 {products[1] && <FashionCard product={products[1]} />}
                 {products[2] && <FashionCard product={products[2]} />}
               </div>
@@ -181,13 +181,16 @@ export default function Home() {
             <div>
               <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4 text-white">ALGO</h2>
               <p className="text-gray-500 text-xs uppercase tracking-[0.2em]">
-                © 2026 ALGO Streetwear.<br/>Life runs on broken algorithms.
+                © 2026 ALGO Streetwear.<br/>Life runs on bad decisions & broken algorithms.
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-16 text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-16 text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
               <div className="flex flex-col gap-6">
                 <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
                 <Link href="/account" className="hover:text-white transition-colors">Account</Link>
+              </div>
+              <div className="flex flex-col gap-6">
+                <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
               </div>
               <div className="flex flex-col gap-6">
                 <a href="https://instagram.com/algo.inn" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>

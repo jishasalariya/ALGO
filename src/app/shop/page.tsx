@@ -17,6 +17,7 @@ type Product = {
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>("All");
   const [loading, setLoading] = useState(true);
   const { setIsCartOpen, items } = useCart();
   const cartItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
@@ -25,17 +26,20 @@ export default function ShopPage() {
     const fetchProducts = async () => {
       setLoading(true);
       
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('status', 'published');
+      let query = supabase.from('products').select('*').eq('status', 'published');
+      
+      if (activeCategory !== "All") {
+        query = query.eq('category', activeCategory);
+      }
+      
+      const { data, error } = await query;
       
       if (data) setProducts(data);
       setLoading(false);
     };
 
     fetchProducts();
-  }, []);
+  }, [activeCategory]);
 
   return (
     <div className="min-h-screen bg-black text-white pt-24 pb-32">
@@ -60,12 +64,12 @@ export default function ShopPage() {
           </p>
         </header>
 
-        {/* Filters placeholder */}
+        {/* Dynamic Filters */}
         <div className="flex gap-6 md:gap-8 border-b border-white/10 pb-4 md:pb-6 mb-8 md:mb-12 text-xs md:text-sm uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap no-scrollbar">
-          <button className="text-white">All</button>
-          <button className="hover:text-white transition-colors">T-Shirts</button>
-          <button className="hover:text-white transition-colors">Outerwear</button>
-          <button className="hover:text-white transition-colors">Bottoms</button>
+          <button onClick={() => setActiveCategory("All")} className={`transition-colors ${activeCategory === "All" ? "text-white" : "hover:text-white"}`}>All</button>
+          <button onClick={() => setActiveCategory("T-Shirts")} className={`transition-colors ${activeCategory === "T-Shirts" ? "text-white" : "hover:text-white"}`}>T-Shirts</button>
+          <button onClick={() => setActiveCategory("Outerwear")} className={`transition-colors ${activeCategory === "Outerwear" ? "text-white" : "hover:text-white"}`}>Outerwear</button>
+          <button onClick={() => setActiveCategory("Bottoms")} className={`transition-colors ${activeCategory === "Bottoms" ? "text-white" : "hover:text-white"}`}>Bottoms</button>
         </div>
 
         {loading ? (
