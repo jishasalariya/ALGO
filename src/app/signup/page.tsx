@@ -229,7 +229,7 @@ export default function SignupPage() {
           <div className="mt-6">
             <button 
               onClick={async () => {
-                await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/auth/callback` } });
+                await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/account` } });
               }}
               className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-white/20 rounded-lg text-sm font-medium text-white hover:bg-white/5 transition-colors"
             >
