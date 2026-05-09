@@ -197,10 +197,13 @@ export default function Home() {
               </div>
               <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
+                <Link href="/shipping" className="hover:text-white transition-colors">Shipping</Link>
+                <Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
               </div>
               <div className="flex flex-col gap-4 md:gap-6">
                 <a href="https://instagram.com/algo.inn" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>
-                <a href="mailto:algowear.co@gmail.com" className="hover:text-white transition-colors">Email</a>
+                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ export default function AdminProducts() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   // Form State
@@ -34,32 +35,62 @@ export default function AdminProducts() {
     fetchProducts();
   }, []);
 
-  const handleAddProduct = async (e: React.FormEvent) => {
+  const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     
-    const { error } = await supabase.from("products").insert([
-      {
-        product_name: formData.product_name,
-        slug: formData.slug || formData.product_name.toLowerCase().replace(/ /g, "-"),
-        price: Number(formData.price),
-        category: formData.category,
-        stock_quantity: Number(formData.stock_quantity),
-        description: formData.description,
-        sizes: formData.sizes.split(",").map(s => s.trim()).filter(Boolean),
-        images: formData.image_url ? formData.image_url.split(",").map(url => url.trim()).filter(Boolean) : [],
-        status: formData.status
-      }
-    ]);
+    const productData = {
+      product_name: formData.product_name,
+      slug: formData.slug || formData.product_name.toLowerCase().replace(/ /g, "-"),
+      price: Number(formData.price),
+      category: formData.category,
+      stock_quantity: Number(formData.stock_quantity),
+      description: formData.description,
+      sizes: formData.sizes.split(",").map(s => s.trim()).filter(Boolean),
+      images: formData.image_url ? formData.image_url.split(",").map(url => url.trim()).filter(Boolean) : [],
+      status: formData.status
+    };
+
+    let error;
+    if (editingId) {
+      const res = await supabase.from("products").update(productData).eq("id", editingId);
+      error = res.error;
+    } else {
+      const res = await supabase.from("products").insert([productData]);
+      error = res.error;
+    }
 
     if (!error) {
       setIsModalOpen(false);
+      setEditingId(null);
       setFormData({ product_name: "", slug: "", price: "", category: "T-Shirts", stock_quantity: "10", image_url: "", description: "", sizes: "S, M, L, XL", status: "published" });
       fetchProducts(); // Refresh list
     } else {
       alert("Error saving product: " + error.message);
     }
     setSaving(false);
+  };
+
+  const handleEditClick = (product: any) => {
+    setEditingId(product.id);
+    setFormData({
+      product_name: product.product_name,
+      slug: product.slug,
+      price: product.price.toString(),
+      category: product.category || "T-Shirts",
+      stock_quantity: product.stock_quantity.toString(),
+      image_url: product.images?.join(", ") || "",
+      description: product.description || "",
+      sizes: product.sizes?.join(", ") || "S, M, L, XL",
+      status: product.status || "published"
+    });
+    setIsModalOpen(true);
+  };
+
+  const openAddModal = () => {
+    setEditingId(null);
+    setFormData({ product_name: "", slug: "", price: "", category: "T-Shirts", stock_quantity: "10", image_url: "", description: "", sizes: "S, M, L, XL", status: "published" });
+    setIsModalOpen(true);
   };
 
   const handleDeleteProduct = async (id: string) => {
@@ -76,7 +107,7 @@ export default function AdminProducts() {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold uppercase tracking-widest">Inventory Management</h2>
         <button 
-          onClick={() => setIsModalOpen(true)}
+          onClick={openAddModal}
           className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-gray-200 transition-colors"
         >
           <Plus className="w-4 h-4" /> Add Product
@@ -115,6 +146,7 @@ export default function AdminProducts() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right flex justify-end gap-3">
+                    <button onClick={() => handleEditClick(product)} className="text-gray-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
                     <button onClick={() => handleDeleteProduct(product.id)} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
                   </td>
                 </tr>
@@ -134,9 +166,11 @@ export default function AdminProducts() {
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-bold uppercase tracking-widest mb-6">Add New Product</h3>
+            <h3 className="text-lg font-bold uppercase tracking-widest mb-6">
+              {editingId ? "Edit Product" : "Add New Product"}
+            </h3>
             
-            <form onSubmit={handleAddProduct} className="space-y-4">
+            <form onSubmit={handleSaveProduct} className="space-y-4">
               <div>
                 <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Product Name</label>
                 <input required type="text" value={formData.product_name} onChange={e => setFormData({...formData, product_name: e.target.value})} className="w-full bg-black border border-white/20 rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none" />
