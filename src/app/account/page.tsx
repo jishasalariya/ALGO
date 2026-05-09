@@ -34,8 +34,8 @@ export default function AccountPage() {
       if (userData) {
         setUserRole(userData.role);
       } else {
-        // Fallback: Check if their email contains 'admin' or 'algo' as a temporary override if DB fails
-        if (session.user.email && (session.user.email.includes('algo') || session.user.email.includes('admin'))) {
+        // Fallback: Check if their email is exactly the store owner's email
+        if (session.user.email === 'algowear.co@gmail.com') {
           setUserRole('admin');
         }
       }
@@ -204,17 +204,6 @@ export default function AccountPage() {
                 <div className="flex items-center gap-4">
                   <button type="button" className="px-8 py-3 bg-white text-black uppercase tracking-widest font-semibold text-sm rounded-lg hover:bg-gray-200 transition-colors">
                     Save Changes
-                  </button>
-                  <button 
-                    type="button" 
-                    onClick={async () => {
-                      await supabase.from('users').update({ role: 'admin' }).eq('id', user.id);
-                      setUserRole('admin');
-                      alert('Promoted to Admin! Refresh the page.');
-                    }}
-                    className="px-4 py-3 bg-cyan-900/30 text-cyan-400 uppercase tracking-widest font-semibold text-sm rounded-lg border border-cyan-400/30 hover:bg-cyan-900/50 transition-colors"
-                  >
-                    Make Me Admin
                   </button>
                 </div>
               </form>
