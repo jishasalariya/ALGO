@@ -23,8 +23,8 @@ export default function ShippingPage() {
           </section>
 
           <section>
-            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">2. Shipping Rates & Delivery Estimates</h2>
-            <p>Standard delivery typically takes 3-7 business days within India depending on your location. Shipping charges are calculated and displayed at checkout.</p>
+            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">2. Shipping Rates</h2>
+            <p>We offer <strong>Free Shipping</strong> on all orders containing 2 or more products! For orders containing only 1 product, a flat shipping fee of <strong>₹50</strong> will be charged at checkout. Standard delivery typically takes 3-7 business days within India.</p>
           </section>
 
           <section>

@@ -18,18 +18,13 @@ export default function RefundPage() {
         
         <div className="space-y-8 text-gray-400 leading-relaxed">
           <section>
-            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">1. Cancellations</h2>
-            <p>Orders can only be cancelled within 24 hours of placement. Once an order is processed for shipping, it cannot be cancelled.</p>
+            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">1. All Sales Final</h2>
+            <p>At ALGO, all sales are final. We do not offer returns, exchanges, or refunds under any circumstances.</p>
           </section>
 
           <section>
-            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">2. Returns & Exchanges</h2>
-            <p>We accept returns for exchanges within 7 days of delivery only if the product is defective or the wrong size was delivered. Items must be unworn, unwashed, and in original packaging.</p>
-          </section>
-
-          <section>
-            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">3. Refunds</h2>
-            <p>Approved refunds will be processed within 5-7 business days to the original method of payment.</p>
+            <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">2. Defective Items</h2>
+            <p>We carefully inspect every item before shipping. In the rare event that you receive a defective or damaged product, please contact us immediately so we can investigate the issue.</p>
           </section>
         </div>
       </div>
