@@ -49,7 +49,7 @@ export default function ShopPage() {
           ALGO
         </Link>
         <div className="flex items-center gap-4 md:gap-6 text-xs md:text-sm uppercase tracking-widest font-medium">
-          <Link href="/account" className="hover:text-gray-400 transition-colors hidden sm:block">Account</Link>
+          <Link href="/account" className="hover:text-gray-400 transition-colors">Account</Link>
           <button onClick={() => setIsCartOpen(true)} className="hover:text-gray-400 transition-colors">
             Cart ({cartItemsCount})
           </button>

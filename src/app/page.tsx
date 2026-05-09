@@ -127,7 +127,7 @@ export default function Home() {
             <Link href="/shop" className="hover:text-gray-400 transition-colors">Shop</Link>
           </div>
           <div className="flex gap-4 md:gap-12 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium">
-            <Link href="/account" className="hover:text-gray-400 transition-colors hidden sm:block">Account</Link>
+            <Link href="/account" className="hover:text-gray-400 transition-colors">Account</Link>
             <Link href="/shop" className="hover:text-gray-400 transition-colors">Cart</Link>
           </div>
         </nav>
