@@ -73,14 +73,14 @@ function FloatingGallery() {
 function FashionCard({ product, isLarge = false }: { product: any, isLarge?: boolean }) {
   if (!product) return null;
   return (
-    <Link href={`/product/${product.slug}`} className="group flex flex-col cursor-pointer w-full">
-      <div className={`relative overflow-hidden bg-[#111] ${isLarge ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full mb-6`}>
+    <Link href={`/product/${product.slug}`} className="group flex flex-col cursor-pointer w-full flex-1">
+      <div className={`relative overflow-hidden bg-[#111] ${isLarge ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full mb-4 md:mb-6`}>
         <motion.img 
           src={product.images?.[0] || "/images/gallery/1.png"}
           alt={product.product_name}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+          className="w-full h-full object-cover grayscale-0 opacity-100 md:grayscale md:opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
         />
       </div>
       <div className="flex justify-between items-start">
@@ -169,12 +169,12 @@ export default function Home() {
               </Link>
             </div>
             
-            <div className="flex flex-row items-center justify-center gap-8 md:gap-32 px-4 md:px-0">
-              <div className="w-2/5">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-32 px-4 md:px-0">
+              <div className="w-full md:w-2/5">
                 {products[0] && <FashionCard product={products[0]} isLarge={true} />}
               </div>
 
-              <div className="w-1/3 flex flex-col gap-8 md:gap-16">
+              <div className="w-full md:w-1/3 flex flex-row md:flex-col gap-4 md:gap-16">
                 {products[1] && <FashionCard product={products[1]} />}
                 {products[2] && <FashionCard product={products[2]} />}
               </div>
