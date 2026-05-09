@@ -38,12 +38,19 @@ function FloatingImage({ url, position, scale, speed, offset }: { url: string, p
 }
 
 function FloatingGallery() {
+  const { viewport } = useThree();
+  
+  // Scale X positions for narrow mobile screens
+  const xMultiplier = Math.min(1, viewport.width / 15);
+  // Scale sizes slightly down for mobile
+  const scaleMultiplier = viewport.width < 10 ? 0.7 : 1;
+
   const images = [
-    { url: "/images/gallery/1.png", pos: [-4, 1, -2], scale: 3, speed: 0.5, offset: 0 },
-    { url: "/images/gallery/2.png", pos: [4, -1, -3], scale: 4, speed: 0.4, offset: 2 },
-    { url: "/images/gallery/3.png", pos: [0, 2, -5], scale: 5, speed: 0.3, offset: 4 },
-    { url: "/images/gallery/4.png", pos: [-6, -2, -6], scale: 3.5, speed: 0.6, offset: 1 },
-    { url: "/images/gallery/5.png", pos: [5, 2, -4], scale: 4.5, speed: 0.45, offset: 3 },
+    { url: "/images/gallery/1.png", pos: [-4 * xMultiplier, 1, -2], scale: 3 * scaleMultiplier, speed: 0.5, offset: 0 },
+    { url: "/images/gallery/2.png", pos: [4 * xMultiplier, -1, -3], scale: 4 * scaleMultiplier, speed: 0.4, offset: 2 },
+    { url: "/images/gallery/3.png", pos: [0, 2, -5], scale: 5 * scaleMultiplier, speed: 0.3, offset: 4 },
+    { url: "/images/gallery/4.png", pos: [-6 * xMultiplier, -2, -6], scale: 3.5 * scaleMultiplier, speed: 0.6, offset: 1 },
+    { url: "/images/gallery/5.png", pos: [5 * xMultiplier, 2, -4], scale: 4.5 * scaleMultiplier, speed: 0.45, offset: 3 },
   ];
 
   return (
@@ -116,12 +123,11 @@ export default function Home() {
         </div>
 
         <nav className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-10 py-6 md:py-8 pointer-events-auto">
-          <div className="flex gap-6 md:gap-12 text-xs uppercase tracking-[0.2em] font-medium">
+          <div className="flex gap-4 md:gap-12 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium">
             <Link href="/shop" className="hover:text-gray-400 transition-colors">Shop</Link>
-            <Link href="/collections" className="hover:text-gray-400 transition-colors hidden md:block">Archive</Link>
           </div>
-          <div className="flex gap-6 md:gap-12 text-xs uppercase tracking-[0.2em] font-medium">
-            <Link href="/account" className="hover:text-gray-400 transition-colors">Account</Link>
+          <div className="flex gap-4 md:gap-12 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium">
+            <Link href="/account" className="hover:text-gray-400 transition-colors hidden sm:block">Account</Link>
             <Link href="/shop" className="hover:text-gray-400 transition-colors">Cart</Link>
           </div>
         </nav>
@@ -131,7 +137,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[18vw] font-black tracking-tighter leading-none uppercase mix-blend-difference text-white"
+            className="text-[22vw] md:text-[18vw] font-black tracking-tighter leading-none uppercase mix-blend-difference text-white"
           >
             ALGO
           </motion.h1>
@@ -139,36 +145,36 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2, delay: 1 }}
-            className="mt-4 text-sm md:text-base tracking-[0.4em] uppercase font-medium mix-blend-difference text-center max-w-2xl px-6"
+            className="mt-4 text-[10px] md:text-base tracking-[0.3em] md:tracking-[0.4em] uppercase font-medium mix-blend-difference text-center max-w-2xl px-6"
           >
             Life runs on bad decisions and broken algorithms
           </motion.p>
         </div>
 
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-4">
+        <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-4">
           <span className="text-[10px] tracking-[0.3em] uppercase text-gray-400">Scroll</span>
-          <div className="w-px h-12 bg-gradient-to-b from-gray-400 to-transparent" />
+          <div className="w-px h-8 md:h-12 bg-gradient-to-b from-gray-400 to-transparent" />
         </div>
       </div>
 
       <div className="relative z-20 bg-[#050505] w-full">
-        <section className="w-full px-4 md:px-8 py-32 bg-[#050505] border-t border-white/10">
+        <section className="w-full px-6 md:px-8 py-24 md:py-32 bg-[#050505] border-t border-white/10 overflow-hidden">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-24 border-b border-white/10 pb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 border-b border-white/10 pb-8">
               <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">
                 Season<br/>One.
               </h2>
-              <Link href="/shop" className="group flex items-center gap-2 text-xs uppercase tracking-[0.2em] hover:text-gray-400 transition-colors mt-8 md:mt-0">
+              <Link href="/shop" className="group flex items-center gap-2 text-[10px] md:text-xs uppercase tracking-[0.2em] hover:text-gray-400 transition-colors mt-8 md:mt-0">
                 View Entire Drop <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             
-            <div className="flex flex-col md:flex-row items-center justify-center gap-16 md:gap-32">
-              <div className="w-full md:w-2/5">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-16 md:gap-32 px-4 md:px-0">
+              <div className="w-[85%] md:w-2/5">
                 {products[0] && <FashionCard product={products[0]} isLarge={true} />}
               </div>
 
-              <div className="w-full md:w-1/3 flex flex-col gap-16">
+              <div className="w-[85%] md:w-1/3 flex flex-col gap-16">
                 {products[1] && <FashionCard product={products[1]} />}
                 {products[2] && <FashionCard product={products[2]} />}
               </div>
@@ -176,23 +182,23 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="w-full bg-[#020202] py-24 px-8 border-t border-white/5">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16">
+        <footer className="w-full bg-[#020202] py-16 md:py-24 px-8 border-t border-white/5">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
             <div>
-              <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4 text-white">ALGO</h2>
-              <p className="text-gray-500 text-xs uppercase tracking-[0.2em]">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4 text-white">ALGO</h2>
+              <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-[0.2em]">
                 © 2026 ALGO Streetwear.<br/>Life runs on bad decisions & broken algorithms.
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-16 text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
-              <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 md:gap-16 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
+              <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
                 <Link href="/account" className="hover:text-white transition-colors">Account</Link>
               </div>
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
               </div>
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4 md:gap-6">
                 <a href="https://instagram.com/algo.inn" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>
                 <a href="mailto:algowear.co@gmail.com" className="hover:text-white transition-colors">Email</a>
               </div>
