@@ -10,16 +10,23 @@ const razorpay = new Razorpay({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { amount, currency = "INR", receipt = "receipt_algo_1" } = body;
-    console.log("Creating Razorpay order for amount:", amount);
+    const { amount, currency = "INR" } = body;
+    const receipt = `receipt_algo_${Date.now()}`;
+    
+    console.log("Processing Razorpay order:", { amount, currency, receipt });
 
-    // Amount must be in paise (smallest currency unit). 
-    // E.g., ₹100 becomes 10000 paise.
+    // Verify keys
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID === 'test_key') {
+      return NextResponse.json({ error: "Razorpay Key ID is missing or invalid in Vercel Environment Variables." }, { status: 500 });
+    }
+    if (!process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET === 'test_secret') {
+      return NextResponse.json({ error: "Razorpay Key Secret is missing or invalid in Vercel Environment Variables." }, { status: 500 });
+    }
+
     const amountInPaise = Math.round(amount * 100);
 
     if (isNaN(amountInPaise) || amountInPaise <= 0) {
-      console.error("Invalid amount provided:", amount);
-      return NextResponse.json({ error: "Invalid amount: " + amount }, { status: 400 });
+      return NextResponse.json({ error: "Invalid payment amount: " + amount }, { status: 400 });
     }
 
     const options = {
@@ -28,18 +35,14 @@ export async function POST(request: Request) {
       receipt,
     };
 
-    console.log("Razorpay Options:", options);
     const order = await razorpay.orders.create(options);
-    console.log("Razorpay Order Created:", order.id);
-
     return NextResponse.json(order, { status: 200 });
   } catch (error: any) {
-    console.error("Razorpay Order Creation Error Details:", error);
+    console.error("Razorpay Error:", error);
     return NextResponse.json(
       { 
         error: error.message || "Failed to create order",
-        code: error.code,
-        description: error.description
+        description: error.description || "Check your Razorpay dashboard for errors."
       }, 
       { status: 500 }
     );
