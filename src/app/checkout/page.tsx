@@ -124,7 +124,7 @@ export default function CheckoutPage() {
         
         if (order.error) {
           console.error("Order creation failed:", order.error);
-          alert("Error creating order: " + order.error);
+          alert(`Error creating order: ${order.error} ${order.description ? `(${order.description})` : ''}`);
           setLoading(false);
           return;
         }
