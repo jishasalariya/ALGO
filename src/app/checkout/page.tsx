@@ -106,6 +106,14 @@ export default function CheckoutPage() {
 
     if (formData.paymentMethod === "razorpay") {
       try {
+        console.log("Starting Razorpay checkout for amount:", grandTotal);
+        
+        if (!(window as any).Razorpay) {
+          alert("Payment gateway is still loading. Please wait a moment and try again.");
+          setLoading(false);
+          return;
+        }
+
         const response = await fetch("/api/razorpay", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,20 +123,22 @@ export default function CheckoutPage() {
         const order = await response.json();
         
         if (order.error) {
+          console.error("Order creation failed:", order.error);
           alert("Error creating order: " + order.error);
           setLoading(false);
           return;
         }
 
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "test_key",
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder", // Use a more obvious placeholder
           amount: order.amount,
           currency: order.currency,
           name: "ALGO",
           description: "Premium Streetwear Order",
           order_id: order.id,
           handler: async function (response: any) {
-            alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+            console.log("Payment success, ID:", response.razorpay_payment_id);
+            alert(`Payment successful!`);
             
             await saveToDatabase(response.razorpay_payment_id, 'razorpay', 'completed');
             
@@ -165,18 +175,27 @@ export default function CheckoutPage() {
           theme: {
             color: "#000000",
           },
+          modal: {
+            ondismiss: function() {
+              setLoading(false);
+              console.log("Checkout modal closed");
+            }
+          }
         };
 
         const rzp1 = new (window as any).Razorpay(options);
         rzp1.on('payment.failed', function (response: any){
+          console.error("Payment failed:", response.error);
           alert("Payment Failed: " + response.error.description);
+          setLoading(false);
         });
         rzp1.open();
-      } catch (error) {
+      } catch (error: any) {
         console.error("Razorpay Error:", error);
-        alert("Failed to initialize payment.");
+        alert("Failed to initialize payment: " + (error.message || "Unknown error"));
       } finally {
-        setLoading(false);
+        // We don't set loading to false here because rzp1.open() is async-like 
+        // and we handle it in ondismiss or handler
       }
     } else {
       // Cash on Delivery
