@@ -4,6 +4,8 @@ import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
 import CartSidebar from "@/components/CartSidebar";
 
+import Script from "next/script";
+
 const montserrat = Montserrat({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -48,6 +50,18 @@ export default function RootLayout({
       className={`${montserrat.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-black text-white selection:bg-white selection:text-black">
+        {/* Google Analytics */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-W568QW21ED" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-W568QW21ED');
+          `}
+        </Script>
+
         <CartProvider>
           {children}
           <CartSidebar />
