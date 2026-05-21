@@ -179,9 +179,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase tracking-widest text-sm font-medium">Select Size</h3>
-                    <button className="text-xs uppercase tracking-widest text-gray-500 hover:text-white underline decoration-gray-500 hover:decoration-white transition-colors">
-                      Size Guide
-                    </button>
+                    
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {(product.sizes || ["S", "M", "L", "XL"]).map((size: string) => (

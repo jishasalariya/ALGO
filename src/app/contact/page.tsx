@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { Mail, Phone, ArrowRight } from "lucide-react";
 
 // Custom Instagram SVG since lucide-react doesn't export it in this version
 function InstagramIcon({ className }: { className?: string }) {
@@ -27,6 +28,50 @@ function InstagramIcon({ className }: { className?: string }) {
 }
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
+    type: null,
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setStatus({ type: "error", message: "Please fill in all fields." });
+      return;
+    }
+    setIsSubmitting(true);
+    setStatus({ type: null, message: "" });
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus({ type: "success", message: "Your message has been sent successfully!" });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        setStatus({ type: "error", message: data.error || "Failed to send message. Please try again." });
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+      setStatus({ type: "error", message: "Something went wrong. Please try again later." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black pt-24 pb-32">
       {/* Navigation */}
@@ -105,33 +150,79 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div className="w-full lg:w-2/3 bg-[#0a0a0a] p-8 md:p-12 border border-white/10 rounded-2xl">
             <h2 className="text-2xl font-bold tracking-tighter uppercase mb-8">Send a message</h2>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Name</label>
-                  <input type="text" className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors" />
+                  <input 
+                    type="text" 
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors" 
+                  />
                 </div>
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Email</label>
-                  <input type="email" className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors" />
+                  <input 
+                    type="email" 
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors" 
+                  />
                 </div>
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Subject</label>
-                <select className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors text-white appearance-none">
-                  <option value="" className="bg-black text-gray-500">Select a subject</option>
-                  <option value="order" className="bg-black">Order Inquiry</option>
-                  <option value="return" className="bg-black">Returns / Exchange</option>
-                  <option value="collab" className="bg-black">Collaboration</option>
-                  <option value="other" className="bg-black">Other</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    required
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full px-4 py-4 bg-black border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors text-white appearance-none"
+                  >
+                    <option value="" disabled className="text-gray-500">Select a subject</option>
+                    <option value="order">Order Inquiry</option>
+                    <option value="return">Returns / Exchange</option>
+                    <option value="collab">Collaboration</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                    </svg>
+                  </div>
+                </div>
               </div>
               <div>
                 <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Message</label>
-                <textarea rows={5} className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors resize-none"></textarea>
+                <textarea 
+                  rows={5} 
+                  required
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  className="w-full px-4 py-4 bg-transparent border border-white/20 rounded-lg focus:outline-none focus:border-white transition-colors resize-none"
+                ></textarea>
               </div>
-              <button type="button" className="group w-full md:w-auto px-12 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-3">
-                Submit <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+
+              {status.message && (
+                <div className={`p-4 rounded-lg text-sm font-medium border ${
+                  status.type === "success" 
+                    ? "bg-green-500/10 border-green-500/20 text-green-400" 
+                    : "bg-red-500/10 border-red-500/20 text-red-400"
+                }`}>
+                  {status.message}
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="group w-full md:w-auto px-12 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm rounded-lg hover:bg-gray-200 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
+              >
+                {isSubmitting ? "Sending..." : "Submit"} 
+                {!isSubmitting && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               </button>
             </form>
           </div>
