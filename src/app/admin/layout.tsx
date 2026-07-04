@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, ShoppingBag, Users, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Users, Settings, LogOut, Ticket } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -14,6 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
     { name: "Customers", href: "/admin/customers", icon: Users },
+    { name: "Coupons", href: "/admin/coupons", icon: Ticket },
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
