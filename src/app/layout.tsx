@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
 import CartSidebar from "@/components/CartSidebar";
+import LeadCapturePopup from "@/components/LeadCapturePopup";
 
 import Script from "next/script";
 
@@ -86,6 +87,7 @@ export default function RootLayout({
         <CartProvider>
           {children}
           <CartSidebar />
+          <LeadCapturePopup />
         </CartProvider>
       </body>
     </html>

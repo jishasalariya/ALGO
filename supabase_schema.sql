@@ -26,3 +26,16 @@ ALTER TABLE public.coupons DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.orders 
 ADD COLUMN IF NOT EXISTS coupon_code VARCHAR(50),
 ADD COLUMN IF NOT EXISTS discount_amount DECIMAL(10, 2) DEFAULT 0.00;
+
+-- Create leads table
+CREATE TABLE IF NOT EXISTS public.leads (
+  id BIGSERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  phone VARCHAR(50) UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable Row Level Security (RLS) or disable if using simple playground policies.
+ALTER TABLE public.leads DISABLE ROW LEVEL SECURITY;
+
