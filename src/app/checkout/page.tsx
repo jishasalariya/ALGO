@@ -32,6 +32,27 @@ export default function CheckoutPage() {
   const [couponError, setCouponError] = useState("");
   const [couponSuccess, setCouponSuccess] = useState("");
 
+  // Available Checkout Coupons States
+  const [availableCoupons, setAvailableCoupons] = useState<any[]>([]);
+  const [loadingCoupons, setLoadingCoupons] = useState(false);
+
+  const fetchAvailableCoupons = async (uId: string) => {
+    setLoadingCoupons(true);
+    try {
+      const res = await fetch(`/api/coupons/user?userId=${uId}`);
+      const data = await res.json();
+      if (data && data.coupons) {
+        // Only show active coupons
+        const active = data.coupons.filter((c: any) => c.status === "active");
+        setAvailableCoupons(active);
+      }
+    } catch (err) {
+      console.error("Error fetching checkout coupons:", err);
+    } finally {
+      setLoadingCoupons(false);
+    }
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
@@ -39,6 +60,7 @@ export default function CheckoutPage() {
       } else {
         setUserId(session.user.id);
         setFormData(prev => ({ ...prev, email: session.user.email || "" }));
+        fetchAvailableCoupons(session.user.id);
       }
     });
   }, []);
@@ -51,8 +73,9 @@ export default function CheckoutPage() {
   const discount = discountAmount;
   const finalTotal = Math.max(0, totalAmount - discount + shippingCharge);
 
-  const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) return;
+  const handleApplyCoupon = async (codeToApply?: string) => {
+    const code = typeof codeToApply === "string" ? codeToApply : couponCode;
+    if (!code.trim()) return;
     setValidatingCoupon(true);
     setCouponError("");
     setCouponSuccess("");
@@ -62,7 +85,7 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code: couponCode.trim(),
+          code: code.trim(),
           subtotal: totalAmount,
           userId
         })
@@ -511,6 +534,37 @@ export default function CheckoutPage() {
                   <p className="text-green-400 text-xs mt-2 font-mono uppercase tracking-wider">
                     {couponSuccess}
                   </p>
+                )}
+
+                {/* Available Coupons list */}
+                {userId && availableCoupons.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+                      Available Coupons (Click to apply)
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {availableCoupons.map((coupon) => (
+                        <button
+                          key={coupon.id}
+                          type="button"
+                          disabled={appliedCoupon !== null || validatingCoupon}
+                          onClick={() => {
+                            setCouponCode(coupon.code);
+                            // Auto apply
+                            setTimeout(() => {
+                              handleApplyCoupon(coupon.code);
+                            }, 50);
+                          }}
+                          className="px-2.5 py-1.5 bg-white/5 hover:bg-white text-gray-400 hover:text-black border border-white/10 hover:border-white rounded text-[10px] font-mono uppercase tracking-widest transition-all text-left flex flex-col gap-0.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                          <span className="font-bold text-inherit">{coupon.code}</span>
+                          <span className="text-[8px] opacity-70 text-inherit">
+                            {coupon.discount_type === "percentage" ? `${coupon.discount_value}% OFF` : `₹${coupon.discount_value} OFF`}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
 
