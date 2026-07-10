@@ -194,6 +194,8 @@ export default function Home() {
               <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
                 <Link href="/account" className="hover:text-white transition-colors">Account</Link>
+                <Link href="/coupons" className="hover:text-white transition-colors">My Coupons</Link>
+                <Link href="/refer-and-earn" className="hover:text-white transition-colors">Refer & Earn</Link>
               </div>
               <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
