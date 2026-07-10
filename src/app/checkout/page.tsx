@@ -517,7 +517,7 @@ export default function CheckoutPage() {
                   ) : (
                     <button
                       type="button"
-                      onClick={handleApplyCoupon}
+                      onClick={() => handleApplyCoupon()}
                       disabled={validatingCoupon || !couponCode.trim()}
                       className="bg-white text-black px-6 rounded-lg uppercase tracking-widest text-xs font-bold hover:bg-gray-200 transition-colors disabled:opacity-50"
                     >
