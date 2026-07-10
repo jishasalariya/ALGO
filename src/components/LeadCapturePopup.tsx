@@ -45,6 +45,7 @@ export default function LeadCapturePopup() {
 
   const handleClose = () => {
     setIsOpen(false);
+    localStorage.setItem("algo-lead-captured", "true");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
