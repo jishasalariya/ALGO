@@ -39,3 +39,48 @@ CREATE TABLE IF NOT EXISTS public.leads (
 -- Enable Row Level Security (RLS) or disable if using simple playground policies.
 ALTER TABLE public.leads DISABLE ROW LEVEL SECURITY;
 
+-- Create referral_codes table
+CREATE TABLE IF NOT EXISTS public.referral_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID UNIQUE NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  code VARCHAR(50) UNIQUE NOT NULL,
+  link TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.referral_codes DISABLE ROW LEVEL SECURITY;
+
+-- Create referral_records table
+CREATE TABLE IF NOT EXISTS public.referral_records (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  referrer_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  referred_id UUID UNIQUE NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'successful', 'rewarded', 'rejected')),
+  reward_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (reward_status IN ('pending', 'rewarded')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.referral_records DISABLE ROW LEVEL SECURITY;
+
+-- Create user_coupons table
+CREATE TABLE IF NOT EXISTS public.user_coupons (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  coupon_id UUID NOT NULL REFERENCES public.coupons(id) ON DELETE CASCADE,
+  assigned_at TIMESTAMPTZ DEFAULT NOW(),
+  redeemed_at TIMESTAMPTZ,
+  status VARCHAR(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'used', 'expired')),
+  UNIQUE(user_id, coupon_id)
+);
+ALTER TABLE public.user_coupons DISABLE ROW LEVEL SECURITY;
+
+-- Create coupon_usage_history table
+CREATE TABLE IF NOT EXISTS public.coupon_usage_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  coupon_id UUID NOT NULL REFERENCES public.coupons(id) ON DELETE CASCADE,
+  order_id VARCHAR(100) NOT NULL,
+  discount_amount DECIMAL(10, 2) NOT NULL,
+  used_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.coupon_usage_history DISABLE ROW LEVEL SECURITY;
+
+

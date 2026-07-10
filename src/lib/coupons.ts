@@ -32,6 +32,25 @@ export async function validateCoupon(
     return { isValid: false, message: "This coupon is inactive.", discount: 0 };
   }
 
+  // Check if this is a user-specific coupon
+  const { data: assignment } = await supabase
+    .from("user_coupons")
+    .select("*")
+    .eq("coupon_id", coupon.id)
+    .maybeSingle();
+
+  if (assignment) {
+    if (!userId) {
+      return { isValid: false, message: "Please log in to use this coupon.", discount: 0 };
+    }
+    if (assignment.user_id !== userId) {
+      return { isValid: false, message: "This coupon is not assigned to your account.", discount: 0 };
+    }
+    if (assignment.status !== "active") {
+      return { isValid: false, message: `This coupon is already ${assignment.status}.`, discount: 0 };
+    }
+  }
+
   // Check validity dates
   const now = new Date();
   const startDate = new Date(coupon.start_date);

@@ -12,6 +12,39 @@ export default function AdminCoupons() {
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Custom states for redemption history tab
+  const [viewTab, setViewTab] = useState<"coupons" | "history">("coupons");
+  const [redemptions, setRedemptions] = useState<any[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  const fetchRedemptions = async () => {
+    setLoadingHistory(true);
+    const { data, error } = await supabase
+      .from("coupon_usage_history")
+      .select(`
+        *,
+        coupons (code),
+        users (full_name, email)
+      `)
+      .order("used_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching redemptions:", error.message);
+    } else if (data) {
+      const mapped = data.map((item: any) => {
+        const couponData = Array.isArray(item.coupons) ? item.coupons[0] : item.coupons;
+        const userData = Array.isArray(item.users) ? item.users[0] : item.users;
+        return {
+          ...item,
+          coupon: couponData || null,
+          user: userData || null
+        };
+      });
+      setRedemptions(mapped);
+    }
+    setLoadingHistory(false);
+  };
+
   // Form State
   const [formData, setFormData] = useState({
     code: "",
@@ -45,6 +78,7 @@ export default function AdminCoupons() {
 
   useEffect(() => {
     fetchCoupons();
+    fetchRedemptions();
   }, []);
 
   // Helper to format ISO datetime-local input
@@ -232,123 +266,230 @@ export default function AdminCoupons() {
         ))}
       </div>
 
-      {/* Main Header & Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-xl font-bold uppercase tracking-widest">Promotion & Coupons</h2>
-        <div className="flex w-full sm:w-auto gap-3">
-          {/* Search bar */}
-          <div className="relative flex-1 sm:w-64">
-            <Search className="w-4 h-4 text-gray-500 absolute left-3 top-3" />
-            <input
-              type="text"
-              placeholder="SEARCH COUPONS..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black border border-white/20 rounded pl-9 pr-3 py-2 text-white text-xs uppercase tracking-widest focus:border-white focus:outline-none placeholder-gray-500"
-            />
-          </div>
-          <button 
-            onClick={openAddModal}
-            className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-gray-200 transition-colors"
-          >
-            <Plus className="w-4 h-4" /> Add Coupon
-          </button>
-        </div>
+      {/* Tab Navigation */}
+      <div className="flex border-b border-white/10 gap-6">
+        <button
+          onClick={() => setViewTab("coupons")}
+          className={`pb-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all ${
+            viewTab === "coupons" 
+              ? "border-white text-white" 
+              : "border-transparent text-gray-500 hover:text-white"
+          }`}
+        >
+          All Coupons
+        </button>
+        <button
+          onClick={() => {
+            setViewTab("history");
+            fetchRedemptions();
+          }}
+          className={`pb-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all ${
+            viewTab === "history" 
+              ? "border-white text-white" 
+              : "border-transparent text-gray-500 hover:text-white"
+          }`}
+        >
+          Redemption History
+        </button>
       </div>
 
-      {/* Coupons Table */}
-      <div className="bg-[#111] border border-white/10 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm min-w-[800px]">
-            <thead className="bg-white/5 uppercase tracking-widest text-xs text-gray-400 border-b border-white/10">
-              <tr>
-                <th className="px-6 py-4">Code / Name</th>
-                <th className="px-6 py-4">Discount</th>
-                <th className="px-6 py-4">Min. Spend</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Validity Period</th>
-                <th className="px-6 py-4">Uses (Used / Rem.)</th>
-                <th className="px-6 py-4">Created At</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/10">
-              {filteredCoupons.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
-                    {searchQuery ? "No coupons match your search query." : "No coupons found. Click 'Add Coupon' to create one."}
-                  </td>
-                </tr>
-              ) : (
-                filteredCoupons.map((coupon) => {
-                  const isExpired = new Date() > new Date(coupon.expiry_date);
-                  const maxUsesText = coupon.max_uses;
-                  const remainingUses = Math.max(0, coupon.max_uses - (coupon.times_used || 0));
+      {viewTab === "coupons" ? (
+        <>
+          {/* Main Header & Actions */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl font-bold uppercase tracking-widest">Promotion & Coupons</h2>
+            <div className="flex w-full sm:w-auto gap-3">
+              {/* Search bar */}
+              <div className="relative flex-1 sm:w-64">
+                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-3" />
+                <input
+                  type="text"
+                  placeholder="SEARCH COUPONS..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-black border border-white/20 rounded pl-9 pr-3 py-2 text-white text-xs uppercase tracking-widest focus:border-white focus:outline-none placeholder-gray-500"
+                />
+              </div>
+              <button 
+                onClick={openAddModal}
+                className="flex items-center gap-2 bg-white text-black px-4 py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-gray-200 transition-colors"
+              >
+                <Plus className="w-4 h-4" /> Add Coupon
+              </button>
+            </div>
+          </div>
 
-                  return (
-                    <tr key={coupon.id} className="hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4 font-mono font-medium">
-                        <div className="text-white text-sm flex items-center gap-1.5">
-                          <Ticket className="w-3.5 h-3.5 text-gray-500" />
-                          {coupon.code}
-                        </div>
-                        {coupon.name && <div className="text-xs text-gray-500 font-sans mt-0.5">{coupon.name}</div>}
-                      </td>
-                      <td className="px-6 py-4">
-                        {coupon.discount_type === "percentage" ? (
-                          <div className="font-semibold text-white">
-                            {coupon.discount_value}%
-                            {coupon.max_discount && <span className="text-xs text-gray-500 font-sans font-normal ml-1">(Max ₹{coupon.max_discount})</span>}
-                          </div>
-                        ) : (
-                          <div className="font-semibold text-white">₹{coupon.discount_value}</div>
-                        )}
-                        <div className="text-[10px] text-gray-500 uppercase tracking-widest">{coupon.discount_type}</div>
-                      </td>
-                      <td className="px-6 py-4 font-mono">₹{coupon.min_order_value}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-widest border ${
-                          isExpired 
-                            ? 'border-red-500/20 text-red-500 bg-red-500/5' 
-                            : coupon.is_active 
-                              ? 'border-green-500/20 text-green-500 bg-green-500/5' 
-                              : 'border-gray-500/20 text-gray-500 bg-gray-500/5'
-                        }`}>
-                          {isExpired ? 'expired' : coupon.is_active ? 'active' : 'inactive'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-xs text-gray-400 font-mono">
-                        <div>S: {new Date(coupon.start_date).toLocaleDateString()}</div>
-                        <div className="mt-0.5">E: {new Date(coupon.expiry_date).toLocaleDateString()}</div>
-                      </td>
-                      <td className="px-6 py-4 font-mono text-xs">
-                        <span className="text-white">{coupon.times_used}</span> / <span className="text-gray-400">{maxUsesText}</span>
-                        <div className="text-[10px] text-gray-500 mt-0.5">Rem: {remainingUses}</div>
-                      </td>
-                      <td className="px-6 py-4 text-xs text-gray-500 font-mono">
-                        {new Date(coupon.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-3 items-center">
-                          <button 
-                            onClick={() => handleToggleActive(coupon)} 
-                            title={coupon.is_active ? "Deactivate" : "Activate"}
-                            className="text-gray-400 hover:text-white transition-colors"
-                          >
-                            {coupon.is_active ? <ToggleRight className="w-5 h-5 text-green-500" /> : <ToggleLeft className="w-5 h-5 text-gray-600" />}
-                          </button>
-                          <button onClick={() => handleEditClick(coupon)} className="text-gray-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
-                          <button onClick={() => handleDeleteCoupon(coupon.id)} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                        </div>
+          {/* Coupons Table */}
+          <div className="bg-[#111] border border-white/10 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm min-w-[800px]">
+                <thead className="bg-white/5 uppercase tracking-widest text-xs text-gray-400 border-b border-white/10">
+                  <tr>
+                    <th className="px-6 py-4">Code / Name</th>
+                    <th className="px-6 py-4">Discount</th>
+                    <th className="px-6 py-4">Min. Spend</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4">Validity Period</th>
+                    <th className="px-6 py-4">Uses (Used / Rem.)</th>
+                    <th className="px-6 py-4">Created At</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10">
+                  {filteredCoupons.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
+                        {searchQuery ? "No coupons match your search query." : "No coupons found. Click 'Add Coupon' to create one."}
                       </td>
                     </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                  ) : (
+                    filteredCoupons.map((coupon) => {
+                      const isExpired = new Date() > new Date(coupon.expiry_date);
+                      const maxUsesText = coupon.max_uses;
+                      const remainingUses = Math.max(0, coupon.max_uses - (coupon.times_used || 0));
+
+                      return (
+                        <tr key={coupon.id} className="hover:bg-white/5 transition-colors">
+                          <td className="px-6 py-4 font-mono font-medium">
+                            <div className="text-white text-sm flex items-center gap-1.5">
+                              <Ticket className="w-3.5 h-3.5 text-gray-500" />
+                              {coupon.code}
+                            </div>
+                            {coupon.name && <div className="text-xs text-gray-500 font-sans mt-0.5">{coupon.name}</div>}
+                          </td>
+                          <td className="px-6 py-4">
+                            {coupon.discount_type === "percentage" ? (
+                              <div className="font-semibold text-white">
+                                {coupon.discount_value}%
+                                {coupon.max_discount && <span className="text-xs text-gray-500 font-sans font-normal ml-1">(Max ₹{coupon.max_discount})</span>}
+                              </div>
+                            ) : (
+                              <div className="font-semibold text-white">₹{coupon.discount_value}</div>
+                            )}
+                            <div className="text-[10px] text-gray-500 uppercase tracking-widest">{coupon.discount_type}</div>
+                          </td>
+                          <td className="px-6 py-4 font-mono">₹{coupon.min_order_value}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-widest border ${
+                              isExpired 
+                                ? 'border-red-500/20 text-red-500 bg-red-500/5' 
+                                : coupon.is_active 
+                                  ? 'border-green-500/20 text-green-500 bg-green-500/5' 
+                                  : 'border-gray-500/20 text-gray-500 bg-gray-500/5'
+                            }`}>
+                              {isExpired ? 'expired' : coupon.is_active ? 'active' : 'inactive'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-xs text-gray-400 font-mono">
+                            <div>S: {new Date(coupon.start_date).toLocaleDateString()}</div>
+                            <div className="mt-0.5">E: {new Date(coupon.expiry_date).toLocaleDateString()}</div>
+                          </td>
+                          <td className="px-6 py-4 font-mono text-xs">
+                            <span className="text-white">{coupon.times_used}</span> / <span className="text-gray-400">{maxUsesText}</span>
+                            <div className="text-[10px] text-gray-500 mt-0.5">Rem: {remainingUses}</div>
+                          </td>
+                          <td className="px-6 py-4 text-xs text-gray-500 font-mono">
+                            {new Date(coupon.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-3 items-center">
+                              <button 
+                                onClick={() => handleToggleActive(coupon)} 
+                                title={coupon.is_active ? "Deactivate" : "Activate"}
+                                className="text-gray-400 hover:text-white transition-colors"
+                              >
+                                {coupon.is_active ? <ToggleRight className="w-5 h-5 text-green-500" /> : <ToggleLeft className="w-5 h-5 text-gray-600" />}
+                              </button>
+                              <button onClick={() => handleEditClick(coupon)} className="text-gray-400 hover:text-white transition-colors"><Edit className="w-4 h-4" /></button>
+                              <button onClick={() => handleDeleteCoupon(coupon.id)} className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Redemption History Search & Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl font-bold uppercase tracking-widest">Redemption History</h2>
+            <div className="relative flex-1 sm:w-64">
+              <Search className="w-4 h-4 text-gray-500 absolute left-3 top-3" />
+              <input
+                type="text"
+                placeholder="SEARCH BY CODE/USER..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-black border border-white/20 rounded pl-9 pr-3 py-2 text-white text-xs uppercase tracking-widest focus:border-white focus:outline-none placeholder-gray-500"
+              />
+            </div>
+          </div>
+
+          {/* Redemption Table */}
+          <div className="bg-[#111] border border-white/10 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm min-w-[800px]">
+                <thead className="bg-white/5 uppercase tracking-widest text-xs text-gray-400 border-b border-white/10">
+                  <tr>
+                    <th className="px-6 py-4">Coupon Code</th>
+                    <th className="px-6 py-4">Redeemed By</th>
+                    <th className="px-6 py-4">Order ID</th>
+                    <th className="px-6 py-4">Discount Amount</th>
+                    <th className="px-6 py-4">Redemption Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10">
+                  {loadingHistory ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-8 text-center text-gray-500 font-mono text-xs uppercase">
+                        Loading History...
+                      </td>
+                    </tr>
+                  ) : redemptions.filter(r => 
+                      (r.coupon?.code || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      (r.user?.full_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      (r.user?.email || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      r.order_id.toLowerCase().includes(searchQuery.toLowerCase())
+                    ).length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-8 text-center text-gray-500 font-mono text-xs uppercase">
+                        No redemptions found.
+                      </td>
+                    </tr>
+                  ) : (
+                    redemptions
+                      .filter(r => 
+                        (r.coupon?.code || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (r.user?.full_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (r.user?.email || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        r.order_id.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                      .map((redemption) => (
+                        <tr key={redemption.id} className="hover:bg-white/5 transition-colors">
+                          <td className="px-6 py-4 font-mono font-medium text-white">{redemption.coupon?.code || "DELETED"}</td>
+                          <td className="px-6 py-4">
+                            <div className="font-semibold text-white">{redemption.user?.full_name || "N/A"}</div>
+                            <div className="text-xs text-gray-500 font-mono">{redemption.user?.email}</div>
+                          </td>
+                          <td className="px-6 py-4 font-mono text-xs text-gray-400">{redemption.order_id}</td>
+                          <td className="px-6 py-4 font-semibold text-white font-mono">₹{redemption.discount_amount}</td>
+                          <td className="px-6 py-4 text-xs text-gray-500 font-mono">
+                            {new Date(redemption.used_at).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Create / Edit Coupon Modal */}
       {isModalOpen && (
@@ -367,7 +508,19 @@ export default function AdminCoupons() {
             <form onSubmit={handleSaveCoupon} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">Coupon Code (e.g. SUMMER50)</label>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-xs uppercase tracking-widest text-gray-400">Coupon Code (e.g. SUMMER50)</label>
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        const generated = "ALGO-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+                        setFormData({ ...formData, code: generated });
+                      }}
+                      className="text-[10px] text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-wider transition-colors"
+                    >
+                      Auto-Generate
+                    </button>
+                  </div>
                   <input required type="text" value={formData.code} onChange={e => setFormData({...formData, code: e.target.value.toUpperCase()})} className="w-full bg-black border border-white/20 rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none uppercase font-mono tracking-widest" />
                 </div>
                 <div>

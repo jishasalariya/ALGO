@@ -19,6 +19,13 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Capture referral code from URL and save to sessionStorage
+    const searchParams = new URLSearchParams(window.location.search);
+    const ref = searchParams.get("ref");
+    if (ref) {
+      sessionStorage.setItem("refCode", ref);
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         window.location.href = "/account";

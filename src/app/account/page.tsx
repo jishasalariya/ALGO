@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Package, User, MapPin, LogOut } from "lucide-react";
+import { Package, User, MapPin, LogOut, Ticket, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export default function AccountPage() {
@@ -21,8 +21,25 @@ export default function AccountPage() {
         window.location.href = "/login";
         return;
       }
-      
       setUser(session.user);
+
+      // Process pending referral link if exists in sessionStorage
+      const storedRef = sessionStorage.getItem("refCode");
+      if (storedRef) {
+        try {
+          await fetch("/api/referral/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              referredId: session.user.id,
+              referralCode: storedRef
+            })
+          });
+          sessionStorage.removeItem("refCode");
+        } catch (err) {
+          console.error("Failed to register referral on login:", err);
+        }
+      }
 
       // Fetch User Role
       const { data: userData, error: userError } = await supabase
@@ -117,6 +134,20 @@ export default function AccountPage() {
             >
               <MapPin className="w-4 h-4" /> Addresses
             </button>
+            
+            <Link 
+              href="/coupons"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm uppercase tracking-widest font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              <Ticket className="w-4 h-4" /> My Coupons
+            </Link>
+
+            <Link 
+              href="/refer-and-earn"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm uppercase tracking-widest font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              <Users className="w-4 h-4" /> Refer & Earn
+            </Link>
             
             {userRole === "admin" && (
               <Link 

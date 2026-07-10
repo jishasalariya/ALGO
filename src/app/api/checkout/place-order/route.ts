@@ -130,7 +130,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 9. Increment Coupon usage count
+    // 9. Increment Coupon usage count & record usage details
     if (validatedCoupon) {
       const { error: updateCouponError } = await supabase
         .from("coupons")
@@ -139,6 +139,119 @@ export async function POST(request: Request) {
       if (updateCouponError) {
         console.error("Failed to increment coupon uses:", updateCouponError.message);
       }
+
+      // Record in coupon_usage_history
+      await supabase.from("coupon_usage_history").insert({
+        user_id: userId,
+        coupon_id: validatedCoupon.id,
+        order_id: orderData.order_id,
+        discount_amount: discount
+      });
+
+      // Update user_coupons status if it was user-specific
+      await supabase
+        .from("user_coupons")
+        .update({ status: "used", redeemed_at: new Date().toISOString() })
+        .eq("user_id", userId)
+        .eq("coupon_id", validatedCoupon.id);
+    }
+
+    // 10. Check Referral Reward Logic
+    try {
+      // Check if this user was referred by someone and the status is pending
+      const { data: referralRecord } = await supabase
+        .from("referral_records")
+        .select("*")
+        .eq("referred_id", userId)
+        .eq("status", "pending")
+        .maybeSingle();
+
+      if (referralRecord) {
+        // Confirm it's their first successful purchase (exclude current order)
+        const { count: prevOrdersCount } = await supabase
+          .from("orders")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", userId)
+          .neq("id", orderData.id);
+
+        if (prevOrdersCount === 0) {
+          // It is the first purchase! Generate reward coupon for the referrer
+          let uniqueRewardCode = "";
+          let isUnique = false;
+          let retries = 5;
+
+          while (!isUnique && retries > 0) {
+            const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+            uniqueRewardCode = `REF-${randStr}`;
+
+            const { data: existingCoupon } = await supabase
+              .from("coupons")
+              .select("id")
+              .eq("code", uniqueRewardCode)
+              .maybeSingle();
+
+            if (!existingCoupon) {
+              isUnique = true;
+            }
+            retries--;
+          }
+
+          if (!isUnique) {
+            uniqueRewardCode = `REF-${Date.now().toString().slice(-6)}`;
+          }
+
+          // Create 20% OFF reward coupon in database
+          const now = new Date();
+          const expiryDate = new Date();
+          expiryDate.setDate(now.getDate() + 30); // 30 days validity
+
+          const { data: newCoupon, error: couponInsertError } = await supabase
+            .from("coupons")
+            .insert({
+              code: uniqueRewardCode,
+              name: `Referral Reward`,
+              discount_type: "percentage",
+              discount_value: 20.00,
+              min_order_value: 0.00,
+              start_date: now.toISOString(),
+              expiry_date: expiryDate.toISOString(),
+              max_uses: 1,
+              max_uses_per_customer: 1,
+              is_active: true,
+              description: `20% OFF Referral Reward Coupon.`
+            })
+            .select()
+            .single();
+
+          if (couponInsertError) {
+            console.error("Failed to create reward coupon:", couponInsertError.message);
+          } else if (newCoupon) {
+            // Assign coupon to the referrer
+            const { error: assignError } = await supabase
+              .from("user_coupons")
+              .insert({
+                user_id: referralRecord.referrer_id,
+                coupon_id: newCoupon.id,
+                status: "active"
+              });
+
+            if (assignError) {
+              console.error("Failed to assign reward coupon to referrer:", assignError.message);
+            } else {
+              // Update referral record to successful and rewarded
+              await supabase
+                .from("referral_records")
+                .update({
+                  status: "successful",
+                  reward_status: "rewarded"
+                })
+                .eq("id", referralRecord.id);
+            }
+          }
+        }
+      }
+    } catch (refErr) {
+      console.error("Failed to process referral rewards:", refErr);
     }
 
     return NextResponse.json(
