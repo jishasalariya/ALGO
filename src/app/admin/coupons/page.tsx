@@ -58,6 +58,7 @@ export default function AdminCoupons() {
     max_uses: "100",
     max_uses_per_customer: "1",
     is_active: true,
+    is_visible: true,
     description: ""
   });
 
@@ -126,6 +127,7 @@ export default function AdminCoupons() {
       max_uses: Number(formData.max_uses) || 100,
       max_uses_per_customer: formData.max_uses_per_customer ? Number(formData.max_uses_per_customer) : null,
       is_active: formData.is_active,
+      is_visible: formData.is_visible,
       description: formData.description.trim() || null
     };
 
@@ -176,6 +178,7 @@ export default function AdminCoupons() {
       max_uses: coupon.max_uses.toString(),
       max_uses_per_customer: coupon.max_uses_per_customer ? coupon.max_uses_per_customer.toString() : "",
       is_active: coupon.is_active,
+      is_visible: coupon.is_visible ?? true,
       description: coupon.description || ""
     });
     setIsModalOpen(true);
@@ -204,6 +207,7 @@ export default function AdminCoupons() {
       max_uses: "100",
       max_uses_per_customer: "1",
       is_active: true,
+      is_visible: true,
       description: ""
     });
   };
@@ -370,15 +374,24 @@ export default function AdminCoupons() {
                           </td>
                           <td className="px-6 py-4 font-mono">₹{coupon.min_order_value}</td>
                           <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-widest border ${
-                              isExpired 
-                                ? 'border-red-500/20 text-red-500 bg-red-500/5' 
-                                : coupon.is_active 
-                                  ? 'border-green-500/20 text-green-500 bg-green-500/5' 
-                                  : 'border-gray-500/20 text-gray-500 bg-gray-500/5'
-                            }`}>
-                              {isExpired ? 'expired' : coupon.is_active ? 'active' : 'inactive'}
-                            </span>
+                            <div className="flex flex-col gap-1.5 items-start">
+                              <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-widest border ${
+                                isExpired 
+                                  ? 'border-red-500/20 text-red-500 bg-red-500/5' 
+                                  : coupon.is_active 
+                                    ? 'border-green-500/20 text-green-500 bg-green-500/5' 
+                                    : 'border-gray-500/20 text-gray-500 bg-gray-500/5'
+                              }`}>
+                                {isExpired ? 'expired' : coupon.is_active ? 'active' : 'inactive'}
+                              </span>
+                              <span className={`px-2 py-0.5 rounded text-[9px] uppercase tracking-widest font-bold border ${
+                                (coupon.is_visible ?? true)
+                                  ? 'border-cyan-500/20 text-cyan-400 bg-cyan-500/5' 
+                                  : 'border-purple-500/20 text-purple-400 bg-purple-500/5'
+                              }`}>
+                                {(coupon.is_visible ?? true) ? 'Public' : 'Hidden'}
+                              </span>
+                            </div>
                           </td>
                           <td className="px-6 py-4 text-xs text-gray-400 font-mono">
                             <div>S: {new Date(coupon.start_date).toLocaleDateString()}</div>
@@ -591,6 +604,19 @@ export default function AdminCoupons() {
                 />
                 <label htmlFor="is_active" className="text-xs uppercase tracking-widest text-gray-400 cursor-pointer">
                   Enable coupon immediately (Active status)
+                </label>
+              </div>
+
+              <div className="flex items-center gap-3 py-2">
+                <input
+                  type="checkbox"
+                  id="is_visible"
+                  checked={formData.is_visible}
+                  onChange={e => setFormData({...formData, is_visible: e.target.checked})}
+                  className="w-4 h-4 text-black focus:ring-black border-white/20 bg-black rounded"
+                />
+                <label htmlFor="is_visible" className="text-xs uppercase tracking-widest text-gray-400 cursor-pointer">
+                  Show coupon publicly (on checkout & user coupons page)
                 </label>
               </div>
 

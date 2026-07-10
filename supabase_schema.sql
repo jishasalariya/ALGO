@@ -83,4 +83,7 @@ CREATE TABLE IF NOT EXISTS public.coupon_usage_history (
 );
 ALTER TABLE public.coupon_usage_history DISABLE ROW LEVEL SECURITY;
 
+-- Add is_visible column to coupons table if it does not exist
+ALTER TABLE public.coupons ADD COLUMN IF NOT EXISTS is_visible BOOLEAN DEFAULT TRUE;
+
 

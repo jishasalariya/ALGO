@@ -42,11 +42,12 @@ export async function GET(request: Request) {
 
     const assignedIds = new Set((allAssignedCoupons || []).map(item => item.coupon_id));
 
-    // 3. Fetch active global promotional coupons (not assigned to any user)
+    // 3. Fetch active global promotional coupons (not assigned to any user and marked as visible)
     const { data: activeCoupons, error: cError } = await supabase
       .from("coupons")
       .select("*")
       .eq("is_active", true)
+      .or("is_visible.is.null,is_visible.eq.true")
       .gt("expiry_date", now);
 
     if (cError) {
