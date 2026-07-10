@@ -70,29 +70,36 @@ export async function GET(request: Request) {
       }));
 
     // 4. Map user-specific coupons
-    const rewardCoupons = (userCoupons || []).map(uc => {
-      const coupon = uc.coupons;
-      const isExpired = new Date() > new Date(coupon.expiry_date);
-      let status = uc.status; // 'active' | 'used' | 'expired'
-      
-      if (status === "active" && isExpired) {
-        status = "expired";
-      }
+    const rewardCoupons = (userCoupons || [])
+      .map(uc => {
+        const coupon: any = Array.isArray(uc.coupons) 
+          ? uc.coupons[0] 
+          : uc.coupons;
 
-      return {
-        id: coupon.id,
-        userCouponId: uc.id,
-        code: coupon.code,
-        name: coupon.name,
-        discountType: coupon.discount_type,
-        discountValue: coupon.discount_value,
-        minOrderValue: coupon.min_order_value,
-        expiryDate: coupon.expiry_date,
-        description: coupon.description || "Referral reward discount coupon",
-        status: status,
-        type: "reward"
-      };
-    });
+        if (!coupon) return null;
+
+        const isExpired = new Date() > new Date(coupon.expiry_date);
+        let status = uc.status; // 'active' | 'used' | 'expired'
+        
+        if (status === "active" && isExpired) {
+          status = "expired";
+        }
+
+        return {
+          id: coupon.id,
+          userCouponId: uc.id,
+          code: coupon.code,
+          name: coupon.name,
+          discountType: coupon.discount_type,
+          discountValue: coupon.discount_value,
+          minOrderValue: coupon.min_order_value,
+          expiryDate: coupon.expiry_date,
+          description: coupon.description || "Referral reward discount coupon",
+          status: status,
+          type: "reward"
+        };
+      })
+      .filter((c): c is NonNullable<typeof c> => c !== null);
 
     // Combine both lists
     const allCoupons = [...promotionalCoupons, ...rewardCoupons];
