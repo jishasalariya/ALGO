@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Download, Search, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
+import { Download, Search, CheckCircle2, XCircle } from "lucide-react";
 
 interface Referral {
   id: string;

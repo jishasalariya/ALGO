@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { Copy, Check, Ticket, ArrowLeft, RefreshCw, Calendar, Tag, AlertCircle } from "lucide-react";
+import { Copy, Check, Ticket, ArrowLeft, RefreshCw, Calendar } from "lucide-react";
 
 export default function CouponsPage() {
   const [coupons, setCoupons] = useState<any[]>([]);

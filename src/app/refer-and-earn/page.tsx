@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Share2, Copy, Check, MessageSquare, Twitter, Facebook, ArrowLeft, Users, CheckCircle, Clock, Award } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function ReferAndEarnPage() {
   const [userId, setUserId] = useState<string | null>(null);
