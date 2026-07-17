@@ -131,7 +131,7 @@ export async function POST(request: Request) {
     }
 
     // 9. Increment Coupon usage count & record usage details
-    if (validatedCoupon) {
+    if (validatedCoupon && !validatedCoupon.isReferral) {
       const { error: updateCouponError } = await supabase
         .from("coupons")
         .update({ times_used: (validatedCoupon.times_used || 0) + 1 })
@@ -158,6 +158,37 @@ export async function POST(request: Request) {
 
     // 10. Check Referral Reward Logic
     try {
+      if (validatedCoupon && validatedCoupon.isReferral) {
+        // Create referral record if it doesn't exist
+        const { data: codeData } = await supabase
+          .from("referral_codes")
+          .select("user_id")
+          .eq("code", couponCode.trim().toUpperCase())
+          .maybeSingle();
+
+        if (codeData) {
+          const referrerId = codeData.user_id;
+          if (referrerId !== userId) {
+            const { data: existingRec } = await supabase
+              .from("referral_records")
+              .select("id")
+              .eq("referred_id", userId)
+              .maybeSingle();
+
+            if (!existingRec) {
+              await supabase
+                .from("referral_records")
+                .insert({
+                  referrer_id: referrerId,
+                  referred_id: userId,
+                  status: "pending",
+                  reward_status: "pending"
+                });
+            }
+          }
+        }
+      }
+
       // Check if this user was referred by someone and the status is pending
       const { data: referralRecord } = await supabase
         .from("referral_records")

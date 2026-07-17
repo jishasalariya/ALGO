@@ -24,7 +24,69 @@ export async function validateCoupon(
     .single();
 
   if (error || !coupon) {
-    return { isValid: false, message: "Invalid coupon code.", discount: 0 };
+    // Check if it's a valid referral code instead
+    const { data: referral, error: refError } = await supabase
+      .from("referral_codes")
+      .select("*")
+      .eq("code", code.trim().toUpperCase())
+      .maybeSingle();
+
+    if (refError || !referral) {
+      return { isValid: false, message: "Invalid coupon code.", discount: 0 };
+    }
+
+    if (!userId) {
+      return { isValid: false, message: "Please log in to apply a referral code.", discount: 0 };
+    }
+
+    // Prevent self-referral
+    if (referral.user_id === userId) {
+      return { isValid: false, message: "You cannot use your own referral code.", discount: 0 };
+    }
+
+    // Check if the user is a new customer (has ordered before)
+    const { count: ordersCount } = await supabase
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", userId);
+
+    if (ordersCount && ordersCount > 0) {
+      return { isValid: false, message: "Referral codes are only valid on your first order.", discount: 0 };
+    }
+
+    // Check if they already successfully used a referral
+    const { data: existingRecord } = await supabase
+      .from("referral_records")
+      .select("status")
+      .eq("referred_id", userId)
+      .maybeSingle();
+
+    if (existingRecord && (existingRecord.status === "successful" || existingRecord.status === "rewarded")) {
+      return { isValid: false, message: "You have already completed a referral.", discount: 0 };
+    }
+
+    // Calculate a 10% discount for the referred customer
+    const discountValue = 10.00; // 10% OFF
+    const discount = Math.round(subtotal * (discountValue / 100) * 100) / 100;
+
+    const mockCoupon = {
+      id: referral.id,
+      code: referral.code,
+      name: "Referral Discount",
+      discount_type: "percentage",
+      discount_value: discountValue,
+      min_order_value: 0.00,
+      is_active: true,
+      description: "10% OFF referral discount.",
+      isReferral: true
+    };
+
+    return {
+      isValid: true,
+      message: "Referral code applied successfully!",
+      coupon: mockCoupon,
+      discount
+    };
   }
 
   // Check if coupon is active
