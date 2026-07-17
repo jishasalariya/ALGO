@@ -8,10 +8,10 @@ import * as THREE from "three";
 import { motion } from "framer-motion";
 import { ArrowRight, MoveRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { Bungee } from "next/font/google";
+import { Syne } from "next/font/google";
 
-const bungee = Bungee({
-  weight: "400",
+const syne = Syne({
+  weight: ["800"],
   subsets: ["latin"],
   display: "swap",
 });
@@ -179,18 +179,23 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            className={`${bungee.className} text-[18vw] md:text-[14vw] leading-none uppercase mix-blend-difference text-white flex select-none pointer-events-auto`}
+            className={`${syne.className} text-[20vw] md:text-[16vw] font-extrabold leading-none uppercase mix-blend-difference flex select-none pointer-events-auto gap-2 md:gap-4`}
           >
             {["K", "Y", "U", "?"].map((letter, idx) => (
               <motion.span
                 key={idx}
                 whileHover={{ 
                   y: -25, 
-                  rotate: [0, -10, 10, 0],
-                  scale: 1.2,
-                  transition: { type: "spring", stiffness: 450, damping: 8 }
+                  rotate: [0, -5, 5, 0],
+                  scale: 1.15,
+                  color: "#ffffff",
+                  WebkitTextStroke: "2px transparent",
+                  transition: { type: "spring", stiffness: 450, damping: 9 }
                 }}
-                className="inline-block cursor-pointer origin-bottom px-1"
+                className="inline-block cursor-pointer origin-bottom text-transparent transition-all duration-300"
+                style={{
+                  WebkitTextStroke: "2px rgba(255,255,255,0.8)"
+                }}
               >
                 {letter}
               </motion.span>
