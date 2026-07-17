@@ -8,6 +8,13 @@ import * as THREE from "three";
 import { motion } from "framer-motion";
 import { ArrowRight, MoveRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { Bungee } from "next/font/google";
+
+const bungee = Bungee({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 // --- 3D Floating Fashion Gallery ---
 function FloatingImage({ url, position, scale, speed, offset }: { url: string, position: [number, number, number], scale: number, speed: number, offset: number }) {
@@ -132,20 +139,68 @@ export default function Home() {
           </div>
         </nav>
 
+        {/* Floating Playful Streetwear Stars */}
+        <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden">
+          {[
+            { top: "15%", left: "10%", size: 24, delay: 0 },
+            { top: "25%", right: "12%", size: 32, delay: 1 },
+            { top: "70%", left: "15%", size: 20, delay: 0.5 },
+            { top: "60%", right: "18%", size: 28, delay: 1.5 },
+          ].map((star, idx) => (
+            <motion.span
+              key={idx}
+              initial={{ opacity: 0.1, y: 0, rotate: 0 }}
+              animate={{ 
+                opacity: [0.1, 0.4, 0.1],
+                y: [0, -20, 0],
+                rotate: [0, 180, 360],
+              }}
+              transition={{
+                duration: 6,
+                delay: star.delay,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute text-white font-sans"
+              style={{
+                top: star.top,
+                left: star.left,
+                right: star.right,
+                fontSize: star.size,
+              }}
+            >
+              ✦
+            </motion.span>
+          ))}
+        </div>
+
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
-          <motion.h1 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[22vw] md:text-[18vw] font-black tracking-tighter leading-none uppercase mix-blend-difference text-white"
+            className={`${bungee.className} text-[18vw] md:text-[14vw] leading-none uppercase mix-blend-difference text-white flex select-none pointer-events-auto`}
           >
-            KYU?
-          </motion.h1>
+            {["K", "Y", "U", "?"].map((letter, idx) => (
+              <motion.span
+                key={idx}
+                whileHover={{ 
+                  y: -25, 
+                  rotate: [0, -10, 10, 0],
+                  scale: 1.2,
+                  transition: { type: "spring", stiffness: 450, damping: 8 }
+                }}
+                className="inline-block cursor-pointer origin-bottom px-1"
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </motion.div>
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2, delay: 1 }}
-            className="mt-4 text-[10px] md:text-base tracking-[0.3em] md:tracking-[0.4em] uppercase font-medium mix-blend-difference text-center max-w-2xl px-6"
+            className="mt-6 text-[10px] md:text-base tracking-[0.3em] md:tracking-[0.4em] uppercase font-medium mix-blend-difference text-center max-w-2xl px-6"
           >
             Life runs on bad decisions and broken algorithms
           </motion.p>
