@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Image as DreiImage } from "@react-three/drei";
-import * as THREE from "three";
 import { motion } from "framer-motion";
 import { ArrowRight, MoveRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
@@ -15,66 +12,6 @@ const syne = Syne({
   subsets: ["latin"],
   display: "swap",
 });
-
-// --- 3D Floating Fashion Gallery ---
-function FloatingImage({ url, position, scale, speed, offset }: { url: string, position: [number, number, number], scale: number, speed: number, offset: number }) {
-  const ref = useRef<any>(null);
-  const { mouse, viewport } = useThree();
-
-  useFrame((state) => {
-    if (!ref.current) return;
-    const t = state.clock.getElapsedTime();
-    ref.current.position.y = position[1] + Math.sin(t * speed + offset) * 0.5;
-    const targetX = (mouse.x * viewport.width) / 5;
-    ref.current.position.x += (targetX + position[0] - ref.current.position.x) * 0.05;
-    ref.current.rotation.y = (mouse.x * Math.PI) / 10;
-    ref.current.rotation.x = -(mouse.y * Math.PI) / 10;
-  });
-
-  return (
-    <DreiImage
-      ref={ref}
-      url={url}
-      transparent
-      position={position}
-      scale={[scale, scale * 1.5]}
-      zoom={1}
-      grayscale={0.2}
-    />
-  );
-}
-
-function FloatingGallery() {
-  const { viewport } = useThree();
-  
-  // Scale X positions for narrow mobile screens
-  const xMultiplier = Math.min(1, viewport.width / 15);
-  // Scale sizes slightly down for mobile
-  const scaleMultiplier = viewport.width < 10 ? 0.4 : 1;
-
-  const images = [
-    { url: "/images/gallery/1.png", pos: [-4 * xMultiplier, 1, -2], scale: 3 * scaleMultiplier, speed: 0.5, offset: 0 },
-    { url: "/images/gallery/2.png", pos: [4 * xMultiplier, -1, -3], scale: 4 * scaleMultiplier, speed: 0.4, offset: 2 },
-    { url: "/images/gallery/3.png", pos: [0, 2, -5], scale: 5 * scaleMultiplier, speed: 0.3, offset: 4 },
-    { url: "/images/gallery/4.png", pos: [-6 * xMultiplier, -2, -6], scale: 3.5 * scaleMultiplier, speed: 0.6, offset: 1 },
-    { url: "/images/gallery/5.png", pos: [5 * xMultiplier, 2, -4], scale: 4.5 * scaleMultiplier, speed: 0.45, offset: 3 },
-  ];
-
-  return (
-    <>
-      {images.map((img, i) => (
-        <FloatingImage 
-          key={i} 
-          url={img.url} 
-          position={img.pos as [number, number, number]} 
-          scale={img.scale} 
-          speed={img.speed}
-          offset={img.offset}
-        />
-      ))}
-    </>
-  );
-}
 
 // --- Fashion Product Card ---
 function FashionCard({ product, isLarge = false }: { product: any, isLarge?: boolean }) {
@@ -118,14 +55,7 @@ export default function Home() {
     <div className="min-h-screen w-full bg-[#050505] text-white font-sans selection:bg-white selection:text-black">
       {/* 3D WebGL Hero Section (100vh) */}
       <div className="relative h-screen w-full overflow-hidden sticky top-0 z-0">
-        <div className="absolute inset-0 z-0">
-          <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
-            <fog attach="fog" args={['#050505', 5, 15]} />
-            <ambientLight intensity={1} />
-            <React.Suspense fallback={null}>
-              <FloatingGallery />
-            </React.Suspense>
-          </Canvas>
+        <div className="absolute inset-0 z-0 bg-[#050505]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050505_100%)] pointer-events-none" />
         </div>
 

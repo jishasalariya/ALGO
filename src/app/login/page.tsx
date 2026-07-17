@@ -44,7 +44,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black px-4 sm:px-6 lg:px-8 selection:bg-white selection:text-black">
       {/* Background aesthetics */}
-      <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-20 grayscale mix-blend-luminosity" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
 
       <motion.div 
