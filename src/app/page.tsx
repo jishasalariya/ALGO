@@ -195,6 +195,7 @@ export default function Home() {
                 {letter}
               </motion.span>
             ))}
+          </motion.div>
         </div>
 
         <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-4">
