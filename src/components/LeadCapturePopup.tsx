@@ -160,11 +160,8 @@ export default function LeadCapturePopup() {
                   <h3 className="text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none">
                     Early Access
                   </h3>
-                  <p className="text-[10px] md:text-xs tracking-[0.25em] uppercase text-gray-500 font-medium mt-2">
-                    Enter the Algorithm
-                  </p>
                   <p className="text-gray-400 text-xs md:text-sm mt-3 leading-relaxed">
-                    Be the first to know about Season Two drops. Bad decisions & broken algorithms.
+                    Be the first to know about Season Two drops.
                   </p>
                 </div>
 
