@@ -13,7 +13,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "KYU? | Premium Modern Streetwear",
+  title: "KYU?",
   description: "Premium modern streetwear ecommerce brand.",
   keywords: ["streetwear", "kyu?", "fashion", "oversized", "premium streetwear"],
   openGraph: {
