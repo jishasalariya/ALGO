@@ -69,40 +69,6 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* Floating Playful Streetwear Stars */}
-        <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden">
-          {[
-            { top: "15%", left: "10%", size: 24, delay: 0 },
-            { top: "25%", right: "12%", size: 32, delay: 1 },
-            { top: "70%", left: "15%", size: 20, delay: 0.5 },
-            { top: "60%", right: "18%", size: 28, delay: 1.5 },
-          ].map((star, idx) => (
-            <motion.span
-              key={idx}
-              initial={{ opacity: 0.1, y: 0, rotate: 0 }}
-              animate={{ 
-                opacity: [0.1, 0.4, 0.1],
-                y: [0, -20, 0],
-                rotate: [0, 180, 360],
-              }}
-              transition={{
-                duration: 6,
-                delay: star.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute text-white font-sans"
-              style={{
-                top: star.top,
-                left: star.left,
-                right: star.right,
-                fontSize: star.size,
-              }}
-            >
-              ✦
-            </motion.span>
-          ))}
-        </div>
 
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
           <motion.div
