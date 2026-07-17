@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 border-r border-white/10 flex flex-col hidden md:flex">
         <div className="p-6 border-b border-white/10">
           <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">
-            ALGO <span className="text-sm font-normal tracking-widest text-gray-500">ADMIN</span>
+            KYU? <span className="text-sm font-normal tracking-widest text-gray-500">ADMIN</span>
           </Link>
         </div>
         

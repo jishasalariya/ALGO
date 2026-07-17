@@ -81,7 +81,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-6 bg-black/80 backdrop-blur-md border-b border-white/10">
         <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">
-          ALGO
+          KYU?
         </Link>
         <div className="flex items-center gap-6 text-sm uppercase tracking-widest font-medium">
           <Link href="/shop" className="hover:text-gray-400 transition-colors hidden sm:block">Shop</Link>

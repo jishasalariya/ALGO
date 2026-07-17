@@ -40,7 +40,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     
     const initCart = async () => {
       let localItems: CartItem[] = [];
-      const savedCart = localStorage.getItem("algo_cart");
+      const savedCart = localStorage.getItem("kyu_cart");
       if (savedCart) {
         try {
           localItems = JSON.parse(savedCart);
@@ -109,7 +109,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Save to local storage when items change
   useEffect(() => {
     if (isClient) {
-      localStorage.setItem("algo_cart", JSON.stringify(items));
+      localStorage.setItem("kyu_cart", JSON.stringify(items));
     }
   }, [items, isClient]);
 

@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
       while (!isUnique && retries > 0) {
         const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-        uniqueCode = `ALGO-${randStr}`;
+        uniqueCode = `KYU-${randStr}`;
 
         // Verify uniqueness
         const { data: existingCode } = await supabase
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
       }
 
       if (!isUnique) {
-        uniqueCode = `ALGO-${Date.now().toString().slice(-6)}`;
+        uniqueCode = `KYU-${Date.now().toString().slice(-6)}`;
       }
 
       // Generate the referral link
@@ -120,7 +120,7 @@ export async function GET(request: Request) {
       
       return {
         id: record.id,
-        friendName: friendUser?.full_name || friendUser?.email || "ALGO Member",
+        friendName: friendUser?.full_name || friendUser?.email || "KYU Member",
         date: record.created_at,
         status: record.status // 'pending' | 'successful' | 'rewarded' | 'rejected'
       };

@@ -109,7 +109,7 @@ export default function ReferAndEarnPage() {
 
   const getShareText = () => {
     return encodeURIComponent(
-      `Join ALGO and get premium streetwear. Use my referral code: ${referralData.referralCode} or sign up using this link: ${referralData.referralLink}`
+      `Join KYU? and get premium streetwear. Use my referral code: ${referralData.referralCode} or sign up using this link: ${referralData.referralLink}`
     );
   };
 
@@ -136,7 +136,7 @@ export default function ReferAndEarnPage() {
           <ArrowLeft className="w-4 h-4" /> Account
         </Link>
         <Link href="/" className="text-2xl font-bold tracking-tighter uppercase absolute left-1/2 -translate-x-1/2">
-          ALGO
+          KYU?
         </Link>
         <div className="flex items-center gap-6 text-sm uppercase tracking-widest font-medium">
           <Link href="/shop" className="hover:text-gray-400 transition-colors">Shop</Link>

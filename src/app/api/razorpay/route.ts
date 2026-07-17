@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { amount, items, couponCode, userId, currency = "INR" } = body;
-    const receipt = `receipt_algo_${Date.now()}`;
+    const receipt = `receipt_kyu_${Date.now()}`;
 
     console.log("Processing Razorpay order request:", { amount, couponCode, userId });
 

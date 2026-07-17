@@ -57,7 +57,7 @@ export default function CouponsPage() {
           <ArrowLeft className="w-4 h-4" /> Account
         </Link>
         <Link href="/" className="text-2xl font-bold tracking-tighter uppercase absolute left-1/2 -translate-x-1/2">
-          ALGO
+          KYU?
         </Link>
         <div className="flex items-center gap-6 text-sm uppercase tracking-widest font-medium">
           <Link href="/shop" className="hover:text-gray-400 transition-colors">Shop</Link>

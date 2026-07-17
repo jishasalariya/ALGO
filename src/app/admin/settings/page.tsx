@@ -6,7 +6,7 @@ export default function AdminSettings() {
       <div className="bg-[#111] border border-white/10 rounded-xl p-8 space-y-8">
         <div>
           <label className="block text-xs uppercase tracking-widest text-gray-400 mb-3">Store Name</label>
-          <input type="text" defaultValue="ALGO Streetwear" className="w-full bg-black border border-white/20 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" />
+          <input type="text" defaultValue="KYU? Streetwear" className="w-full bg-black border border-white/20 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" />
         </div>
         
         <div>

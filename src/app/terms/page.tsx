@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-black text-white pt-24 pb-32">
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-6 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">ALGO</Link>
+        <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">KYU?</Link>
       </nav>
 
       <div className="max-w-3xl mx-auto px-8 mt-12">
@@ -19,7 +19,7 @@ export default function TermsPage() {
         <div className="space-y-8 text-gray-400 leading-relaxed">
           <section>
             <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">1. General</h2>
-            <p>By placing an order with ALGO, you agree to be bound by these terms and conditions. These terms apply to all orders placed via our website.</p>
+            <p>By placing an order with KYU?, you agree to be bound by these terms and conditions. These terms apply to all orders placed via our website.</p>
           </section>
 
           <section>
@@ -29,7 +29,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-white text-xl font-semibold uppercase tracking-widest mb-4">3. Intellectual Property</h2>
-            <p>All designs, graphics, and content on this website are the intellectual property of ALGO and may not be reproduced without explicit permission.</p>
+            <p>All designs, graphics, and content on this website are the intellectual property of KYU? and may not be reproduced without explicit permission.</p>
           </section>
         </div>
       </div>

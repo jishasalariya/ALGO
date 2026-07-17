@@ -32,7 +32,7 @@ export default function LeadCapturePopup() {
     if (isExcludedRoute) return;
 
     // Check localStorage
-    const hasCaptured = localStorage.getItem("algo-lead-captured");
+    const hasCaptured = localStorage.getItem("kyu-lead-captured");
     if (hasCaptured === "true") return;
 
     // Trigger popup after 3 seconds
@@ -45,7 +45,7 @@ export default function LeadCapturePopup() {
 
   const handleClose = () => {
     setIsOpen(false);
-    localStorage.setItem("algo-lead-captured", "true");
+    localStorage.setItem("kyu-lead-captured", "true");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +99,7 @@ export default function LeadCapturePopup() {
 
       if (response.ok) {
         setShowSuccess(true);
-        localStorage.setItem("algo-lead-captured", "true");
+        localStorage.setItem("kyu-lead-captured", "true");
         
         // Auto-close popup after 2 seconds
         setTimeout(() => {
@@ -140,7 +140,7 @@ export default function LeadCapturePopup() {
             transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.6 }}
             className="relative w-full max-w-md bg-[#050505] border border-white/10 rounded-2xl p-8 overflow-hidden shadow-2xl z-10 font-sans"
           >
-            {/* Background design elements to fit ALGO theme */}
+            {/* Background design elements to fit KYU theme */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-white/2 rounded-full blur-2xl pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/2 rounded-full blur-2xl pointer-events-none" />
 

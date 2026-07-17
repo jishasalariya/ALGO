@@ -32,7 +32,7 @@ function RotatingText() {
           bevelSegments={5}
           letterSpacing={0.1}
         >
-          ALGO
+          KYU?
           <meshStandardMaterial color="#ffffff" roughness={0.1} metalness={0.8} />
         </Text3D>
       </Center>

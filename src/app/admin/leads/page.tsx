@@ -62,7 +62,7 @@ export default function AdminLeads() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `algo_leads_${new Date().toISOString().split("T")[0]}.csv`);
+    link.setAttribute("download", `kyu_leads_${new Date().toISOString().split("T")[0]}.csv`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();

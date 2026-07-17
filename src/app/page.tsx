@@ -139,7 +139,7 @@ export default function Home() {
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
             className="text-[22vw] md:text-[18vw] font-black tracking-tighter leading-none uppercase mix-blend-difference text-white"
           >
-            ALGO
+            KYU?
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -185,9 +185,9 @@ export default function Home() {
         <footer className="w-full bg-[#020202] py-16 md:py-24 px-8 border-t border-white/5">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4 text-white">ALGO</h2>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4 text-white">KYU?</h2>
               <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-[0.2em]">
-                © 2026 ALGO Streetwear.<br/>Life runs on bad decisions & broken algorithms.
+                © 2026 KYU? Streetwear.<br/>Life runs on bad decisions & broken algorithms.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 md:gap-16 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium text-gray-500">

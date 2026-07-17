@@ -13,20 +13,20 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ALGO | Bad Decisions & Broken Algorithms",
+  title: "KYU? | Bad Decisions & Broken Algorithms",
   description: "Premium modern streetwear ecommerce brand. Life runs on broken algorithms.",
-  keywords: ["streetwear", "algo", "fashion", "oversized", "premium streetwear"],
+  keywords: ["streetwear", "kyu?", "fashion", "oversized", "premium streetwear"],
   openGraph: {
-    title: "ALGO Streetwear - Season One",
+    title: "KYU? Streetwear - Season One",
     description: "Life runs on bad decisions & broken algorithms. Explore our latest drops.",
     url: "https://algo-streetwear.vercel.app",
-    siteName: "ALGO",
+    siteName: "KYU?",
     images: [
       {
         url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop",
         width: 1200,
         height: 630,
-        alt: "ALGO Streetwear",
+        alt: "KYU? Streetwear",
       },
     ],
     locale: "en_US",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ALGO Streetwear",
+    title: "KYU? Streetwear",
     description: "Life runs on bad decisions & broken algorithms.",
     images: ["https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop"],
   },

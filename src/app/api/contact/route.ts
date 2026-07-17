@@ -22,12 +22,12 @@ export async function POST(request: Request) {
 
     // Email to Store Owner
     const ownerMailOptions = {
-      from: `"ALGO Contact Form" <${process.env.EMAIL_USER}>`,
+      from: `"KYU? Contact Form" <${process.env.EMAIL_USER}>`,
       to: ownerEmail,
       subject: `NEW CONTACT MESSAGE: ${subject.toUpperCase()} - ${name}`,
       html: `
         <div style="font-family: 'Arial', sans-serif; max-width: 600px; padding: 20px; border: 1px solid #ddd; background-color: #000; color: #fff;">
-          <h2 style="color: #fff; border-bottom: 2px solid #fff; padding-bottom: 10px; text-transform: uppercase; text-align: center;">ALGO</h2>
+          <h2 style="color: #fff; border-bottom: 2px solid #fff; padding-bottom: 10px; text-transform: uppercase; text-align: center;">KYU?</h2>
           <h3 style="color: #aaa; text-align: center; margin-top: 0;">New Contact Submission</h3>
           
           <div style="margin-top: 20px;">

@@ -22,12 +22,12 @@ export async function POST(request: Request) {
 
     // 1. Email to Customer
     const customerMailOptions = {
-      from: `"ALGO" <${process.env.EMAIL_USER}>`,
+      from: `"KYU?" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Order Confirmed: ${orderId}`,
       html: `
         <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #000000; color: #ffffff;">
-          <h1 style="text-transform: uppercase; letter-spacing: 2px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 20px;">ALGO</h1>
+          <h1 style="text-transform: uppercase; letter-spacing: 2px; text-align: center; border-bottom: 1px solid #333; padding-bottom: 20px;">KYU?</h1>
           
           <div style="margin-top: 30px;">
             <p style="font-size: 16px; color: #cccccc;">Hi ${customerName},</p>
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
 
     // 2. Notification Email to Store Owner
     const ownerMailOptions = {
-      from: `"ALGO System" <${process.env.EMAIL_USER}>`,
+      from: `"KYU? System" <${process.env.EMAIL_USER}>`,
       to: ownerEmail,
       subject: `NEW ORDER RECEIVED: ${orderId}`,
       html: `

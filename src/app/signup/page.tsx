@@ -103,7 +103,7 @@ export default function SignupPage() {
       >
         <div>
           <Link href="/" className="flex justify-center mb-6 text-3xl font-bold tracking-tighter uppercase">
-            ALGO
+            KYU?
           </Link>
           <h2 className="text-center text-2xl font-bold uppercase tracking-widest text-white">
             {step === 1 ? "Join The Movement" : "Verify OTP"}

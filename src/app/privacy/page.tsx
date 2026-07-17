@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-black text-white pt-24 pb-32">
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-6 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">ALGO</Link>
+        <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">KYU?</Link>
       </nav>
 
       <div className="max-w-3xl mx-auto px-8 mt-12">

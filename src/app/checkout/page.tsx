@@ -159,7 +159,7 @@ export default function CheckoutPage() {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
           amount: order.amount,
           currency: order.currency,
-          name: "ALGO",
+          name: "KYU?",
           description: "Premium Streetwear Order",
           order_id: order.id,
           handler: async function (paymentResponse: any) {
@@ -311,7 +311,7 @@ export default function CheckoutPage() {
       {/* Simple Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-6 bg-black border-b border-white/10">
         <Link href="/" className="text-2xl font-bold tracking-tighter uppercase">
-          ALGO
+          KYU?
         </Link>
         <div className="flex items-center gap-2 text-sm uppercase tracking-widest text-gray-400">
           <Lock className="w-4 h-4" /> Secure Checkout

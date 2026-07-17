@@ -46,7 +46,7 @@ export default function ShopPage() {
       {/* Navigation (simplified for inner pages) */}
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-8 py-6 bg-black/80 backdrop-blur-md border-b border-white/10">
         <Link href="/" className="text-xl md:text-2xl font-bold tracking-tighter uppercase">
-          ALGO
+          KYU?
         </Link>
         <div className="flex items-center gap-4 md:gap-6 text-xs md:text-sm uppercase tracking-widest font-medium">
           <Link href="/account" className="hover:text-gray-400 transition-colors">Account</Link>

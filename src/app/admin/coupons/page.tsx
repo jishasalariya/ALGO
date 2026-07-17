@@ -526,7 +526,7 @@ export default function AdminCoupons() {
                     <button 
                       type="button"
                       onClick={() => {
-                        const generated = "ALGO-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+                        const generated = "KYU-" + Math.random().toString(36).substring(2, 8).toUpperCase();
                         setFormData({ ...formData, code: generated });
                       }}
                       className="text-[10px] text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-wider transition-colors"
