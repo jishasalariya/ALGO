@@ -188,14 +188,9 @@ export default function Home() {
                   y: -25, 
                   rotate: [0, -5, 5, 0],
                   scale: 1.15,
-                  color: "#ffffff",
-                  WebkitTextStroke: "2px transparent",
                   transition: { type: "spring", stiffness: 450, damping: 9 }
                 }}
-                className="inline-block cursor-pointer origin-bottom text-transparent transition-all duration-300"
-                style={{
-                  WebkitTextStroke: "2px rgba(255,255,255,0.8)"
-                }}
+                className="inline-block cursor-pointer origin-bottom text-transparent hover:text-white transition-all duration-300 [text-stroke:2px_rgba(255,255,255,0.8)] [-webkit-text-stroke:2px_rgba(255,255,255,0.8)] hover:[text-stroke:2px_transparent] hover:[-webkit-text-stroke:2px_transparent]"
               >
                 {letter}
               </motion.span>
