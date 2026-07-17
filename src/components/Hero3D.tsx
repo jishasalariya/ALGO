@@ -65,12 +65,7 @@ export default function Hero3D() {
         </Canvas>
       </div>
 
-      {/* Floating Tagline */}
-      <div className="absolute bottom-12 z-20 w-full text-center px-4">
-        <p className="text-sm md:text-base font-medium tracking-[0.2em] uppercase text-white/80">
-          Life runs on bad decisions & broken algorithms
-        </p>
-      </div>
+
     </div>
   );
 }

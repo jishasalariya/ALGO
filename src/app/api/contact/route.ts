@@ -38,10 +38,6 @@ export async function POST(request: Request) {
             <h4 style="margin-top: 25px; border-bottom: 1px solid #333; padding-bottom: 5px; text-transform: uppercase; color: #888;">Message:</h4>
             <div style="background-color: #111; padding: 20px; border-radius: 5px; border: 1px solid #333; white-space: pre-wrap; line-height: 1.6; color: #ccc; font-size: 15px;">${message}</div>
           </div>
-          
-          <p style="font-size: 11px; color: #555; margin-top: 40px; border-top: 1px solid #222; padding-top: 15px; text-align: center; letter-spacing: 1px;">
-            "LIFE RUNS ON BAD DECISIONS & BROKEN ALGORITHMS"
-          </p>
         </div>
       `,
     };

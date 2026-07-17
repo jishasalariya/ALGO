@@ -38,10 +38,7 @@ export async function POST(request: Request) {
               <p>Items: ${products || 'N/A'}</p>
               <p>Total Paid: <strong>₹${amount}</strong></p>
             </div>
-            
-            <p style="font-size: 14px; color: #888888; margin-top: 40px; text-align: center;">
-              "Life runs on bad decisions & broken algorithms"
-            </p>
+
           </div>
         </div>
       `,

@@ -130,7 +130,7 @@ export default function Home() {
             <div>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4 text-white">KYU?</h2>
               <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-[0.2em]">
-                © 2026 KYU? Streetwear.<br/>Life runs on bad decisions & broken algorithms.
+                © 2026 KYU? Streetwear.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 md:gap-16 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
