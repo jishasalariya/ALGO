@@ -195,15 +195,6 @@ export default function Home() {
                 {letter}
               </motion.span>
             ))}
-          </motion.div>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 2, delay: 1 }}
-            className="mt-6 text-[10px] md:text-base tracking-[0.3em] md:tracking-[0.4em] uppercase font-medium mix-blend-difference text-center max-w-2xl px-6"
-          >
-            Life runs on bad decisions and broken algorithms
-          </motion.p>
         </div>
 
         <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-4">
