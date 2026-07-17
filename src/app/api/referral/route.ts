@@ -50,7 +50,7 @@ export async function GET(request: Request) {
 
       // Generate the referral link
       // Use origin or default domain
-      const origin = request.headers.get("origin") || "https://algo-streetwear.vercel.app";
+      const origin = request.headers.get("origin") || "https://kyu-wear.vercel.app";
       const referralLink = `${origin}/signup?ref=${uniqueCode}`;
 
       const { data: newCodeData, error: insertError } = await supabase
@@ -69,6 +69,21 @@ export async function GET(request: Request) {
       }
 
       referralCodeData = newCodeData;
+    }
+
+    // Ensure the link is using the new kyu-wear.vercel.app domain
+    const activeOrigin = "https://kyu-wear.vercel.app";
+    let referralLink = referralCodeData.link;
+    if (referralLink && (referralLink.includes("algo-streetwear.vercel.app") || referralLink.includes("localhost"))) {
+      referralLink = `${activeOrigin}/signup?ref=${referralCodeData.code}`;
+      // Update in database asynchronously
+      supabase
+        .from("referral_codes")
+        .update({ link: referralLink })
+        .eq("id", referralCodeData.id)
+        .then(({ error }) => {
+          if (error) console.error("Error updating referral link domain in DB:", error);
+        });
     }
 
     // 2. Fetch referral statistics & history
@@ -128,7 +143,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       referralCode: referralCodeData.code,
-      referralLink: referralCodeData.link,
+      referralLink: referralLink,
       stats: {
         totalReferrals,
         successfulReferrals,

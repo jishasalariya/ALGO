@@ -65,8 +65,8 @@ export async function validateCoupon(
       return { isValid: false, message: "You have already completed a referral.", discount: 0 };
     }
 
-    // Calculate a 10% discount for the referred customer
-    const discountValue = 10.00; // 10% OFF
+    // Calculate a 20% discount for the referred customer
+    const discountValue = 20.00; // 20% OFF
     const discount = Math.round(subtotal * (discountValue / 100) * 100) / 100;
 
     const mockCoupon = {
@@ -77,7 +77,7 @@ export async function validateCoupon(
       discount_value: discountValue,
       min_order_value: 0.00,
       is_active: true,
-      description: "10% OFF referral discount.",
+      description: "20% OFF referral discount.",
       isReferral: true
     };
 

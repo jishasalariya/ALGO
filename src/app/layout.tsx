@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "KYU? Streetwear - Season One",
     description: "Explore our latest premium streetwear drops.",
-    url: "https://algo-streetwear.vercel.app",
+    url: "https://kyu-wear.vercel.app",
     siteName: "KYU?",
     images: [
       {
