@@ -76,7 +76,7 @@ export default function ShopClient({ initialProducts }: { initialProducts: Produ
                       <img 
                         src={product.images[0]} 
                         alt={product.product_name}
-                        className="w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                        className="w-full h-full object-cover opacity-100 md:opacity-80 grayscale-0 md:grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                       />
                     ) : (
                       <div className="w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-600 text-xs">

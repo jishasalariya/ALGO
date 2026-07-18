@@ -67,7 +67,7 @@ export default async function BlogListingPage() {
                       <img 
                         src={post.cover_image} 
                         alt={post.title}
-                        className="w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-750 ease-out"
+                        className="w-full h-full object-cover opacity-100 md:opacity-80 grayscale-0 md:grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-750 ease-out"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs font-mono">
