@@ -62,6 +62,7 @@ export default function Home() {
         <nav className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-10 py-6 md:py-8 pointer-events-auto">
           <div className="flex gap-4 md:gap-12 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium">
             <Link href="/shop" className="hover:text-gray-400 transition-colors">Shop</Link>
+            <Link href="/blog" className="hover:text-gray-400 transition-colors">Blog</Link>
             <Link href="/about" className="hover:text-gray-400 transition-colors">About</Link>
           </div>
           <div className="flex gap-4 md:gap-12 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium">
@@ -137,6 +138,7 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 md:gap-16 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
               <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
+                <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
                 <Link href="/about" className="hover:text-white transition-colors">About</Link>
                 <Link href="/account" className="hover:text-white transition-colors">Account</Link>
                 <Link href="/coupons" className="hover:text-white transition-colors">My Coupons</Link>
