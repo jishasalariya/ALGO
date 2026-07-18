@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Syne } from "next/font/google";
-import { MoveRight, Shield, RefreshCw, Sparkles } from "lucide-react";
+import { MoveRight, Sparkles, Flame, Eye } from "lucide-react";
 
 const syne = Syne({
   weight: ["800"],
@@ -25,50 +25,88 @@ export default function AboutPage() {
 
       <div className="max-w-4xl mx-auto px-6 mt-12 md:mt-20">
         {/* Header Title */}
-        <header className="mb-16 md:mb-24 border-b border-white/10 pb-8">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500 block mb-3 font-semibold">About The Label</span>
+        <header className="mb-16 md:mb-20 border-b border-white/10 pb-8">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500 block mb-3 font-semibold font-mono">The Manifesto</span>
           <h1 className={`${syne.className} text-5xl md:text-8xl font-black tracking-tighter uppercase leading-none`}>
-            KYU?<br/>EST. 2026.
+            WEAR YOUR<br/>CURIOSITY.
           </h1>
         </header>
 
         {/* Narrative / Story */}
-        <div className="space-y-12 text-gray-400 text-sm md:text-base leading-relaxed tracking-wide font-light">
-          <p>
-            KYU? is a design collective and streetwear label engineered for impact. Operating at the intersection of architectural minimalism and modern counterculture, we make garments that serve as expressions of identity.
-          </p>
-          <p>
-            Our name is derived from the word &ldquo;Queue&rdquo;—representing anticipation, sequence, and the constant evolution of culture. Every piece is constructed in limited drops, ensuring exclusivity and reducing waste. We reject fast fashion in favor of durable, heavy-weight silhouettes built to last.
-          </p>
-        </div>
+        <div className="space-y-16 text-gray-300 text-sm md:text-base leading-relaxed tracking-wide font-light">
+          {/* Welcome section */}
+          <div className="space-y-6">
+            <h2 className="text-white text-lg md:text-2xl uppercase tracking-wider font-semibold font-sans">Welcome</h2>
+            <p className="text-gray-400 border-l-2 border-white/20 pl-6 italic">
+              If you&apos;ve found your way to this page, you&apos;re likely more than just a casual browser. You&apos;re someone who values substance, someone who looks at the world and wonders, &ldquo;Why?&rdquo; That question is the heartbeat of KYU?
+            </p>
+          </div>
 
-        {/* Brand Columns / Values */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mt-20 md:mt-28 border-t border-b border-white/10 py-16">
-          <div className="flex flex-col gap-4">
-            <Sparkles className="w-6 h-6 text-white" />
-            <h3 className="text-white text-xs uppercase tracking-[0.2em] font-semibold">Engineered Fit</h3>
-            <p className="text-gray-500 text-xs leading-relaxed">
-              Oversized cuts drafted from scratch to achieve the perfect drape and street silhouette.
+          {/* Section 1: The Anatomy of a Question */}
+          <div className="space-y-6">
+            <h2 className="text-white text-lg md:text-2xl uppercase tracking-wider font-semibold font-sans">The Anatomy of a Question</h2>
+            <p>
+              We didn&apos;t set out to build another clothing brand that chases fleeting trends or tells anyone how to curate their identity. We set out to build a platform for the curious. The name &ldquo;KYU?&rdquo; is more than a clever play on phonetics—it is a manifesto. It represents the relentless pursuit of understanding.
+            </p>
+            <p>
+              Every design we bring to life is born from a desire to spark curiosity, invite conversation, and bridge the gap between different perspectives. Fashion is one of the most powerful forms of communication; it is how people introduce themselves to the world before they ever speak a word.
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <Shield className="w-6 h-6 text-white" />
-            <h3 className="text-white text-xs uppercase tracking-[0.2em] font-semibold">Premium Craft</h3>
-            <p className="text-gray-500 text-xs leading-relaxed">
-              Constructed using 240+ GSM heavyweight loopback Terry cotton and high-density branding.
+
+          {/* Section 2: Unapologetically Fluid */}
+          <div className="space-y-6">
+            <h2 className="text-white text-lg md:text-2xl uppercase tracking-wider font-semibold font-sans">Unapologetically Fluid</h2>
+            <p>
+              One of the most restrictive forces in modern style is the pressure to &ldquo;niche down.&rdquo; Society often insists on picking a style, defining an aesthetic, and staying within the lines. At KYU?, we refuse to live in that box. Human beings are complex, layered, and constantly evolving. Why should a wardrobe be any different? We believe in the freedom to be everything at once:
+            </p>
+
+            {/* Three Columns of Style */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 border-t border-b border-white/5 py-10 bg-zinc-950/30 p-6 rounded-lg">
+              <div className="flex flex-col gap-3">
+                <Sparkles className="w-5 h-5 text-white" />
+                <h3 className="text-white text-xs uppercase tracking-[0.2em] font-semibold">The Minimalist</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">
+                  Seeking perfection in the essential, the premium, and the understated.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Flame className="w-5 h-5 text-white" />
+                <h3 className="text-white text-xs uppercase tracking-[0.2em] font-semibold">The Bold</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">
+                  Embracing heavy graphics and streetwear that demand attention.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Eye className="w-5 h-5 text-white" />
+                <h3 className="text-white text-xs uppercase tracking-[0.2em] font-semibold">The Storyteller</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">
+                  Honoring heritage through pieces that celebrate cultural and traditional roots.
+                </p>
+              </div>
+            </div>
+
+            <p className="pt-4">
+              Our commitment is to individuality. No one needs to justify their style or fit into a single &ldquo;vibe.&rdquo; Each piece is designed to mirror human complexity—versatile, timeless, and bold enough to stand on its own, regardless of aesthetic.
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <RefreshCw className="w-6 h-6 text-white" />
-            <h3 className="text-white text-xs uppercase tracking-[0.2em] font-semibold">Sustainable Drops</h3>
-            <p className="text-gray-500 text-xs leading-relaxed">
-              Released in hyper-limited series to eliminate deadstock and preserve true exclusivity.
+
+          {/* Section 3: Our Promise to You */}
+          <div className="space-y-6">
+            <h2 className="text-white text-lg md:text-2xl uppercase tracking-wider font-semibold font-sans">Our Promise to You</h2>
+            <p>
+              When someone wears KYU?, they aren&apos;t just wearing a logo. They are wearing a badge of inquiry. It signals to the world that curiosity is alive and that there is courage in looking beneath the surface. Our logo was crafted to reflect this philosophy—a symbol that holds its own on a plain, premium essential just as well as it does on a piece of high-impact wearable art.
+            </p>
+            <p>
+              We exist to provide the canvas for each journey. Whether leading a conversation or observing the world with a fresh perspective, KYU? invites everyone to wear their curiosity on their sleeve.
+            </p>
+            <p className="font-medium text-white tracking-widest uppercase text-xs">
+              Thank you for being part of the movement.
             </p>
           </div>
         </div>
 
         {/* Call to Action */}
-        <div className="mt-20 md:mt-28 text-center flex flex-col items-center gap-6">
+        <div className="mt-24 text-center flex flex-col items-center gap-6">
           <h2 className="text-xl md:text-2xl uppercase tracking-widest font-medium">Explore Drop One</h2>
           <Link href="/shop" className="group flex items-center gap-3 px-8 py-4 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-widest text-xs font-semibold">
             View Collection <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
