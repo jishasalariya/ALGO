@@ -86,4 +86,56 @@ ALTER TABLE public.coupon_usage_history DISABLE ROW LEVEL SECURITY;
 -- Add is_visible column to coupons table if it does not exist
 ALTER TABLE public.coupons ADD COLUMN IF NOT EXISTS is_visible BOOLEAN DEFAULT TRUE;
 
+-- Create blogs table with Row Level Security (RLS)
+CREATE TABLE IF NOT EXISTS public.blogs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  cover_image TEXT,
+  body_content TEXT NOT NULL,
+  status VARCHAR(20) DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+  publish_date TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.blogs ENABLE ROW LEVEL SECURITY;
+
+-- Policy 1: Allow public read access to published posts
+CREATE POLICY "Allow public read access to published posts" 
+ON public.blogs 
+FOR SELECT 
+USING (status = 'published');
+
+-- Policy 2: Allow authenticated users full read access (to drafts as well)
+CREATE POLICY "Allow authenticated users full read access"
+ON public.blogs
+FOR SELECT
+TO authenticated
+USING (true);
+
+-- Policy 3: Allow authenticated users to insert posts
+CREATE POLICY "Allow authenticated users to insert posts"
+ON public.blogs
+FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+-- Policy 4: Allow authenticated users to update posts
+CREATE POLICY "Allow authenticated users to update posts"
+ON public.blogs
+FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+-- Policy 5: Allow authenticated users to delete posts
+CREATE POLICY "Allow authenticated users to delete posts"
+ON public.blogs
+FOR DELETE
+TO authenticated
+USING (true);
+
+
 
