@@ -2,8 +2,8 @@ import { supabase } from "@/lib/supabase";
 import ProductClient from "./ProductClient";
 import { notFound } from "next/navigation";
 
-// Revalidate product cache every 60 seconds (Incremental Static Regeneration)
-export const revalidate = 60;
+// Revalidate product cache every 15 seconds (Incremental Static Regeneration)
+export const revalidate = 15;
 
 export async function generateStaticParams() {
   // Query strictly published products to build paths at build time
