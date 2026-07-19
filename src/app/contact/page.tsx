@@ -134,8 +134,8 @@ export default function ContactPage() {
                 <InstagramIcon className="w-4 h-4" /> Instagram
               </h3>
               <p className="text-lg">
-                <a href="https://www.instagram.com/algo.inn" target="_blank" rel="noreferrer" className="hover:text-gray-300 transition-colors inline-flex items-center gap-2">
-                  @algo.inn <ArrowRight className="w-4 h-4" />
+                <a href="https://www.instagram.com/kyu_wear" target="_blank" rel="noreferrer" className="hover:text-gray-300 transition-colors inline-flex items-center gap-2">
+                  @kyu_wear <ArrowRight className="w-4 h-4" />
                 </a>
               </p>
             </div>
@@ -235,14 +235,14 @@ export default function ContactPage() {
               <h2 className="text-4xl font-bold tracking-tighter uppercase mb-2">Join the Cult</h2>
               <p className="text-gray-400">Follow us on Instagram for latest drops and campaigns.</p>
             </div>
-            <a href="https://www.instagram.com/algo.inn" target="_blank" rel="noreferrer" className="mt-6 md:mt-0 px-6 py-3 border border-white/20 rounded-full flex items-center gap-2 hover:bg-white/5 transition-colors uppercase tracking-widest text-sm">
-              <InstagramIcon className="w-4 h-4" /> @algo.inn
+            <a href="https://www.instagram.com/kyu_wear" target="_blank" rel="noreferrer" className="mt-6 md:mt-0 px-6 py-3 border border-white/20 rounded-full flex items-center gap-2 hover:bg-white/5 transition-colors uppercase tracking-widest text-sm">
+              <InstagramIcon className="w-4 h-4" /> @kyu_wear
             </a>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
-              <a key={i} href="https://www.instagram.com/algo.inn" target="_blank" rel="noreferrer" className="group relative aspect-square bg-[#111] overflow-hidden block">
+              <a key={i} href="https://www.instagram.com/kyu_wear" target="_blank" rel="noreferrer" className="group relative aspect-square bg-[#111] overflow-hidden block">
                 <img 
                   src={`https://images.unsplash.com/photo-${i === 1 ? '1529139574466-a30ab7300def' : i === 2 ? '1503342217505-b0a15ec3261c' : i === 3 ? '1521572163474-6864f9cf17ab' : '1556821840-3a63f95609a7'}?q=80&w=600&auto=format&fit=crop`} 
                   className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
