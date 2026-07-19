@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/favicon.ico",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "KYU? — Wear Your Curiosity",
     description: "Premium oversized streetwear from India. Season One is live — heavyweight 240 GSM tees built for the bold and the curious.",
