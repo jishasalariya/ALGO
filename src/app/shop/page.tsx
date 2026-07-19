@@ -7,7 +7,7 @@ export const revalidate = 15;
 
 export const metadata: Metadata = {
   title: "Shop Streetwear — T-Shirts, Outerwear & Bottoms | KYU?",
-  description: "Shop premium oversized streetwear. Season One features heavyweight 240 GSM cotton drop-shoulder t-shirts. Buy boxy fit tees online in India.",
+  description: "Shop premium oversized streetwear. Season One features heavyweight 240 GSM cotton drop-shoulder t-shirts. Buy premium boxy fit tees online in India with fast shipping.",
   keywords: ["Oversized t-shirt India", "Buy oversized t-shirt online", "oversized streetwear tee"],
   alternates: {
     canonical: "/shop",

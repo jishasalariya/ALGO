@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "KYU? Streetwear — Premium Oversized T-Shirts, India",
-  description: "Premium oversized streetwear by Kyu clothing. 240 GSM heavyweight cotton tees featuring minimal fronts and bold backs. Shop Kyu Season One live now.",
+  description: "Premium oversized streetwear by Kyu clothing. Heavyweight 240 GSM cotton tees featuring minimal fronts and bold back graphic designs. Shop Kyu Season One live now.",
   keywords: ["Kyu streetwear", "Kyu clothing", "streetwear brand India"],
   alternates: {
     canonical: "/",

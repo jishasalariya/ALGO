@@ -76,6 +76,8 @@ export default function ShopClient({ initialProducts }: { initialProducts: Produ
                       <img 
                         src={product.images[0]} 
                         alt={`KYU? ${product.product_name} — Black T-Shirt`}
+                        width={600}
+                        height={800}
                         className="w-full h-full object-cover opacity-100 md:opacity-80 grayscale-0 md:grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                       />
                     ) : (
