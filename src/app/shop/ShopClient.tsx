@@ -44,7 +44,7 @@ export default function ShopClient({ initialProducts }: { initialProducts: Produ
         <header className="mb-12 md:mb-16">
           <h1 className="text-4xl md:text-7xl font-bold tracking-tighter uppercase mb-4">Collection</h1>
           <p className="text-gray-400 max-w-lg text-sm md:text-base">
-            Explore our latest drops. Minimal designs engineered for maximum impact.
+            Explore our latest drops of premium streetwear. Minimal designs and oversized fits engineered for maximum impact.
           </p>
         </header>
 

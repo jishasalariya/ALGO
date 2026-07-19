@@ -155,7 +155,7 @@ export default function ProductClient({ product }: { product: any }) {
                 {/* Size Selector */}
                 <div>
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="uppercase tracking-widest text-sm font-medium">Select Size</h3>
+                    <div className="uppercase tracking-widest text-sm font-medium">Select Size</div>
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {(product.sizes || ["S", "M", "L", "XL"]).map((size: string) => (
@@ -176,7 +176,7 @@ export default function ProductClient({ product }: { product: any }) {
 
                 {/* Quantity */}
                 <div>
-                  <h3 className="uppercase tracking-widest text-sm font-medium mb-4">Quantity</h3>
+                  <div className="uppercase tracking-widest text-sm font-medium mb-4">Quantity</div>
                   <div className="flex items-center border border-white/20 w-32 h-12">
                     <button 
                       onClick={() => setQuantity(q => Math.max(1, q - 1))}

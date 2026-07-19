@@ -105,10 +105,15 @@ export default function HomeClient() {
       <div className="relative z-20 bg-[#050505] w-full">
         <section className="w-full px-6 md:px-8 py-24 md:py-32 bg-[#050505] border-t border-white/10 overflow-hidden">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-row justify-between items-end mb-16 md:mb-24 border-b border-white/10 pb-8">
-              <h2 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-none">
-                Drop<br/>One.
-              </h2>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 border-b border-white/10 pb-8 gap-6">
+              <div>
+                <h2 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-none mb-4">
+                  Drop<br/>One.
+                </h2>
+                <p className="text-gray-400 text-xs md:text-sm max-w-md font-light tracking-wide">
+                  Premium modern streetwear designed in India. Heavyweight oversized t-shirts engineered with 240 GSM cotton. Season One is now live.
+                </p>
+              </div>
               <Link href="/shop" className="group flex items-center gap-2 text-[10px] md:text-xs uppercase tracking-[0.2em] hover:text-gray-400 transition-colors">
                 View Entire Drop <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -130,7 +135,7 @@ export default function HomeClient() {
         <footer className="w-full bg-[#020202] py-16 md:py-24 px-8 border-t border-white/5">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4 text-white">KYU?</h2>
+              <div className="text-3xl md:text-4xl font-bold tracking-tighter uppercase mb-4 text-white">KYU?</div>
               <p className="text-gray-500 text-[10px] md:text-xs uppercase tracking-[0.2em]">
                 © 2026 KYU? Streetwear.
               </p>
@@ -148,11 +153,13 @@ export default function HomeClient() {
                 <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
                 <Link href="/shipping" className="hover:text-white transition-colors">Shipping</Link>
                 <Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
+                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               </div>
               <div className="flex flex-col gap-4 md:gap-6">
                 <a href="https://instagram.com/algo.inn" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>
-                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                <a href="https://www.facebook.com/profile.php?id=61591930839027" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Facebook</a>
+                <a href="https://x.com/kyu_wear" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Twitter</a>
               </div>
             </div>
           </div>
