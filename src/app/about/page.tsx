@@ -2,6 +2,20 @@ import React from "react";
 import Link from "next/link";
 import { Syne } from "next/font/google";
 import { MoveRight, Sparkles, Flame, Eye } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Our Story | KYU? Streetwear",
+  description: "KYU? isn't just a name — it's a question. Discover the story behind India's newest streetwear brand, built on curiosity, bold identity, and premium craft.",
+  openGraph: {
+    title: "Why We Created KYU?",
+    description: "The story behind the question mark. Learn what KYU? stands for and why every piece we make asks something of you.",
+  },
+  twitter: {
+    title: "Why We Created KYU?",
+    description: "The story behind the question mark. Learn what KYU? stands for and why every piece we make asks something of you.",
+  }
+};
 
 const syne = Syne({
   weight: ["800"],

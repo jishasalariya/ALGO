@@ -13,6 +13,21 @@ const syne = Syne({
 // Revalidate the page cache every 60 seconds (ISR)
 export const revalidate = 60;
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Journal | KYU? Streetwear",
+  description: "Style guides, drop stories, and the thinking behind KYU?. Read the Journal for everything streetwear, fabric, fit, and the culture we're building.",
+  openGraph: {
+    title: "KYU? Journal",
+    description: "Stories, style guides, and behind-the-scenes from KYU? Streetwear.",
+  },
+  twitter: {
+    title: "KYU? Journal",
+    description: "Stories, style guides, and behind-the-scenes from KYU? Streetwear.",
+  }
+};
+
 export default async function BlogListingPage() {
   // Fetch published blog posts from Supabase database
   const { data: posts } = await supabase

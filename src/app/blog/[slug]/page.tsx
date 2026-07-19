@@ -11,8 +11,42 @@ const syne = Syne({
   display: "swap",
 });
 
+import type { Metadata } from "next";
+
 // Revalidate blog cache every 60 seconds (ISR)
 export const revalidate = 60;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: post } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (!post) return {};
+
+  // Strip HTML tags and extract 150 char excerpt
+  const cleanExcerpt = post.body_content
+    ? post.body_content.replace(/<[^>]*>/g, '').slice(0, 150) + '...'
+    : 'Read the latest post on KYU? Journal.';
+
+  return {
+    title: `${post.title} | KYU? Journal`,
+    description: cleanExcerpt,
+    openGraph: {
+      title: `${post.title} | KYU? Journal`,
+      description: cleanExcerpt,
+      images: post.cover_image ? [{ url: post.cover_image }] : []
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | KYU? Journal`,
+      description: cleanExcerpt,
+      images: post.cover_image ? [post.cover_image] : []
+    }
+  };
+}
 
 export async function generateStaticParams() {
   // Query strictly published posts to build paths at build time
