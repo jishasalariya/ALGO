@@ -16,10 +16,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyu-wear.vercel.app
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: "KYU? | Kyu Streetwear — Premium Oversized T-Shirts, India",
-    template: "%s | KYU? Streetwear",
-  },
+  title: "KYU? | Kyu Streetwear — Premium Oversized T-Shirts, India",
   description: "Kyu clothing for the bold and curious. Premium oversized t-shirts, 240 GSM heavyweight cotton, minimal fronts, bold backs. Shop Kyu streetwear — Season One is live.",
   keywords: ["streetwear", "kyu?", "fashion", "oversized", "premium streetwear"],
   openGraph: {
