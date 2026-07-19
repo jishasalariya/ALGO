@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: "google9423182b0e28a606",
+  },
   openGraph: {
     title: "KYU? — Wear Your Curiosity",
     description: "Premium oversized streetwear from India. Season One is live — heavyweight 240 GSM tees built for the bold and the curious.",
