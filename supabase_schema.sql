@@ -1,4 +1,148 @@
--- Create coupons table
+-- ==========================================
+-- ALGO Ecommerce Database Schema & Security
+-- Run this entire script in your Supabase SQL Editor
+-- ==========================================
+
+-- 1. USERS TABLE (Extends Supabase auth.users)
+CREATE TABLE IF NOT EXISTS public.users (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  full_name TEXT,
+  email TEXT UNIQUE NOT NULL,
+  phone_number TEXT UNIQUE,
+  profile_image TEXT,
+  role TEXT DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Trigger to automatically create a user profile when a new user signs up in Supabase Auth
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (id, full_name, email, role)
+  VALUES (
+    new.id, 
+    COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name'), 
+    new.email, 
+    'user'
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Drop trigger if exists to prevent duplicate trigger errors
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+
+-- 2. PRODUCTS TABLE
+CREATE TABLE IF NOT EXISTS public.products (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  product_name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL,
+  category TEXT NOT NULL,
+  stock_quantity INTEGER DEFAULT 0,
+  sizes TEXT[] DEFAULT '{}', -- Array of sizes like ['S', 'M', 'L', 'XL']
+  images TEXT[] DEFAULT '{}', -- Array of image URLs
+  featured_product BOOLEAN DEFAULT FALSE,
+  status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+-- 3. ADDRESSES TABLE
+CREATE TABLE IF NOT EXISTS public.addresses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  full_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  pincode TEXT NOT NULL,
+  city TEXT NOT NULL,
+  state TEXT NOT NULL,
+  address_line TEXT NOT NULL,
+  landmark TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+-- 4. ORDERS TABLE
+CREATE TABLE IF NOT EXISTS public.orders (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE SET NULL,
+  order_id TEXT UNIQUE NOT NULL, -- e.g. ALGO-20231012-XYZ
+  total_amount DECIMAL(10, 2) NOT NULL,
+  shipping_charge DECIMAL(10, 2) DEFAULT 50.00,
+  payment_method TEXT NOT NULL,
+  payment_status TEXT DEFAULT 'pending' CHECK (payment_status IN ('pending', 'completed', 'failed', 'refunded')),
+  order_status TEXT DEFAULT 'processing' CHECK (order_status IN ('processing', 'shipped', 'delivered', 'cancelled')),
+  shipping_address JSONB NOT NULL, -- Snapshot of address at the time of order
+  coupon_code VARCHAR(50),
+  discount_amount DECIMAL(10, 2) DEFAULT 0.00,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+-- 5. ORDER_ITEMS TABLE
+CREATE TABLE IF NOT EXISTS public.order_items (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE NOT NULL,
+  product_id UUID REFERENCES public.products(id) ON DELETE SET NULL,
+  quantity INTEGER NOT NULL CHECK (quantity > 0),
+  selected_size TEXT NOT NULL,
+  price DECIMAL(10, 2) NOT NULL -- Price at the time of purchase
+);
+
+
+-- 6. CART TABLE
+CREATE TABLE IF NOT EXISTS public.cart (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  product_id UUID REFERENCES public.products(id) ON DELETE CASCADE NOT NULL,
+  quantity INTEGER DEFAULT 1 CHECK (quantity > 0),
+  selected_size TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, product_id, selected_size)
+);
+
+
+-- 7. WISHLIST TABLE
+CREATE TABLE IF NOT EXISTS public.wishlist (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  product_id UUID REFERENCES public.products(id) ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, product_id)
+);
+
+
+-- 8. PAYMENTS TABLE
+CREATE TABLE IF NOT EXISTS public.payments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE NOT NULL,
+  razorpay_payment_id TEXT UNIQUE,
+  payment_method TEXT NOT NULL,
+  payment_status TEXT NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+-- 9. OTP VERIFICATION TABLE
+CREATE TABLE IF NOT EXISTS public.otp_verifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  email_or_phone TEXT NOT NULL,
+  otp TEXT NOT NULL,
+  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  verified_status BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+
+-- 10. COUPONS TABLE
 CREATE TABLE IF NOT EXISTS public.coupons (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code VARCHAR(50) UNIQUE NOT NULL,
@@ -12,22 +156,14 @@ CREATE TABLE IF NOT EXISTS public.coupons (
   max_uses INT NOT NULL DEFAULT 100,
   max_uses_per_customer INT, -- Optional limit per customer
   is_active BOOLEAN DEFAULT TRUE,
+  is_visible BOOLEAN DEFAULT TRUE,
   description TEXT,
   times_used INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Enable Row Level Security (RLS) or disable if using simple playground policies.
--- By default, if the rest of the tables are accessible using the anon key, 
--- we will allow public read access for checkout, and full access for admin.
-ALTER TABLE public.coupons DISABLE ROW LEVEL SECURITY;
 
--- Add coupon columns to orders table if they do not exist
-ALTER TABLE public.orders 
-ADD COLUMN IF NOT EXISTS coupon_code VARCHAR(50),
-ADD COLUMN IF NOT EXISTS discount_amount DECIMAL(10, 2) DEFAULT 0.00;
-
--- Create leads table
+-- 11. LEADS TABLE
 CREATE TABLE IF NOT EXISTS public.leads (
   id BIGSERIAL PRIMARY KEY,
   name VARCHAR(255),
@@ -36,10 +172,8 @@ CREATE TABLE IF NOT EXISTS public.leads (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Enable Row Level Security (RLS) or disable if using simple playground policies.
-ALTER TABLE public.leads DISABLE ROW LEVEL SECURITY;
 
--- Create referral_codes table
+-- 12. REFERRAL CODES TABLE
 CREATE TABLE IF NOT EXISTS public.referral_codes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID UNIQUE NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -47,9 +181,9 @@ CREATE TABLE IF NOT EXISTS public.referral_codes (
   link TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-ALTER TABLE public.referral_codes DISABLE ROW LEVEL SECURITY;
 
--- Create referral_records table
+
+-- 13. REFERRAL RECORDS TABLE
 CREATE TABLE IF NOT EXISTS public.referral_records (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   referrer_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -58,9 +192,9 @@ CREATE TABLE IF NOT EXISTS public.referral_records (
   reward_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (reward_status IN ('pending', 'rewarded')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-ALTER TABLE public.referral_records DISABLE ROW LEVEL SECURITY;
 
--- Create user_coupons table
+
+-- 14. USER COUPONS TABLE
 CREATE TABLE IF NOT EXISTS public.user_coupons (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -70,9 +204,9 @@ CREATE TABLE IF NOT EXISTS public.user_coupons (
   status VARCHAR(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'used', 'expired')),
   UNIQUE(user_id, coupon_id)
 );
-ALTER TABLE public.user_coupons DISABLE ROW LEVEL SECURITY;
 
--- Create coupon_usage_history table
+
+-- 15. COUPON USAGE HISTORY TABLE
 CREATE TABLE IF NOT EXISTS public.coupon_usage_history (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -81,12 +215,9 @@ CREATE TABLE IF NOT EXISTS public.coupon_usage_history (
   discount_amount DECIMAL(10, 2) NOT NULL,
   used_at TIMESTAMPTZ DEFAULT NOW()
 );
-ALTER TABLE public.coupon_usage_history DISABLE ROW LEVEL SECURITY;
 
--- Add is_visible column to coupons table if it does not exist
-ALTER TABLE public.coupons ADD COLUMN IF NOT EXISTS is_visible BOOLEAN DEFAULT TRUE;
 
--- Create blogs table with Row Level Security (RLS)
+-- 16. BLOGS TABLE
 CREATE TABLE IF NOT EXISTS public.blogs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(255) NOT NULL,
@@ -99,84 +230,167 @@ CREATE TABLE IF NOT EXISTS public.blogs (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Enable Row Level Security (RLS)
-ALTER TABLE public.blogs ENABLE ROW LEVEL SECURITY;
-
--- Policy 1: Allow public read access to published posts
-CREATE POLICY "Allow public read access to published posts" 
-ON public.blogs 
-FOR SELECT 
-USING (status = 'published');
-
--- Policy 2: Allow authenticated users full read access (to drafts as well)
-CREATE POLICY "Allow authenticated users full read access"
-ON public.blogs
-FOR SELECT
-TO authenticated
-USING (true);
-
--- Policy 3: Allow authenticated users to insert posts
-CREATE POLICY "Allow authenticated users to insert posts"
-ON public.blogs
-FOR INSERT
-TO authenticated
-WITH CHECK (true);
-
--- Policy 4: Allow authenticated users to update posts
-CREATE POLICY "Allow authenticated users to update posts"
-ON public.blogs
-FOR UPDATE
-TO authenticated
-USING (true)
-WITH CHECK (true);
-
--- Policy 5: Allow authenticated users to delete posts
-CREATE POLICY "Allow authenticated users to delete posts"
-ON public.blogs
-FOR DELETE
-TO authenticated
-USING (true);
-
 
 -- =========================================================================
--- Enable Row Level Security (RLS) on products table and apply secure policies
+-- SECURITY POLICY CONFIGURATIONS (Row Level Security - RLS)
 -- =========================================================================
 
--- 1. Enable Row Level Security
+-- Helper function to check if the requesting user is an admin
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.users
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- ----------------------------------------------------
+-- A. USERS TABLE SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public select on users" ON public.users;
+DROP POLICY IF EXISTS "Allow user update on self" ON public.users;
+
+CREATE POLICY "Allow public select on users" ON public.users 
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow user update on self" ON public.users 
+  FOR UPDATE USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
+
+
+-- ----------------------------------------------------
+-- B. PRODUCTS TABLE SECURITY
+-- ----------------------------------------------------
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
--- 2. Policy: Allow public read access to published products only
-CREATE POLICY "Allow public read access to published products" 
-ON public.products 
-FOR SELECT 
-USING (status = 'published');
+DROP POLICY IF EXISTS "Public can view published products" ON public.products;
+DROP POLICY IF EXISTS "Allow public read access to published products" ON public.products;
+DROP POLICY IF EXISTS "Allow authenticated users read access to all products" ON public.products;
+DROP POLICY IF EXISTS "Allow authenticated users to insert products" ON public.products;
+DROP POLICY IF EXISTS "Allow authenticated users to update products" ON public.products;
+DROP POLICY IF EXISTS "Allow authenticated users to delete products" ON public.products;
+DROP POLICY IF EXISTS "Allow admin full access on products" ON public.products;
 
--- 3. Policy: Allow authenticated admin users to read draft/published products
-CREATE POLICY "Allow authenticated users read access to all products"
-ON public.products
-FOR SELECT
-TO authenticated
-USING (true);
+CREATE POLICY "Public can view published products" ON public.products
+  FOR SELECT USING (status = 'published');
 
--- 4. Policy: Allow authenticated admin users to insert products
-CREATE POLICY "Allow authenticated users to insert products"
-ON public.products
-FOR INSERT
-TO authenticated
-WITH CHECK (true);
+CREATE POLICY "Allow admin full access on products" ON public.products
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
--- 5. Policy: Allow authenticated admin users to update products
-CREATE POLICY "Allow authenticated users to update products"
-ON public.products
-FOR UPDATE
-TO authenticated
-USING (true)
-WITH CHECK (true);
 
--- 6. Policy: Allow authenticated admin users to delete products
-CREATE POLICY "Allow authenticated users to delete products"
-ON public.products
-FOR DELETE
-TO authenticated
-USING (true);
+-- ----------------------------------------------------
+-- C. BLOGS TABLE SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.blogs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public read access to published posts" ON public.blogs;
+DROP POLICY IF EXISTS "Allow authenticated users full read access" ON public.blogs;
+DROP POLICY IF EXISTS "Allow authenticated users to insert posts" ON public.blogs;
+DROP POLICY IF EXISTS "Allow authenticated users to update posts" ON public.blogs;
+DROP POLICY IF EXISTS "Allow authenticated users to delete posts" ON public.blogs;
+DROP POLICY IF EXISTS "Allow admin full access on blogs" ON public.blogs;
+
+CREATE POLICY "Allow public read access to published posts" ON public.blogs
+  FOR SELECT USING (status = 'published');
+
+CREATE POLICY "Allow admin full access on blogs" ON public.blogs
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- D. CART & WISHLIST SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.cart ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can manage their own cart" ON public.cart;
+CREATE POLICY "Users can manage their own cart" ON public.cart 
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+ALTER TABLE public.wishlist ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can manage their own wishlist" ON public.wishlist;
+CREATE POLICY "Users can manage their own wishlist" ON public.wishlist 
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+
+-- ----------------------------------------------------
+-- E. ADDRESSES & ORDERS SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.addresses ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can manage their own addresses" ON public.addresses;
+CREATE POLICY "Users can manage their own addresses" ON public.addresses 
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view their own orders" ON public.orders;
+DROP POLICY IF EXISTS "Users can create their own orders" ON public.orders;
+DROP POLICY IF EXISTS "Admins can view all orders" ON public.orders;
+DROP POLICY IF EXISTS "Admins can update all orders" ON public.orders;
+
+CREATE POLICY "Users can view their own orders" ON public.orders 
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create their own orders" ON public.orders 
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Admins can manage all orders" ON public.orders
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- F. LEADS TABLE SECURITY (Form submission)
+-- ----------------------------------------------------
+ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public insert on leads" ON public.leads;
+DROP POLICY IF EXISTS "Allow admin manage on leads" ON public.leads;
+
+CREATE POLICY "Allow public insert on leads" ON public.leads 
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow admin manage on leads" ON public.leads 
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- G. COUPONS SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.coupons ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public select on coupons" ON public.coupons;
+DROP POLICY IF EXISTS "Allow admin manage on coupons" ON public.coupons;
+
+CREATE POLICY "Allow public select on coupons" ON public.coupons 
+  FOR SELECT USING (is_active = true AND is_visible = true);
+
+CREATE POLICY "Allow admin manage on coupons" ON public.coupons 
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- H. REFERRALS & USER COUPONS SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.referral_codes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow users manage own codes" ON public.referral_codes;
+CREATE POLICY "Allow users manage own codes" ON public.referral_codes
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+ALTER TABLE public.referral_records ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow users select own referral records" ON public.referral_records;
+DROP POLICY IF EXISTS "Allow admin manage referral records" ON public.referral_records;
+
+CREATE POLICY "Allow users select own referral records" ON public.referral_records
+  FOR SELECT USING (auth.uid() = referrer_id OR auth.uid() = referred_id);
+
+CREATE POLICY "Allow admin manage referral records" ON public.referral_records
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+ALTER TABLE public.user_coupons ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow users select own assigned coupons" ON public.user_coupons;
+DROP POLICY IF EXISTS "Allow admin manage user coupons" ON public.user_coupons;
+
+CREATE POLICY "Allow users select own assigned coupons" ON public.user_coupons
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Allow admin manage user coupons" ON public.user_coupons
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
