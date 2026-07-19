@@ -219,6 +219,39 @@ export default function ProductClient({ product }: { product: any }) {
                     ))}
                   </ul>
                 </div>
+
+                {/* Social Share Options */}
+                <div className="pt-8 border-t border-white/10 flex flex-col gap-3">
+                  <span className="text-[10px] tracking-[0.2em] uppercase text-gray-500 font-semibold font-mono">Share This Piece</span>
+                  <div className="flex gap-4 text-xs font-mono">
+                    <a 
+                      href={`https://wa.me/?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20on%20KYU?%20Streetwear:%20${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      WhatsApp
+                    </a>
+                    <span className="text-white/10">|</span>
+                    <a 
+                      href={`https://twitter.com/intent/tweet?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20from%20@kyu_wear:%20${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      Twitter
+                    </a>
+                    <span className="text-white/10">|</span>
+                    <a 
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      Facebook
+                    </a>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>

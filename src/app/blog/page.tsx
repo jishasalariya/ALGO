@@ -113,7 +113,7 @@ export default async function BlogListingPage() {
                   
                   {/* Read Article link */}
                   <span className="inline-flex items-center gap-1 text-xs uppercase tracking-widest font-semibold text-white/60 group-hover:text-white transition-colors mt-3">
-                    Read Article <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    Read Article <span className="sr-only">: {post.title}</span> <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Link>
               </article>
