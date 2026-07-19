@@ -73,7 +73,7 @@ export default function HomeClient() {
 
 
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
-          <motion.div
+          <motion.h1
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
@@ -93,7 +93,7 @@ export default function HomeClient() {
                 {letter}
               </motion.span>
             ))}
-          </motion.div>
+          </motion.h1>
         </div>
 
         <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-4">
