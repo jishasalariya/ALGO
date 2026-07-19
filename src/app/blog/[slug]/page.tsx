@@ -31,9 +31,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     ? post.body_content.replace(/<[^>]*>/g, '').slice(0, 150) + '...'
     : 'Read the latest post on KYU? Journal.';
 
+  let blogKeywords = ["Best fabric for oversized t-shirt", "High GSM t-shirt India", "Streetwear outfit ideas"];
+  if (slug === 'oversized-vs-regular-fit-which-one-actually-suits-you') {
+    blogKeywords = ["Oversized vs regular fit t-shirt", "180 GSM vs 240 GSM t-shirt", "Oversized t-shirt outfit men", "Streetwear outfit ideas"];
+  }
+
   return {
     title: `${post.title} | KYU? Journal`,
     description: cleanExcerpt,
+    keywords: blogKeywords,
     openGraph: {
       title: `${post.title} | KYU? Journal`,
       description: cleanExcerpt,

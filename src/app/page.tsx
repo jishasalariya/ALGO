@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "KYU? | Kyu Streetwear — Premium Oversized T-Shirts, India",
   description: "Kyu clothing for the bold and curious. Premium oversized t-shirts, 240 GSM heavyweight cotton, minimal fronts, bold backs. Shop Kyu streetwear — Season One is live.",
+  keywords: ["Kyu streetwear", "Kyu clothing", "streetwear brand India"],
   openGraph: {
     title: "KYU? — Wear Your Curiosity",
     description: "Premium oversized streetwear from India. Season One is live — heavyweight 240 GSM tees built for the bold and the curious.",

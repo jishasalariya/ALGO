@@ -27,9 +27,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     metaDescription = `${product.product_name} — ${product.description.slice(0, 120)}. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit.`;
   }
 
+  let productKeywords = ["Kyu oversized t-shirt", "Kyu premium t-shirt", "240 GSM t-shirt"];
+  if (slug === 'karikala-chola') {
+    productKeywords = ["240 GSM t-shirt", "Heavyweight t-shirt", "premium cotton t-shirt", "Kyu oversized t-shirt"];
+  }
+
   return {
     title: `${product.product_name} — Kyu Oversized T-Shirt, 240 GSM Cotton`,
     description: metaDescription,
+    keywords: productKeywords,
     openGraph: {
       title: `${product.product_name} | KYU?`,
       description: `240 GSM oversized tee. Minimal front, bold back. ₹${product.price}. Shop the KYU? Season One drop.`,
