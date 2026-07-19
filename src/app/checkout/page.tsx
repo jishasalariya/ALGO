@@ -36,10 +36,14 @@ export default function CheckoutPage() {
   const [availableCoupons, setAvailableCoupons] = useState<any[]>([]);
   const [loadingCoupons, setLoadingCoupons] = useState(false);
 
-  const fetchAvailableCoupons = async (uId: string) => {
+  const fetchAvailableCoupons = async (token: string) => {
     setLoadingCoupons(true);
     try {
-      const res = await fetch(`/api/coupons/user?userId=${uId}`);
+      const res = await fetch(`/api/coupons/user`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       const data = await res.json();
       if (data && data.coupons) {
         // Only show active coupons
@@ -60,7 +64,7 @@ export default function CheckoutPage() {
       } else {
         setUserId(session.user.id);
         setFormData(prev => ({ ...prev, email: session.user.email || "" }));
-        fetchAvailableCoupons(session.user.id);
+        fetchAvailableCoupons(session.access_token);
       }
     });
   }, []);
@@ -81,13 +85,17 @@ export default function CheckoutPage() {
     setCouponSuccess("");
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch("/api/coupons/validate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.access_token || ""}`
+        },
         body: JSON.stringify({
           code: code.trim(),
           subtotal: totalAmount,
-          userId
+          userId: session?.user?.id || userId
         })
       });
 
@@ -95,7 +103,7 @@ export default function CheckoutPage() {
       if (data.isValid) {
         setAppliedCoupon(data.coupon);
         setDiscountAmount(data.discount);
-        setCouponSuccess(`Coupon "${data.coupon.code}" applied successfully!`);
+        setCouponSuccess(data.message || `Coupon "${data.coupon.code}" applied successfully!`);
       } else {
         setCouponError(data.message || "Failed to validate coupon.");
       }
@@ -122,15 +130,12 @@ export default function CheckoutPage() {
       return;
     }
 
-    setLoading(true);
-
     if (formData.paymentMethod === "razorpay") {
       try {
         console.log("Starting Razorpay checkout for amount:", finalTotal);
         
         if (!(window as any).Razorpay) {
           alert("Payment gateway is still loading. Please wait a moment and try again.");
-          setLoading(false);
           return;
         }
 
@@ -151,9 +156,10 @@ export default function CheckoutPage() {
         if (order.error) {
           console.error("Order creation failed:", order.error);
           alert(`Error creating order: ${order.error} ${order.description ? `(${order.description})` : ''}`);
-          setLoading(false);
           return;
         }
+
+        setLoading(true);
 
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
@@ -168,9 +174,13 @@ export default function CheckoutPage() {
 
             try {
               // Securely save order details server-side
+              const { data: { session } } = await supabase.auth.getSession();
               const placeOrderRes = await fetch("/api/checkout/place-order", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${session?.access_token || ""}`
+                },
                 body: JSON.stringify({
                   items,
                   formData,
@@ -178,11 +188,16 @@ export default function CheckoutPage() {
                   couponCode: appliedCoupon ? appliedCoupon.code : null,
                   razorpayPaymentId: paymentResponse.razorpay_payment_id,
                   razorpayOrderId: paymentResponse.razorpay_order_id,
-                  userId
+                  razorpaySignature: paymentResponse.razorpay_signature
                 })
               });
 
               const placeOrderResult = await placeOrderRes.json();
+              if (placeOrderRes.status === 401) {
+                alert("Your session has expired. Please log in again to complete your order.");
+                window.location.href = "/login";
+                return;
+              }
               if (placeOrderResult.error) {
                 alert("Error recording order details: " + placeOrderResult.error);
                 setLoading(false);
@@ -251,19 +266,27 @@ export default function CheckoutPage() {
       // Cash on Delivery
       setLoading(true);
       try {
+        const { data: { session } } = await supabase.auth.getSession();
         const placeOrderRes = await fetch("/api/checkout/place-order", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token || ""}`
+          },
           body: JSON.stringify({
             items,
             formData,
             paymentMethod: "cod",
-            couponCode: appliedCoupon ? appliedCoupon.code : null,
-            userId
+            couponCode: appliedCoupon ? appliedCoupon.code : null
           })
         });
 
         const placeOrderResult = await placeOrderRes.json();
+        if (placeOrderRes.status === 401) {
+          alert("Your session has expired. Please log in again to complete your order.");
+          window.location.href = "/login";
+          return;
+        }
         if (placeOrderResult.error) {
           alert("Error placing order: " + placeOrderResult.error);
           setLoading(false);

@@ -10,14 +10,15 @@ export interface CouponValidationResult {
 export async function validateCoupon(
   code: string,
   subtotal: number,
-  userId?: string | null
+  userId?: string | null,
+  client = supabase
 ): Promise<CouponValidationResult> {
   if (!code) {
     return { isValid: false, message: "Coupon code is empty.", discount: 0 };
   }
 
   // Fetch coupon from Supabase
-  const { data: coupon, error } = await supabase
+  const { data: coupon, error } = await client
     .from("coupons")
     .select("*")
     .eq("code", code.trim().toUpperCase())
@@ -25,7 +26,7 @@ export async function validateCoupon(
 
   if (error || !coupon) {
     // Check if it's a valid referral code instead
-    const { data: referral, error: refError } = await supabase
+    const { data: referral, error: refError } = await client
       .from("referral_codes")
       .select("*")
       .eq("code", code.trim().toUpperCase())
@@ -45,7 +46,7 @@ export async function validateCoupon(
     }
 
     // Check if the user is a new customer (has ordered before)
-    const { count: ordersCount } = await supabase
+    const { count: ordersCount } = await client
       .from("orders")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId);
@@ -55,7 +56,7 @@ export async function validateCoupon(
     }
 
     // Check if they already successfully used a referral
-    const { data: existingRecord } = await supabase
+    const { data: existingRecord } = await client
       .from("referral_records")
       .select("status")
       .eq("referred_id", userId)
@@ -95,7 +96,7 @@ export async function validateCoupon(
   }
 
   // Check if this is a user-specific coupon
-  const { data: assignment } = await supabase
+  const { data: assignment } = await client
     .from("user_coupons")
     .select("*")
     .eq("coupon_id", coupon.id)
@@ -142,7 +143,7 @@ export async function validateCoupon(
 
   // Check usage per customer (only if customer limit is set and userId is provided)
   if (coupon.max_uses_per_customer && userId) {
-    const { count, error: countError } = await supabase
+    const { count, error: countError } = await client
       .from("orders")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId)

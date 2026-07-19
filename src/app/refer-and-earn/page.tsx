@@ -78,7 +78,11 @@ export default function ReferAndEarnPage() {
       setUserId(uId);
 
       try {
-        const response = await fetch(`/api/referral?userId=${uId}`);
+        const response = await fetch(`/api/referral`, {
+          headers: {
+            "Authorization": `Bearer ${session.access_token}`
+          }
+        });
         const data = await response.json();
         if (data && !data.error) {
           setReferralData(data);

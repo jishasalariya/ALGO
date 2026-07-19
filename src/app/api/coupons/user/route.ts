@@ -1,19 +1,23 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseServer";
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-
-    if (!userId) {
-      return NextResponse.json({ error: "User ID is required." }, { status: 400 });
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized. Missing or invalid Authorization header." }, { status: 401 });
     }
+    const token = authHeader.split(" ")[1];
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized. Session has expired or is invalid." }, { status: 401 });
+    }
+    const userId = user.id;
 
     const now = new Date().toISOString();
 
-    // 1. Fetch coupons assigned to this user
-    const { data: userCoupons, error: ucError } = await supabase
+    // 1. Fetch coupons assigned to this user using admin client to bypass select RLS checks
+    const { data: userCoupons, error: ucError } = await supabaseAdmin
       .from("user_coupons")
       .select(`
         id,
@@ -30,8 +34,7 @@ export async function GET(request: Request) {
     }
 
     // 2. Fetch all coupon IDs that are assigned to ANY user
-    // This allows us to filter out private coupons from the global list
-    const { data: allAssignedCoupons, error: acError } = await supabase
+    const { data: allAssignedCoupons, error: acError } = await supabaseAdmin
       .from("user_coupons")
       .select("coupon_id");
 
@@ -42,8 +45,8 @@ export async function GET(request: Request) {
 
     const assignedIds = new Set((allAssignedCoupons || []).map(item => item.coupon_id));
 
-    // 3. Fetch active global promotional coupons (not assigned to any user and marked as visible)
-    const { data: activeCoupons, error: cError } = await supabase
+    // 3. Fetch active global promotional coupons using admin client
+    const { data: activeCoupons, error: cError } = await supabaseAdmin
       .from("coupons")
       .select("*")
       .eq("is_active", true)
@@ -66,7 +69,7 @@ export async function GET(request: Request) {
         minOrderValue: coupon.min_order_value,
         expiryDate: coupon.expiry_date,
         description: coupon.description || "Promotional discount coupon",
-        status: "active", // Global active coupons are always active for user display
+        status: "active",
         type: "promotional"
       }));
 
@@ -80,7 +83,7 @@ export async function GET(request: Request) {
         if (!coupon) return null;
 
         const isExpired = new Date() > new Date(coupon.expiry_date);
-        let status = uc.status; // 'active' | 'used' | 'expired'
+        let status = uc.status;
         
         if (status === "active" && isExpired) {
           status = "expired";

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseServer";
 
 export async function POST(request: Request) {
   try {
@@ -37,8 +37,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Database Insert
-    const { data, error } = await supabase
+    // 2. Database Insert using server admin client to bypass public constraints securely
+    const { data, error } = await supabaseAdmin
       .from("leads")
       .insert({
         name: sanitizedName || null,
@@ -60,19 +60,19 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json(
-        { error: "Failed to store early access submission. Please try again." },
+        { error: "Failed to submit early access request. Please try again." },
         { status: 500 }
       );
     }
 
     return NextResponse.json(
-      { success: true, message: "Successfully signed up for early access!" },
+      { success: true, message: "Thank you for registering for early access!", data },
       { status: 200 }
     );
-  } catch (err: any) {
-    console.error("API error inserting lead:", err);
+  } catch (error: any) {
+    console.error("Leads API unexpected error:", error);
     return NextResponse.json(
-      { error: err.message || "An unexpected server error occurred." },
+      { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
   }

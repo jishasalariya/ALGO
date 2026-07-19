@@ -19,7 +19,11 @@ export default function CouponsPage() {
     }
 
     try {
-      const response = await fetch(`/api/coupons/user?userId=${session.user.id}`);
+      const response = await fetch(`/api/coupons/user`, {
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`
+        }
+      });
       const data = await response.json();
       if (data && data.coupons) {
         setCoupons(data.coupons);

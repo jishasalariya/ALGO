@@ -1,24 +1,43 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseServer";
 import { validateCoupon } from "@/lib/coupons";
+import crypto from "crypto";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { items, formData, paymentMethod, couponCode, razorpayPaymentId, razorpayOrderId, userId } = body;
-
-    if (!userId) {
-      return NextResponse.json({ error: "User ID is required." }, { status: 400 });
+    // 1. Verify access token from client headers (prevent IDOR)
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized. Missing or invalid Authorization header." }, { status: 401 });
     }
+    const token = authHeader.split(" ")[1];
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized. Session has expired or is invalid." }, { status: 401 });
+    }
+    const userId = user.id;
+
+    const body = await request.json();
+    const { 
+      items, 
+      formData, 
+      paymentMethod, 
+      couponCode, 
+      razorpayPaymentId, 
+      razorpayOrderId, 
+      razorpaySignature
+    } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Your cart is empty." }, { status: 400 });
     }
 
-    // 1. Recalculate order subtotal by fetching actual prices from DB to prevent client-side price tampering
+    // 2. Recalculate order subtotal by fetching actual prices from DB to prevent client-side price tampering
     let subtotal = 0;
+    const productPriceMap: Record<string, number> = {};
+
     for (const item of items) {
-      const { data: product, error: prodError } = await supabase
+      const { data: product, error: prodError } = await supabaseAdmin
         .from("products")
         .select("price")
         .eq("id", item.productId)
@@ -30,15 +49,18 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
-      subtotal += product.price * item.quantity;
+      
+      const dbPrice = Number(product.price);
+      productPriceMap[item.productId] = dbPrice;
+      subtotal += dbPrice * item.quantity;
     }
 
-    // 2. Validate coupon if provided
+    // 3. Validate coupon if provided using admin client to bypass select RLS checks
     let discount = 0;
     let validatedCoupon = null;
 
     if (couponCode) {
-      const validation = await validateCoupon(couponCode, subtotal, userId);
+      const validation = await validateCoupon(couponCode, subtotal, userId, supabaseAdmin);
       if (!validation.isValid) {
         return NextResponse.json({ error: validation.message }, { status: 400 });
       }
@@ -46,15 +68,52 @@ export async function POST(request: Request) {
       validatedCoupon = validation.coupon;
     }
 
-    // 3. Calculate shipping charge
+    // 4. Calculate shipping charge
     // Rule: Free if total items quantity >= 2, else ₹50
     const totalQuantity = items.reduce((acc: number, item: any) => acc + item.quantity, 0);
     const shippingCharge = totalQuantity >= 2 ? 0 : 50;
 
     const grandTotal = Math.max(0, subtotal - discount + shippingCharge);
 
-    // 4. Save Address
-    const { error: addressError } = await supabase.from("addresses").insert({
+    // 5. Razorpay Secure Payment Verification (Signature Verification)
+    let paymentStatus = "pending";
+    let orderId = `COD-${Math.floor(Math.random() * 900000) + 100000}`;
+
+    if (paymentMethod === "razorpay") {
+      if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature) {
+        return NextResponse.json(
+          { error: "Missing Razorpay payment validation credentials." },
+          { status: 400 }
+        );
+      }
+
+      // Perform backend HMAC SHA256 verification using Razorpay Secret Key
+      const keySecret = process.env.RAZORPAY_KEY_SECRET;
+      if (!keySecret) {
+        return NextResponse.json(
+          { error: "Payment verification failed: Razorpay secret is not configured on the server." },
+          { status: 500 }
+        );
+      }
+
+      const generatedSignature = crypto
+        .createHmac("sha256", keySecret)
+        .update(`${razorpayOrderId}|${razorpayPaymentId}`)
+        .digest("hex");
+
+      if (generatedSignature !== razorpaySignature) {
+        return NextResponse.json(
+          { error: "Payment verification failed: Invalid Razorpay signature signature mismatch." },
+          { status: 400 }
+        );
+      }
+
+      orderId = razorpayPaymentId;
+      paymentStatus = "completed";
+    }
+
+    // 6. Save Address
+    const { error: addressError } = await supabaseAdmin.from("addresses").insert({
       user_id: userId,
       full_name: `${formData.firstName} ${formData.lastName}`,
       phone: formData.phone,
@@ -68,12 +127,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Failed to save shipping address: " + addressError.message }, { status: 500 });
     }
 
-    // 5. Determine order status details
-    const orderId = paymentMethod === "razorpay" ? razorpayPaymentId : `COD-${Math.floor(Math.random() * 900000) + 100000}`;
-    const paymentStatus = paymentMethod === "razorpay" ? "completed" : "pending";
-
-    // 6. Save Order (using standard client access)
-    const { data: orderData, error: orderError } = await supabase
+    // 7. Save Order (using elevated admin role to bypass order insert constraints securely)
+    const { data: orderData, error: orderError } = await supabaseAdmin
       .from("orders")
       .insert({
         user_id: userId,
@@ -97,25 +152,24 @@ export async function POST(request: Request) {
       );
     }
 
-    // 7. Save Order Items
+    // 8. Save Order Items (using verified database prices from recalculated pricing map)
     const orderItems = items.map((item: any) => ({
       order_id: orderData.id,
       product_id: item.productId,
       quantity: item.quantity,
       selected_size: item.size,
-      price: item.price,
+      price: productPriceMap[item.productId], // Securely bind the database price
     }));
 
-    const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
+    const { error: itemsError } = await supabaseAdmin.from("order_items").insert(orderItems);
     if (itemsError) {
-      // Revert/delete order to avoid orphan records if possible
-      await supabase.from("orders").delete().eq("id", orderData.id);
+      await supabaseAdmin.from("orders").delete().eq("id", orderData.id);
       return NextResponse.json({ error: "Failed to save order items: " + itemsError.message }, { status: 500 });
     }
 
-    // 8. Reduce Stock Quantity
+    // 9. Reduce Stock Quantity
     for (const item of items) {
-      const { data: productData } = await supabase
+      const { data: productData } = await supabaseAdmin
         .from("products")
         .select("stock_quantity")
         .eq("id", item.productId)
@@ -123,16 +177,16 @@ export async function POST(request: Request) {
 
       if (productData) {
         const newStock = Math.max(0, (productData.stock_quantity || 0) - item.quantity);
-        await supabase
+        await supabaseAdmin
           .from("products")
           .update({ stock_quantity: newStock })
           .eq("id", item.productId);
       }
     }
 
-    // 9. Increment Coupon usage count & record usage details
+    // 10. Increment Coupon usage count & record usage details
     if (validatedCoupon && !validatedCoupon.isReferral) {
-      const { error: updateCouponError } = await supabase
+      const { error: updateCouponError } = await supabaseAdmin
         .from("coupons")
         .update({ times_used: (validatedCoupon.times_used || 0) + 1 })
         .eq("id", validatedCoupon.id);
@@ -141,26 +195,25 @@ export async function POST(request: Request) {
       }
 
       // Record in coupon_usage_history
-      await supabase.from("coupon_usage_history").insert({
+      await supabaseAdmin.from("coupon_usage_history").insert({
         user_id: userId,
         coupon_id: validatedCoupon.id,
         order_id: orderData.order_id,
         discount_amount: discount
       });
 
-      // Update user_coupons status if it was user-specific
-      await supabase
+      // Update user_coupons status
+      await supabaseAdmin
         .from("user_coupons")
         .update({ status: "used", redeemed_at: new Date().toISOString() })
         .eq("user_id", userId)
         .eq("coupon_id", validatedCoupon.id);
     }
 
-    // 10. Check Referral Reward Logic
+    // 11. Check Referral Reward Logic
     try {
       if (validatedCoupon && validatedCoupon.isReferral) {
-        // Create referral record if it doesn't exist
-        const { data: codeData } = await supabase
+        const { data: codeData } = await supabaseAdmin
           .from("referral_codes")
           .select("user_id")
           .eq("code", couponCode.trim().toUpperCase())
@@ -169,14 +222,14 @@ export async function POST(request: Request) {
         if (codeData) {
           const referrerId = codeData.user_id;
           if (referrerId !== userId) {
-            const { data: existingRec } = await supabase
+            const { data: existingRec } = await supabaseAdmin
               .from("referral_records")
               .select("id")
               .eq("referred_id", userId)
               .maybeSingle();
 
             if (!existingRec) {
-              await supabase
+              await supabaseAdmin
                 .from("referral_records")
                 .insert({
                   referrer_id: referrerId,
@@ -190,7 +243,7 @@ export async function POST(request: Request) {
       }
 
       // Check if this user was referred by someone and the status is pending
-      const { data: referralRecord } = await supabase
+      const { data: referralRecord } = await supabaseAdmin
         .from("referral_records")
         .select("*")
         .eq("referred_id", userId)
@@ -198,15 +251,13 @@ export async function POST(request: Request) {
         .maybeSingle();
 
       if (referralRecord) {
-        // Confirm it's their first successful purchase (exclude current order)
-        const { count: prevOrdersCount } = await supabase
+        const { count: prevOrdersCount } = await supabaseAdmin
           .from("orders")
           .select("id", { count: "exact", head: true })
           .eq("user_id", userId)
           .neq("id", orderData.id);
 
         if (prevOrdersCount === 0) {
-          // It is the first purchase! Generate reward coupon for the referrer
           let uniqueRewardCode = "";
           let isUnique = false;
           let retries = 5;
@@ -215,7 +266,7 @@ export async function POST(request: Request) {
             const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
             uniqueRewardCode = `REF-${randStr}`;
 
-            const { data: existingCoupon } = await supabase
+            const { data: existingCoupon } = await supabaseAdmin
               .from("coupons")
               .select("id")
               .eq("code", uniqueRewardCode)
@@ -231,12 +282,11 @@ export async function POST(request: Request) {
             uniqueRewardCode = `REF-${Date.now().toString().slice(-6)}`;
           }
 
-          // Create 20% OFF reward coupon in database
           const now = new Date();
           const expiryDate = new Date();
-          expiryDate.setDate(now.getDate() + 30); // 30 days validity
+          expiryDate.setDate(now.getDate() + 30); 
 
-          const { data: newCoupon, error: couponInsertError } = await supabase
+          const { data: newCoupon, error: couponInsertError } = await supabaseAdmin
             .from("coupons")
             .insert({
               code: uniqueRewardCode,
@@ -257,8 +307,7 @@ export async function POST(request: Request) {
           if (couponInsertError) {
             console.error("Failed to create reward coupon:", couponInsertError.message);
           } else if (newCoupon) {
-            // Assign coupon to the referrer
-            const { error: assignError } = await supabase
+            const { error: assignError } = await supabaseAdmin
               .from("user_coupons")
               .insert({
                 user_id: referralRecord.referrer_id,
@@ -269,8 +318,7 @@ export async function POST(request: Request) {
             if (assignError) {
               console.error("Failed to assign reward coupon to referrer:", assignError.message);
             } else {
-              // Update referral record to successful and rewarded
-              await supabase
+              await supabaseAdmin
                 .from("referral_records")
                 .update({
                   status: "successful",

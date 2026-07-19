@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseServer";
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-
-    if (!userId) {
-      return NextResponse.json({ error: "User ID is required." }, { status: 400 });
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized. Missing or invalid Authorization header." }, { status: 401 });
     }
+    const token = authHeader.split(" ")[1];
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized. Session has expired or is invalid." }, { status: 401 });
+    }
+    const userId = user.id;
 
-    // 1. Get or generate referral code
-    let { data: referralCodeData, error: fetchError } = await supabase
+    // 1. Get or generate referral code using admin client to read/write referral_codes safely
+    let { data: referralCodeData, error: fetchError } = await supabaseAdmin
       .from("referral_codes")
       .select("*")
       .eq("user_id", userId)
@@ -32,7 +36,7 @@ export async function GET(request: Request) {
         uniqueCode = `KYU-${randStr}`;
 
         // Verify uniqueness
-        const { data: existingCode } = await supabase
+        const { data: existingCode } = await supabaseAdmin
           .from("referral_codes")
           .select("id")
           .eq("code", uniqueCode)
@@ -49,11 +53,10 @@ export async function GET(request: Request) {
       }
 
       // Generate the referral link
-      // Use origin or default domain
       const origin = request.headers.get("origin") || "https://kyu-wear.vercel.app";
       const referralLink = `${origin}/signup?ref=${uniqueCode}`;
 
-      const { data: newCodeData, error: insertError } = await supabase
+      const { data: newCodeData, error: insertError } = await supabaseAdmin
         .from("referral_codes")
         .insert({
           user_id: userId,
@@ -77,7 +80,7 @@ export async function GET(request: Request) {
     if (referralLink && (referralLink.includes("algo-streetwear.vercel.app") || referralLink.includes("localhost"))) {
       referralLink = `${activeOrigin}/signup?ref=${referralCodeData.code}`;
       // Update in database asynchronously
-      supabase
+      supabaseAdmin
         .from("referral_codes")
         .update({ link: referralLink })
         .eq("id", referralCodeData.id)
@@ -87,8 +90,7 @@ export async function GET(request: Request) {
     }
 
     // 2. Fetch referral statistics & history
-    // Get all records where referrer_id = userId
-    const { data: records, error: recordsError } = await supabase
+    const { data: records, error: recordsError } = await supabaseAdmin
       .from("referral_records")
       .select(`
         id,
@@ -113,7 +115,7 @@ export async function GET(request: Request) {
     const pendingReferrals = referralRecords.filter(r => r.status === "pending").length;
     
     // Rewards earned: count reward coupons assigned to this user that have a description like "Referral Reward"
-    const { data: rewardCoupons, error: couponError } = await supabase
+    const { data: rewardCoupons, error: couponError } = await supabaseAdmin
       .from("user_coupons")
       .select(`
         id,
@@ -137,7 +139,7 @@ export async function GET(request: Request) {
         id: record.id,
         friendName: friendUser?.full_name || friendUser?.email || "KYU Member",
         date: record.created_at,
-        status: record.status // 'pending' | 'successful' | 'rewarded' | 'rejected'
+        status: record.status
       };
     });
 

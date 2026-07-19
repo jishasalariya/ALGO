@@ -29,9 +29,11 @@ export default function AccountPage() {
         try {
           await fetch("/api/referral/register", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.access_token}`
+            },
             body: JSON.stringify({
-              referredId: session.user.id,
               referralCode: storedRef
             })
           });
