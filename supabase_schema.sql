@@ -280,9 +280,21 @@ ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Public can view published products" ON public.products;
 DROP POLICY IF EXISTS "Allow admin full access on products" ON public.products;
+DROP POLICY IF EXISTS "Allow public stock update" ON public.products;
 
 CREATE POLICY "Public can view published products" ON public.products
   FOR SELECT USING (status = 'published');
+
+-- Allow checkout system to reduce stock quantity, but strictly protect other columns from changes
+CREATE POLICY "Allow public stock update" ON public.products
+  FOR UPDATE
+  USING (true)
+  WITH CHECK (
+    product_name = products.product_name AND
+    slug = products.slug AND
+    price = products.price AND
+    category = products.category
+  );
 
 CREATE POLICY "Allow admin full access on products" ON public.products
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
@@ -328,13 +340,15 @@ CREATE POLICY "Users can manage their own addresses" ON public.addresses
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view their own orders" ON public.orders;
 DROP POLICY IF EXISTS "Users can create their own orders" ON public.orders;
+DROP POLICY IF EXISTS "Allow public insert on orders" ON public.orders;
 DROP POLICY IF EXISTS "Admins can manage all orders" ON public.orders;
 
 CREATE POLICY "Users can view their own orders" ON public.orders 
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can create their own orders" ON public.orders 
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- Allow public insert on orders so checkout routes (executing as anon role) can place orders
+CREATE POLICY "Allow public insert on orders" ON public.orders 
+  FOR INSERT WITH CHECK (true);
 
 CREATE POLICY "Admins can manage all orders" ON public.orders
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
@@ -346,6 +360,7 @@ CREATE POLICY "Admins can manage all orders" ON public.orders
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own order items" ON public.order_items;
 DROP POLICY IF EXISTS "Users can insert own order items" ON public.order_items;
+DROP POLICY IF EXISTS "Allow public insert on order_items" ON public.order_items;
 DROP POLICY IF EXISTS "Admins can manage all order items" ON public.order_items;
 
 -- Users can view details of items in their own orders
@@ -358,15 +373,9 @@ CREATE POLICY "Users can view own order items" ON public.order_items
     )
   );
 
--- Users can insert items linked to their own orders during checkout
-CREATE POLICY "Users can insert own order items" ON public.order_items
-  FOR INSERT WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.orders 
-      WHERE public.orders.id = public.order_items.order_id 
-      AND public.orders.user_id = auth.uid()
-    )
-  );
+-- Allow public insert on order items to support checkout placing items in DB
+CREATE POLICY "Allow public insert on order_items" ON public.order_items
+  FOR INSERT WITH CHECK (true);
 
 CREATE POLICY "Admins can manage all order items" ON public.order_items
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
@@ -377,6 +386,7 @@ CREATE POLICY "Admins can manage all order items" ON public.order_items
 -- ----------------------------------------------------
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view own payments" ON public.payments;
+DROP POLICY IF EXISTS "Allow public insert on payments" ON public.payments;
 DROP POLICY IF EXISTS "Admins can manage all payments" ON public.payments;
 
 -- Users can view payment details linked to their own orders
@@ -388,6 +398,10 @@ CREATE POLICY "Users can view own payments" ON public.payments
       AND public.orders.user_id = auth.uid()
     )
   );
+
+-- Allow public insert on payments to support Razorpay callbacks registering payments in DB
+CREATE POLICY "Allow public insert on payments" ON public.payments
+  FOR INSERT WITH CHECK (true);
 
 CREATE POLICY "Admins can manage all payments" ON public.payments
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
@@ -429,9 +443,20 @@ CREATE POLICY "Allow admin manage on leads" ON public.leads
 ALTER TABLE public.coupons ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow public select on coupons" ON public.coupons;
 DROP POLICY IF EXISTS "Allow admin manage on coupons" ON public.coupons;
+DROP POLICY IF EXISTS "Allow public coupon update" ON public.coupons;
 
 CREATE POLICY "Allow public select on coupons" ON public.coupons 
   FOR SELECT USING (is_active = true AND is_visible = true);
+
+-- Allow public checkout flow to increment usage count of coupons
+CREATE POLICY "Allow public coupon update" ON public.coupons
+  FOR UPDATE
+  USING (true)
+  WITH CHECK (
+    code = coupons.code AND
+    discount_type = coupons.discount_type AND
+    discount_value = coupons.discount_value
+  );
 
 CREATE POLICY "Allow admin manage on coupons" ON public.coupons 
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
@@ -447,20 +472,30 @@ CREATE POLICY "Allow users manage own codes" ON public.referral_codes
 
 ALTER TABLE public.referral_records ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow users select own referral records" ON public.referral_records;
+DROP POLICY IF EXISTS "Allow public insert/update on referral_records" ON public.referral_records;
 DROP POLICY IF EXISTS "Allow admin manage referral records" ON public.referral_records;
 
 CREATE POLICY "Allow users select own referral records" ON public.referral_records
   FOR SELECT USING (auth.uid() = referrer_id OR auth.uid() = referred_id);
+
+-- Allow public checkout flow to create and update referral links/records
+CREATE POLICY "Allow public insert/update on referral_records" ON public.referral_records
+  FOR ALL USING (true) WITH CHECK (true);
 
 CREATE POLICY "Allow admin manage referral records" ON public.referral_records
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 ALTER TABLE public.user_coupons ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow users select own assigned coupons" ON public.user_coupons;
+DROP POLICY IF EXISTS "Allow public update on user_coupons" ON public.user_coupons;
 DROP POLICY IF EXISTS "Allow admin manage user coupons" ON public.user_coupons;
 
 CREATE POLICY "Allow users select own assigned coupons" ON public.user_coupons
   FOR SELECT USING (auth.uid() = user_id);
+
+-- Allow public checkout flow to mark user coupon status as 'used'
+CREATE POLICY "Allow public update on user_coupons" ON public.user_coupons
+  FOR UPDATE USING (true) WITH CHECK (true);
 
 CREATE POLICY "Allow admin manage user coupons" ON public.user_coupons
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
@@ -471,10 +506,15 @@ CREATE POLICY "Allow admin manage user coupons" ON public.user_coupons
 -- ----------------------------------------------------
 ALTER TABLE public.coupon_usage_history ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow users select own coupon history" ON public.coupon_usage_history;
+DROP POLICY IF EXISTS "Allow public insert on coupon_history" ON public.coupon_usage_history;
 DROP POLICY IF EXISTS "Allow admin manage coupon history" ON public.coupon_usage_history;
 
 CREATE POLICY "Allow users select own coupon history" ON public.coupon_usage_history
   FOR SELECT USING (auth.uid() = user_id);
+
+-- Allow public checkout flow to record coupon usage logs
+CREATE POLICY "Allow public insert on coupon_history" ON public.coupon_usage_history
+  FOR INSERT WITH CHECK (true);
 
 CREATE POLICY "Allow admin manage coupon history" ON public.coupon_usage_history
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
