@@ -40,6 +40,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${post.title} | KYU? Journal`,
     description: cleanExcerpt,
     keywords: blogKeywords,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: `${post.title} | KYU? Journal`,
       description: cleanExcerpt,

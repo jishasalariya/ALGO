@@ -6,16 +6,28 @@ import type { Metadata } from "next";
 export const revalidate = 15;
 
 export const metadata: Metadata = {
-  title: "Shop Oversized T-Shirts India | 240 GSM Streetwear — KYU?",
-  description: "Buy oversized t-shirts online — 240 GSM heavyweight cotton, boxy drop-shoulder fit. Karikala Chola, Spill the Tea, Vintage Torque Tee. Oversized streetwear, India.",
+  title: "Shop Streetwear — T-Shirts, Outerwear & Bottoms | KYU?",
+  description: "Shop premium oversized streetwear. Season One features heavyweight 240 GSM cotton drop-shoulder t-shirts. Buy boxy fit tees online in India.",
   keywords: ["Oversized t-shirt India", "Buy oversized t-shirt online", "oversized streetwear tee"],
+  alternates: {
+    canonical: "/shop",
+  },
   openGraph: {
     title: "Shop KYU? Season One",
     description: "Minimal designs engineered for maximum impact. Browse the full Season One collection of premium oversized streetwear.",
+    images: [
+      {
+        url: "https://res.cloudinary.com/du3nga7zg/image/upload/v1777835099/final_black_front_mdjizc.jpg",
+        width: 1200,
+        height: 630,
+        alt: "KYU? Streetwear Shop Collection",
+      }
+    ]
   },
   twitter: {
     title: "Shop KYU? Season One",
     description: "Minimal designs engineered for maximum impact. Browse the full Season One collection of premium oversized streetwear.",
+    images: ["https://res.cloudinary.com/du3nga7zg/image/upload/v1777835099/final_black_front_mdjizc.jpg"]
   }
 };
 

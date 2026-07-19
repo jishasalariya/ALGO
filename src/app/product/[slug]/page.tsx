@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${product.product_name} — Kyu Oversized T-Shirt, 240 GSM Cotton`,
     description: metaDescription,
     keywords: productKeywords,
+    alternates: {
+      canonical: `/product/${slug}`,
+    },
     openGraph: {
       title: `${product.product_name} | KYU?`,
       description: `240 GSM oversized tee. Minimal front, bold back. ₹${product.price}. Shop the KYU? Season One drop.`,
@@ -76,5 +79,60 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  return <ProductClient product={product} />;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyu-wear.vercel.app';
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.product_name,
+    "image": product.images?.[0] || "",
+    "description": product.description || `Premium 240 GSM heavyweight cotton ${product.product_name} drop-shoulder oversized fit from KYU? Season One.`,
+    "offers": {
+      "@type": "Offer",
+      "url": `${siteUrl}/product/${product.slug}`,
+      "priceCurrency": "INR",
+      "price": product.price,
+      "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "priceValidUntil": "2027-12-31"
+    }
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Shop",
+        "item": `${siteUrl}/shop`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.product_name,
+        "item": `${siteUrl}/product/${product.slug}`
+      }
+    ]
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <ProductClient product={product} />
+    </>
+  );
 }

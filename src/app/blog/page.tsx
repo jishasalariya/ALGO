@@ -18,6 +18,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Journal | KYU? Streetwear",
   description: "Style guides, drop stories, and the thinking behind KYU?. Read the Journal for everything streetwear, fabric, fit, and the culture we're building.",
+  alternates: {
+    canonical: "/blog",
+  },
   openGraph: {
     title: "KYU? Journal",
     description: "Stories, style guides, and behind-the-scenes from KYU? Streetwear.",

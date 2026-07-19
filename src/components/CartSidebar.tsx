@@ -59,7 +59,7 @@ export default function CartSidebar() {
                 items.map((item) => (
                   <div key={item.id} className="flex gap-4">
                     <div className="w-24 h-32 bg-[#111] border border-white/10 flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale-0 md:grayscale" />
+                      <img src={item.image} alt={`KYU? ${item.name} — Black T-Shirt`} className="w-full h-full object-cover grayscale-0 md:grayscale" />
                     </div>
                     <div className="flex-1 flex flex-col justify-between py-1">
                       <div>

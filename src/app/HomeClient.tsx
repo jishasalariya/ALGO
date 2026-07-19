@@ -21,7 +21,7 @@ function FashionCard({ product, isLarge = false }: { product: any, isLarge?: boo
       <div className={`relative overflow-hidden bg-[#111] ${isLarge ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full mb-4 md:mb-6`}>
         <motion.img 
           src={product.images?.[0] || "/images/gallery/1.png"}
-          alt={product.product_name}
+          alt={`KYU? ${product.product_name} — Black T-Shirt`}
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full object-cover grayscale-0 opacity-100 md:grayscale md:opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"

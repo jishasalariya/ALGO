@@ -85,7 +85,7 @@ export default function ProductClient({ product }: { product: any }) {
                   onClick={() => setMainImage(img)}
                   className={`relative aspect-[3/4] bg-[#111] overflow-hidden border-2 transition-colors ${mainImage === img ? 'border-white' : 'border-transparent'}`}
                 >
-                  <img src={img} alt="Thumbnail" className="w-full h-full object-cover transition-all" />
+                  <img src={img} alt={`KYU? ${product.product_name} — Black T-Shirt Thumbnail ${idx + 1}`} className="w-full h-full object-cover transition-all" />
                 </button>
               ))}
             </div>
@@ -113,7 +113,7 @@ export default function ProductClient({ product }: { product: any }) {
               >
                 <img 
                   src={mainImage} 
-                  alt={product.product_name} 
+                  alt={`KYU? ${product.product_name} — Black T-Shirt`} 
                   style={{ transformOrigin: 'var(--x, 50%) var(--y, 50%)' }}
                   className={`w-full h-full object-cover transition-all duration-300 ease-out group-hover:scale-[2] pointer-events-none ${isZoomedMobile ? 'scale-[2]' : 'scale-100'}`} 
                 />
@@ -127,7 +127,7 @@ export default function ProductClient({ product }: { product: any }) {
                     onClick={() => setMainImage(img)}
                     className={`relative w-20 flex-shrink-0 aspect-[3/4] bg-[#111] overflow-hidden border-2 transition-colors ${mainImage === img ? 'border-white' : 'border-transparent'}`}
                   >
-                    <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                    <img src={img} alt={`KYU? ${product.product_name} — Black T-Shirt Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

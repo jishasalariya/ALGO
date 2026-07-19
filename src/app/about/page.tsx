@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Our Story | KYU? Streetwear",
   description: "KYU? isn't just a name — it's a question. Discover the story behind India's newest streetwear brand, built on curiosity, bold identity, and premium craft.",
   keywords: ["Kyu clothing", "Streetwear brand India", "premium streetwear essentials"],
+  alternates: {
+    canonical: "/about",
+  },
   openGraph: {
     title: "Why We Created KYU?",
     description: "The story behind the question mark. Learn what KYU? stands for and why every piece we make asks something of you.",
