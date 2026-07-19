@@ -254,12 +254,23 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow public select on users" ON public.users;
 DROP POLICY IF EXISTS "Allow user update on self" ON public.users;
+DROP POLICY IF EXISTS "Allow users to view own profile" ON public.users;
+DROP POLICY IF EXISTS "Allow admin view all profiles" ON public.users;
+DROP POLICY IF EXISTS "Allow admin update all profiles" ON public.users;
 
-CREATE POLICY "Allow public select on users" ON public.users 
-  FOR SELECT USING (true);
+-- Users can only read their own profile row, admins can read all
+CREATE POLICY "Allow users to view own profile" ON public.users 
+  FOR SELECT USING (auth.uid() = id);
 
+CREATE POLICY "Allow admin view all profiles" ON public.users
+  FOR SELECT TO authenticated USING (public.is_admin());
+
+-- Users can update their own profile details, admins can update all
 CREATE POLICY "Allow user update on self" ON public.users 
   FOR UPDATE USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Allow admin update all profiles" ON public.users
+  FOR UPDATE TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 
 -- ----------------------------------------------------
@@ -268,11 +279,6 @@ CREATE POLICY "Allow user update on self" ON public.users
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Public can view published products" ON public.products;
-DROP POLICY IF EXISTS "Allow public read access to published products" ON public.products;
-DROP POLICY IF EXISTS "Allow authenticated users read access to all products" ON public.products;
-DROP POLICY IF EXISTS "Allow authenticated users to insert products" ON public.products;
-DROP POLICY IF EXISTS "Allow authenticated users to update products" ON public.products;
-DROP POLICY IF EXISTS "Allow authenticated users to delete products" ON public.products;
 DROP POLICY IF EXISTS "Allow admin full access on products" ON public.products;
 
 CREATE POLICY "Public can view published products" ON public.products
@@ -288,10 +294,6 @@ CREATE POLICY "Allow admin full access on products" ON public.products
 ALTER TABLE public.blogs ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow public read access to published posts" ON public.blogs;
-DROP POLICY IF EXISTS "Allow authenticated users full read access" ON public.blogs;
-DROP POLICY IF EXISTS "Allow authenticated users to insert posts" ON public.blogs;
-DROP POLICY IF EXISTS "Allow authenticated users to update posts" ON public.blogs;
-DROP POLICY IF EXISTS "Allow authenticated users to delete posts" ON public.blogs;
 DROP POLICY IF EXISTS "Allow admin full access on blogs" ON public.blogs;
 
 CREATE POLICY "Allow public read access to published posts" ON public.blogs
@@ -326,8 +328,7 @@ CREATE POLICY "Users can manage their own addresses" ON public.addresses
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can view their own orders" ON public.orders;
 DROP POLICY IF EXISTS "Users can create their own orders" ON public.orders;
-DROP POLICY IF EXISTS "Admins can view all orders" ON public.orders;
-DROP POLICY IF EXISTS "Admins can update all orders" ON public.orders;
+DROP POLICY IF EXISTS "Admins can manage all orders" ON public.orders;
 
 CREATE POLICY "Users can view their own orders" ON public.orders 
   FOR SELECT USING (auth.uid() = user_id);
@@ -340,7 +341,76 @@ CREATE POLICY "Admins can manage all orders" ON public.orders
 
 
 -- ----------------------------------------------------
--- F. LEADS TABLE SECURITY (Form submission)
+-- F. ORDER_ITEMS SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own order items" ON public.order_items;
+DROP POLICY IF EXISTS "Users can insert own order items" ON public.order_items;
+DROP POLICY IF EXISTS "Admins can manage all order items" ON public.order_items;
+
+-- Users can view details of items in their own orders
+CREATE POLICY "Users can view own order items" ON public.order_items
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.orders 
+      WHERE public.orders.id = public.order_items.order_id 
+      AND public.orders.user_id = auth.uid()
+    )
+  );
+
+-- Users can insert items linked to their own orders during checkout
+CREATE POLICY "Users can insert own order items" ON public.order_items
+  FOR INSERT WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.orders 
+      WHERE public.orders.id = public.order_items.order_id 
+      AND public.orders.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Admins can manage all order items" ON public.order_items
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- G. PAYMENTS SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view own payments" ON public.payments;
+DROP POLICY IF EXISTS "Admins can manage all payments" ON public.payments;
+
+-- Users can view payment details linked to their own orders
+CREATE POLICY "Users can view own payments" ON public.payments
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM public.orders 
+      WHERE public.orders.id = public.payments.order_id 
+      AND public.orders.user_id = auth.uid()
+    )
+  );
+
+CREATE POLICY "Admins can manage all payments" ON public.payments
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- H. OTP VERIFICATION SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.otp_verifications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public insert on otp" ON public.otp_verifications;
+DROP POLICY IF EXISTS "Allow admin manage on otp" ON public.otp_verifications;
+
+-- Anyone can insert an OTP request during login/signup flows
+CREATE POLICY "Allow public insert on otp" ON public.otp_verifications 
+  FOR INSERT WITH CHECK (true);
+
+-- Admins/backend processes have full control
+CREATE POLICY "Allow admin manage on otp" ON public.otp_verifications
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- I. LEADS SECURITY (Newsletter Form Submission)
 -- ----------------------------------------------------
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow public insert on leads" ON public.leads;
@@ -354,7 +424,7 @@ CREATE POLICY "Allow admin manage on leads" ON public.leads
 
 
 -- ----------------------------------------------------
--- G. COUPONS SECURITY
+-- J. COUPONS SECURITY
 -- ----------------------------------------------------
 ALTER TABLE public.coupons ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow public select on coupons" ON public.coupons;
@@ -368,7 +438,7 @@ CREATE POLICY "Allow admin manage on coupons" ON public.coupons
 
 
 -- ----------------------------------------------------
--- H. REFERRALS & USER COUPONS SECURITY
+-- K. REFERRALS & USER COUPONS SECURITY
 -- ----------------------------------------------------
 ALTER TABLE public.referral_codes ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow users manage own codes" ON public.referral_codes;
@@ -393,4 +463,18 @@ CREATE POLICY "Allow users select own assigned coupons" ON public.user_coupons
   FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Allow admin manage user coupons" ON public.user_coupons
+  FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+
+-- ----------------------------------------------------
+-- L. COUPON USAGE HISTORY SECURITY
+-- ----------------------------------------------------
+ALTER TABLE public.coupon_usage_history ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow users select own coupon history" ON public.coupon_usage_history;
+DROP POLICY IF EXISTS "Allow admin manage coupon history" ON public.coupon_usage_history;
+
+CREATE POLICY "Allow users select own coupon history" ON public.coupon_usage_history
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Allow admin manage coupon history" ON public.coupon_usage_history
   FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
