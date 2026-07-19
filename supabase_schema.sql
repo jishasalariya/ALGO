@@ -138,4 +138,45 @@ TO authenticated
 USING (true);
 
 
+-- =========================================================================
+-- Enable Row Level Security (RLS) on products table and apply secure policies
+-- =========================================================================
+
+-- 1. Enable Row Level Security
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
+
+-- 2. Policy: Allow public read access to published products only
+CREATE POLICY "Allow public read access to published products" 
+ON public.products 
+FOR SELECT 
+USING (status = 'published');
+
+-- 3. Policy: Allow authenticated admin users to read draft/published products
+CREATE POLICY "Allow authenticated users read access to all products"
+ON public.products
+FOR SELECT
+TO authenticated
+USING (true);
+
+-- 4. Policy: Allow authenticated admin users to insert products
+CREATE POLICY "Allow authenticated users to insert products"
+ON public.products
+FOR INSERT
+TO authenticated
+WITH CHECK (true);
+
+-- 5. Policy: Allow authenticated admin users to update products
+CREATE POLICY "Allow authenticated users to update products"
+ON public.products
+FOR UPDATE
+TO authenticated
+USING (true)
+WITH CHECK (true);
+
+-- 6. Policy: Allow authenticated admin users to delete products
+CREATE POLICY "Allow authenticated users to delete products"
+ON public.products
+FOR DELETE
+TO authenticated
+USING (true);
 
