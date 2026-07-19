@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "KYU?",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop",
+        url: "https://res.cloudinary.com/du3nga7zg/image/upload/v1784404414/file_000000005f1071f4b5e86afe95af0140_e8hpiq.png",
         width: 1200,
         height: 630,
         alt: "KYU? Streetwear",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "KYU? — Wear Your Curiosity",
     description: "Premium oversized streetwear from India. Season One is live — heavyweight 240 GSM tees built for the bold and the curious.",
-    images: ["https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop"],
+    images: ["https://res.cloudinary.com/du3nga7zg/image/upload/v1784404414/file_000000005f1071f4b5e86afe95af0140_e8hpiq.png"],
   },
 };
 

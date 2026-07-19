@@ -42,7 +42,7 @@ export default function Home() {
     "url": siteUrl,
     "logo": `${siteUrl}/images/logo.png`,
     "sameAs": [
-      "https://instagram.com/kyu_wear"
+      "https://instagram.com/algo.inn?igsh=MW5wa3dkYTRrOXJyZw=="
     ]
   };
 
