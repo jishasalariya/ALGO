@@ -77,9 +77,9 @@ export default function HomeClient() {
 
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0.9, scale: 0.98, y: 5 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className={`${syne.className} text-[20vw] md:text-[16vw] font-extrabold leading-none uppercase mix-blend-difference flex select-none pointer-events-auto gap-2 md:gap-4`}
           >
             {["K", "Y", "U", "?"].map((letter, idx) => (
