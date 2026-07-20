@@ -125,10 +125,29 @@ export default function HomeClient() {
               <div className="w-full md:w-2/5">
                 {products[0] && <FashionCard product={products[0]} isLarge={true} />}
               </div>
-
               <div className="w-full md:w-1/3 flex flex-row md:flex-col gap-4 md:gap-16">
                 {products[1] && <FashionCard product={products[1]} />}
                 {products[2] && <FashionCard product={products[2]} />}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Brand Story + Season One Description */}
+        <section className="w-full px-6 md:px-8 py-24 md:py-32 bg-[#080808] border-t border-white/5 overflow-hidden">
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight uppercase mb-6 text-white">Why We Exist</h2>
+                <p className="text-gray-300 text-sm md:text-base font-light leading-relaxed">
+                  KYU? isn&apos;t a name — it&apos;s a question. Every piece we make starts with asking why: why oversized, why 240 GSM, why now. We&apos;re not here to blend in. We&apos;re here to make you ask the same question everyone asks us — Kyu?
+                </p>
+              </div>
+              <div className="flex flex-col justify-end">
+                <h3 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-6 font-semibold">Season One</h3>
+                <p className="text-gray-400 text-sm md:text-base font-light leading-relaxed">
+                  Season One marks the beginning. Three pieces, one philosophy: heavyweight 240 GSM cotton, drop-shoulder oversized fits, and designs that carry a story on the back. Minimal up front. Bold where it counts.
+                </p>
               </div>
             </div>
           </div>

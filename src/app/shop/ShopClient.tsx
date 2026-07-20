@@ -42,9 +42,9 @@ export default function ShopClient({ initialProducts }: { initialProducts: Produ
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
         <header className="mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-7xl font-bold tracking-tighter uppercase mb-4">Collection</h1>
-          <p className="text-gray-400 max-w-lg text-sm md:text-base">
-            Explore our latest drops of premium streetwear. Minimal designs and oversized fits engineered for maximum impact.
+          <h1 className="text-4xl md:text-7xl font-bold tracking-tighter uppercase mb-4">Shop Collection</h1>
+          <p className="text-gray-400 max-w-2xl text-sm md:text-base leading-relaxed">
+            Premium oversized streetwear, engineered for impact. Every KYU? piece is built on 240 GSM heavyweight cotton with a drop-shoulder fit — designed minimal up front, bold on the back. Browse Season One below.
           </p>
         </header>
 

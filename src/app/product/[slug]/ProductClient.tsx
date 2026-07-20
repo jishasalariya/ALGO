@@ -149,7 +149,8 @@ export default function ProductClient({ product }: { product: any }) {
               <div className="space-y-8">
                 {/* Description */}
                 <div>
-                  <p className="text-gray-400 leading-relaxed text-sm md:text-base">
+                  <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 font-semibold">Description</h2>
+                  <p className="text-gray-300 leading-relaxed text-sm md:text-base">
                     {product.description || "Minimal streetwear engineered for maximum impact."}
                   </p>
                 </div>
@@ -212,6 +213,7 @@ export default function ProductClient({ product }: { product: any }) {
 
                 {/* Bullet Points */}
                 <div className="pt-8 border-t border-white/10">
+                  <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4 font-semibold">Fabric & Fit</h2>
                   <ul className="space-y-2 text-sm text-gray-400">
                     {(product.details || ["Premium Terry Cotton Fabric", "240 GSM Heavyweight Quality", "Oversized Relaxed Fit", "Soft & Breathable Material"]).map((detail: string, idx: number) => (
                       <li key={idx} className="flex items-center gap-2">

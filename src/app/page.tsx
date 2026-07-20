@@ -71,7 +71,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
-      <h1 className="sr-only">KYU? Streetwear — Premium Heavyweight Oversized T-Shirts in India</h1>
+      <h1 className="sr-only">KYU? — Wear Your Curiosity</h1>
       <HomeClient />
     </>
   );
