@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useCart } from "@/components/CartProvider";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import { useSearchParams } from "next/navigation";
 
 type Product = {
   id: string;
@@ -16,7 +17,18 @@ type Product = {
 };
 
 export default function ShopClient({ initialProducts }: { initialProducts: Product[] }) {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
   const [activeCategory, setActiveCategory] = useState<string>("All");
+
+  useEffect(() => {
+    if (categoryParam) {
+      setActiveCategory(categoryParam);
+    } else {
+      setActiveCategory("All");
+    }
+  }, [categoryParam]);
+
   const { setIsCartOpen, items } = useCart();
   const cartItemsCount = items.reduce((acc, item) => acc + item.quantity, 0);
 

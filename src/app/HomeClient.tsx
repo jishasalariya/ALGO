@@ -75,7 +75,7 @@ export default function HomeClient() {
         </nav>
 
 
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none gap-8 md:gap-12">
           <motion.div
             initial={{ opacity: 0.9, scale: 0.98, y: 5 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -96,6 +96,20 @@ export default function HomeClient() {
                 {letter}
               </motion.span>
             ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-auto"
+          >
+            <Link 
+              href="/shop" 
+              className="px-6 md:px-8 py-3.5 border border-white/20 hover:border-white bg-black/40 hover:bg-white text-white hover:text-black transition-all duration-300 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] backdrop-blur-md"
+            >
+              Shop The Drop
+            </Link>
           </motion.div>
         </div>
 

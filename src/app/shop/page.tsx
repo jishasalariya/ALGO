@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 };
 
+import { Suspense } from "react";
+
 export default async function ShopPage() {
   // Fetch strictly published products from the Supabase database
   const { data: products } = await supabase
@@ -38,5 +40,9 @@ export default async function ShopPage() {
     .select("*")
     .eq("status", "published");
 
-  return <ShopClient initialProducts={products || []} />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black text-white flex items-center justify-center font-mono text-xs uppercase tracking-widest">Loading Collection...</div>}>
+      <ShopClient initialProducts={products || []} />
+    </Suspense>
+  );
 }

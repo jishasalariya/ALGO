@@ -129,6 +129,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ]
   };
 
+  // Fetch up to 4 other published products for "You May Also Like"
+  const { data: relatedProducts } = await supabase
+    .from("products")
+    .select("*")
+    .eq("status", "published")
+    .not("id", "eq", product.id)
+    .limit(4);
+
   return (
     <>
       <script
@@ -139,7 +147,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <ProductClient product={product} />
+      <ProductClient product={product} relatedProducts={relatedProducts || []} />
     </>
   );
 }

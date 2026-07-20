@@ -7,7 +7,7 @@ import { ArrowLeft, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 
-export default function ProductClient({ product }: { product: any }) {
+export default function ProductClient({ product, relatedProducts = [] }: { product: any, relatedProducts?: any[] }) {
   const { addItem, setIsCartOpen, items } = useCart();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -156,6 +156,11 @@ export default function ProductClient({ product }: { product: any }) {
                   </p>
                 </div>
 
+                {/* Category Link */}
+                <div className="text-xs uppercase tracking-widest text-gray-400 font-mono">
+                  Category: <Link href={`/shop?category=${encodeURIComponent(product.category || "T-Shirts")}`} className="text-white hover:text-gray-300 transition-colors underline decoration-white/20 underline-offset-4 font-semibold">{product.category || "T-Shirts"}</Link>
+                </div>
+
                 {/* Size Selector */}
                 <div>
                   <div className="flex justify-between items-center mb-4">
@@ -261,6 +266,32 @@ export default function ProductClient({ product }: { product: any }) {
             </motion.div>
           </div>
         </div>
+
+        {/* Related Products Section */}
+        {relatedProducts && relatedProducts.length > 0 && (
+          <div className="mt-24 pt-16 border-t border-white/10">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight uppercase mb-10 text-white">You May Also Like</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {relatedProducts.map((p) => (
+                <Link key={p.id} href={`/product/${p.slug}`} className="group flex flex-col cursor-pointer w-full">
+                  <div className="relative aspect-[3/4] bg-[#111] overflow-hidden mb-4">
+                    <img 
+                      src={getOptimizedImageUrl(p.images?.[0] || "/images/gallery/1.png", 600)}
+                      alt={`KYU? ${p.product_name}`}
+                      width={600}
+                      height={800}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-sm font-semibold tracking-wide uppercase text-white group-hover:text-gray-300 transition-colors">{p.product_name}</h3>
+                    <span className="text-xs font-semibold tracking-widest text-gray-400">₹{p.price}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
