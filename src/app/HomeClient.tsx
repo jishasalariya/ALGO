@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { MoveRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Syne } from "next/font/google";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
 
 const syne = Syne({
   weight: ["800"],
@@ -20,7 +21,7 @@ function FashionCard({ product, isLarge = false }: { product: any, isLarge?: boo
     <Link href={`/product/${product.slug}`} className="group flex flex-col cursor-pointer w-full flex-1">
       <div className={`relative overflow-hidden bg-[#111] ${isLarge ? 'aspect-[3/4]' : 'aspect-[4/5]'} w-full mb-4 md:mb-6`}>
         <motion.img 
-          src={product.images?.[0] || "/images/gallery/1.png"}
+          src={getOptimizedImageUrl(product.images?.[0] || "/images/gallery/1.png", 600)}
           alt={`KYU? ${product.product_name} — Black T-Shirt`}
           width={600}
           height={750}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useCart } from "@/components/CartProvider";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
 
 type Product = {
   id: string;
@@ -74,7 +75,7 @@ export default function ShopClient({ initialProducts }: { initialProducts: Produ
                   <div className="relative aspect-[3/4] bg-[#111] overflow-hidden mb-6">
                     {product.images && product.images[0] ? (
                       <img 
-                        src={product.images[0]} 
+                        src={getOptimizedImageUrl(product.images[0], 600)} 
                         alt={`KYU? ${product.product_name} — Black T-Shirt`}
                         width={600}
                         height={800}

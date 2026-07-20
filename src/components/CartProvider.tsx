@@ -2,6 +2,10 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import dynamic from "next/dynamic";
+
+const CartSidebar = dynamic(() => import("./CartSidebar"), { ssr: false });
+const LeadCapturePopup = dynamic(() => import("./LeadCapturePopup"), { ssr: false });
 
 export type CartItem = {
   id: string; // unique string for the cart item (usually product.id + size)
@@ -190,6 +194,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
+      <CartSidebar />
+      <LeadCapturePopup />
     </CartContext.Provider>
   );
 }

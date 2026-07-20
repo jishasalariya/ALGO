@@ -7,6 +7,7 @@ import { ArrowLeft, Lock, ArrowRight, Tag } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
 
 export default function CheckoutPage() {
   const { items, totalAmount, shippingCharge, clearCart } = useCart();
@@ -497,7 +498,7 @@ export default function CheckoutPage() {
                   items.map((item) => (
                     <div key={item.id} className="flex gap-4">
                       <div className="w-16 h-20 bg-[#111] border border-white/10 flex-shrink-0 relative">
-                        <img src={item.image} alt={`KYU? ${item.name} — Black T-Shirt`} className="w-full h-full object-cover grayscale-0 md:grayscale" />
+                        <img src={getOptimizedImageUrl(item.image, 160)} alt={`KYU? ${item.name} — Black T-Shirt`} className="w-full h-full object-cover grayscale-0 md:grayscale" />
                         <span className="absolute -top-2 -right-2 w-5 h-5 bg-white text-black text-xs font-bold rounded-full flex items-center justify-center">
                           {item.quantity}
                         </span>

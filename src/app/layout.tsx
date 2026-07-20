@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
-import CartSidebar from "@/components/CartSidebar";
-import LeadCapturePopup from "@/components/LeadCapturePopup";
 
 import Script from "next/script";
 
@@ -37,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "KYU?",
     images: [
       {
-        url: "https://res.cloudinary.com/du3nga7zg/image/upload/v1784404414/file_000000005f1071f4b5e86afe95af0140_e8hpiq.png",
+        url: "https://res.cloudinary.com/du3nga7zg/image/upload/q_auto,f_auto,w_800/v1784404414/file_000000005f1071f4b5e86afe95af0140_e8hpiq.png",
         width: 1200,
         height: 630,
         alt: "KYU? Streetwear",
@@ -50,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "KYU? — Wear Your Curiosity",
     description: "Premium oversized streetwear from India. Season One is live — heavyweight 240 GSM tees built for the bold and the curious.",
-    images: ["https://res.cloudinary.com/du3nga7zg/image/upload/v1784404414/file_000000005f1071f4b5e86afe95af0140_e8hpiq.png"],
+    images: ["https://res.cloudinary.com/du3nga7zg/image/upload/q_auto,f_auto,w_800/v1784404414/file_000000005f1071f4b5e86afe95af0140_e8hpiq.png"],
   },
 };
 
@@ -76,8 +74,8 @@ export default function RootLayout({
         </noscript>
 
         {/* Google Analytics */}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-W568QW21ED" strategy="afterInteractive" />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-W568QW21ED" strategy="lazyOnload" />
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -88,7 +86,7 @@ export default function RootLayout({
         </Script>
 
         {/* Google Tag Manager */}
-        <Script id="google-tag-manager" strategy="afterInteractive">
+        <Script id="google-tag-manager" strategy="lazyOnload">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -100,8 +98,6 @@ export default function RootLayout({
 
         <CartProvider>
           {children}
-          <CartSidebar />
-          <LeadCapturePopup />
         </CartProvider>
       </body>
     </html>

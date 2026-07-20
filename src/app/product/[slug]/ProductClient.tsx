@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
 
 export default function ProductClient({ product }: { product: any }) {
   const { addItem, setIsCartOpen, items } = useCart();
@@ -85,7 +86,7 @@ export default function ProductClient({ product }: { product: any }) {
                   onClick={() => setMainImage(img)}
                   className={`relative aspect-[3/4] bg-[#111] overflow-hidden border-2 transition-colors ${mainImage === img ? 'border-white' : 'border-transparent'}`}
                 >
-                  <img src={img} alt={`KYU? ${product.product_name} — Black T-Shirt Thumbnail ${idx + 1}`} width={80} height={107} className="w-full h-full object-cover transition-all" />
+                  <img src={getOptimizedImageUrl(img, 160)} alt={`KYU? ${product.product_name} — Black T-Shirt Thumbnail ${idx + 1}`} width={80} height={107} className="w-full h-full object-cover transition-all" />
                 </button>
               ))}
             </div>
@@ -112,7 +113,7 @@ export default function ProductClient({ product }: { product: any }) {
                 }}
               >
                 <img 
-                  src={mainImage} 
+                  src={getOptimizedImageUrl(mainImage, 800)} 
                   alt={`KYU? ${product.product_name} — Black T-Shirt`} 
                   width={600}
                   height={800}
@@ -129,7 +130,7 @@ export default function ProductClient({ product }: { product: any }) {
                     onClick={() => setMainImage(img)}
                     className={`relative w-20 flex-shrink-0 aspect-[3/4] bg-[#111] overflow-hidden border-2 transition-colors ${mainImage === img ? 'border-white' : 'border-transparent'}`}
                   >
-                    <img src={img} alt={`KYU? ${product.product_name} — Black T-Shirt Thumbnail ${idx + 1}`} width={80} height={107} className="w-full h-full object-cover" />
+                    <img src={getOptimizedImageUrl(img, 160)} alt={`KYU? ${product.product_name} — Black T-Shirt Thumbnail ${idx + 1}`} width={80} height={107} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
