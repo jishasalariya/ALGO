@@ -87,13 +87,20 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     "name": product.product_name,
     "image": product.images?.[0] || "",
     "description": product.description || `Premium 240 GSM heavyweight cotton ${product.product_name} drop-shoulder oversized fit from KYU? Season One.`,
+    "sku": product.id,
+    "mpn": product.id,
+    "brand": {
+      "@type": "Brand",
+      "name": "KYU?"
+    },
     "offers": {
       "@type": "Offer",
       "url": `${siteUrl}/product/${product.slug}`,
       "priceCurrency": "INR",
-      "price": product.price,
+      "price": String(product.price),
       "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      "priceValidUntil": "2027-12-31"
+      "priceValidUntil": "2027-12-31",
+      "itemCondition": "https://schema.org/NewCondition"
     }
   };
 
