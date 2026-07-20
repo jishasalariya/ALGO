@@ -236,7 +236,7 @@ export default function ProductClient({ product }: { product: any }) {
                     </a>
                     <span className="text-white/10">|</span>
                     <a 
-                      href={`https://twitter.com/intent/tweet?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20from%20@kyu_wear:%20${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      href={`https://twitter.com/intent/tweet?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20from%20@KyuWear:%20${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
                       target="_blank" 
                       rel="noreferrer" 
                       className="text-gray-400 hover:text-white transition-colors"

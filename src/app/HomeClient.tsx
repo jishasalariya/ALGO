@@ -161,7 +161,7 @@ export default function HomeClient() {
               <div className="flex flex-col gap-4 md:gap-6">
                 <a href="https://instagram.com/algo.inn?igsh=MW5wa3dkYTRrOXJyZw==" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Instagram</a>
                 <a href="https://www.facebook.com/profile.php?id=61591930839027" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Facebook</a>
-                <a href="https://x.com/kyu_wear" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Twitter</a>
+                <a href="https://x.com/KyuWear" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Twitter</a>
               </div>
             </div>
           </div>
