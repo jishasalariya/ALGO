@@ -125,7 +125,7 @@ export default function ContactPage() {
                 <Mail className="w-4 h-4" /> Email
               </h3>
               <p className="text-lg">
-                <a href="mailto:algowear.co@gmail.com" className="hover:text-gray-300 transition-colors">algowear.co@gmail.com</a>
+                <a href="mailto:kyuwear.in@gmail.com" className="hover:text-gray-300 transition-colors">kyuwear.in@gmail.com</a>
               </p>
             </div>
 

@@ -54,7 +54,7 @@ export default function AccountPage() {
         setUserRole(userData.role);
       } else {
         // Fallback: Check if their email is exactly the store owner's email
-        if (session.user.email === 'algowear.co@gmail.com') {
+        if (session.user.email === 'kyuwear.in@gmail.com') {
           setUserRole('admin');
         }
       }

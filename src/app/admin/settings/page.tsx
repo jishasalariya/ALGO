@@ -11,7 +11,7 @@ export default function AdminSettings() {
         
         <div>
           <label className="block text-xs uppercase tracking-widest text-gray-400 mb-3">Admin Email Contact</label>
-          <input type="email" defaultValue="algowear.co@gmail.com" className="w-full bg-black border border-white/20 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" />
+          <input type="email" defaultValue="kyuwear.in@gmail.com" className="w-full bg-black border border-white/20 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-colors" />
         </div>
 
         <div>

@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         window.location.href = "/login";
       } else {
         // TEMPORARILY DISABLED STRICT EMAIL CHECK FOR DEVELOPMENT:
-        // if (session.user.email !== "algowear.co@gmail.com") window.location.href = "/";
+        // if (session.user.email !== "kyuwear.in@gmail.com") window.location.href = "/";
         setIsLoading(false);
       }
     };
