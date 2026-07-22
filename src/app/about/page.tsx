@@ -114,6 +114,16 @@ export default function AboutPage() {
             <p>
               When someone wears KYU?, they aren&apos;t just wearing a logo. They are wearing a badge of inquiry. It signals to the world that curiosity is alive and that there is courage in looking beneath the surface. Our logo was crafted to reflect this philosophy—a symbol that holds its own on a plain, premium essential just as well as it does on a piece of high-impact wearable art.
             </p>
+            <div className="flex justify-center py-6">
+              <div className="relative bg-white p-8 rounded-none shadow-2xl max-w-[240px] aspect-square flex flex-col items-center justify-center group overflow-hidden border border-zinc-200">
+                <img 
+                  src="/images/logo.jpg" 
+                  alt="KYU? Logo Badge" 
+                  className="w-32 h-32 object-contain transition-transform duration-700 group-hover:scale-105"
+                />
+                <span className="mt-4 text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-500">Logo Mark</span>
+              </div>
+            </div>
             <p>
               We exist to provide the canvas for each journey. Whether leading a conversation or observing the world with a fresh perspective, KYU? invites everyone to wear their curiosity on their sleeve.
             </p>
