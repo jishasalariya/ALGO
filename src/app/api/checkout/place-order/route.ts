@@ -229,102 +229,78 @@ export async function POST(request: Request) {
               .maybeSingle();
 
             if (!existingRec) {
-              await supabaseAdmin
-                .from("referral_records")
+              // Generate unique reward coupon code for the referrer
+              let uniqueRewardCode = "";
+              let isUnique = false;
+              let retries = 5;
+
+              while (!isUnique && retries > 0) {
+                const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+                uniqueRewardCode = `REF-${randStr}`;
+
+                const { data: existingCoupon } = await supabaseAdmin
+                  .from("coupons")
+                  .select("id")
+                  .eq("code", uniqueRewardCode)
+                  .maybeSingle();
+
+                if (!existingCoupon) {
+                  isUnique = true;
+                }
+                retries--;
+              }
+
+              if (!isUnique) {
+                uniqueRewardCode = `REF-${Date.now().toString().slice(-6)}`;
+              }
+
+              const now = new Date();
+              const expiryDate = new Date();
+              expiryDate.setDate(now.getDate() + 30); 
+
+              const { data: newCoupon, error: couponInsertError } = await supabaseAdmin
+                .from("coupons")
                 .insert({
-                  referrer_id: referrerId,
-                  referred_id: userId,
-                  status: "pending",
-                  reward_status: "pending"
-                });
-            }
-          }
-        }
-      }
-
-      // Check if this user was referred by someone and the status is pending
-      const { data: referralRecord } = await supabaseAdmin
-        .from("referral_records")
-        .select("*")
-        .eq("referred_id", userId)
-        .eq("status", "pending")
-        .maybeSingle();
-
-      if (referralRecord) {
-        const { count: prevOrdersCount } = await supabaseAdmin
-          .from("orders")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", userId)
-          .neq("id", orderData.id);
-
-        if (prevOrdersCount === 0) {
-          let uniqueRewardCode = "";
-          let isUnique = false;
-          let retries = 5;
-
-          while (!isUnique && retries > 0) {
-            const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-            uniqueRewardCode = `REF-${randStr}`;
-
-            const { data: existingCoupon } = await supabaseAdmin
-              .from("coupons")
-              .select("id")
-              .eq("code", uniqueRewardCode)
-              .maybeSingle();
-
-            if (!existingCoupon) {
-              isUnique = true;
-            }
-            retries--;
-          }
-
-          if (!isUnique) {
-            uniqueRewardCode = `REF-${Date.now().toString().slice(-6)}`;
-          }
-
-          const now = new Date();
-          const expiryDate = new Date();
-          expiryDate.setDate(now.getDate() + 30); 
-
-          const { data: newCoupon, error: couponInsertError } = await supabaseAdmin
-            .from("coupons")
-            .insert({
-              code: uniqueRewardCode,
-              name: `Referral Reward`,
-              discount_type: "percentage",
-              discount_value: 20.00,
-              min_order_value: 0.00,
-              start_date: now.toISOString(),
-              expiry_date: expiryDate.toISOString(),
-              max_uses: 1,
-              max_uses_per_customer: 1,
-              is_active: true,
-              description: `20% OFF Referral Reward Coupon.`
-            })
-            .select()
-            .single();
-
-          if (couponInsertError) {
-            console.error("Failed to create reward coupon:", couponInsertError.message);
-          } else if (newCoupon) {
-            const { error: assignError } = await supabaseAdmin
-              .from("user_coupons")
-              .insert({
-                user_id: referralRecord.referrer_id,
-                coupon_id: newCoupon.id,
-                status: "active"
-              });
-
-            if (assignError) {
-              console.error("Failed to assign reward coupon to referrer:", assignError.message);
-            } else {
-              await supabaseAdmin
-                .from("referral_records")
-                .update({
-                  status: "successful",
-                  reward_status: "rewarded"
+                  code: uniqueRewardCode,
+                  name: `Referral Reward`,
+                  discount_type: "percentage",
+                  discount_value: 20.00,
+                  min_order_value: 0.00,
+                  start_date: now.toISOString(),
+                  expiry_date: expiryDate.toISOString(),
+                  max_uses: 1,
+                  max_uses_per_customer: 1,
+                  is_active: true,
+                  description: `20% OFF Referral Reward Coupon.`
                 })
-                .eq("id", referralRecord.id);
+                .select()
+                .single();
+
+              if (couponInsertError) {
+                console.error("Failed to create reward coupon:", couponInsertError.message);
+              } else if (newCoupon) {
+                const { error: assignError } = await supabaseAdmin
+                  .from("user_coupons")
+                  .insert({
+                    user_id: referrerId,
+                    coupon_id: newCoupon.id,
+                    status: "active"
+                  });
+
+                if (assignError) {
+                  console.error("Failed to assign reward coupon to referrer:", assignError.message);
+                } else {
+                  // Create successful and rewarded referral record directly
+                  await supabaseAdmin
+                    .from("referral_records")
+                    .insert({
+                      referrer_id: referrerId,
+                      referred_id: userId,
+                      status: "successful",
+                      reward_status: "rewarded"
+                    });
+                }
+              }
             }
           }
         }

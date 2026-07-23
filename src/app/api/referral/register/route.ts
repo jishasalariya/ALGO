@@ -51,14 +51,81 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "This user has already been referred." }, { status: 400 });
     }
 
-    // 4. Create a pending referral record using server admin client to bypass RLS restrictions
+    // 4. Generate unique coupon code for referrer
+    let uniqueRewardCode = "";
+    let isUnique = false;
+    let retries = 5;
+
+    while (!isUnique && retries > 0) {
+      const randStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+      uniqueRewardCode = `REF-${randStr}`;
+
+      const { data: existingCoupon } = await supabaseAdmin
+        .from("coupons")
+        .select("id")
+        .eq("code", uniqueRewardCode)
+        .maybeSingle();
+
+      if (!existingCoupon) {
+        isUnique = true;
+      }
+      retries--;
+    }
+
+    if (!isUnique) {
+      uniqueRewardCode = `REF-${Date.now().toString().slice(-6)}`;
+    }
+
+    const now = new Date();
+    const expiryDate = new Date();
+    expiryDate.setDate(now.getDate() + 30); 
+
+    // 5. Create the coupon
+    const { data: newCoupon, error: couponInsertError } = await supabaseAdmin
+      .from("coupons")
+      .insert({
+        code: uniqueRewardCode,
+        name: `Referral Reward`,
+        discount_type: "percentage",
+        discount_value: 20.00,
+        min_order_value: 0.00,
+        start_date: now.toISOString(),
+        expiry_date: expiryDate.toISOString(),
+        max_uses: 1,
+        max_uses_per_customer: 1,
+        is_active: true,
+        description: `20% OFF Referral Reward Coupon.`
+      })
+      .select()
+      .single();
+
+    if (couponInsertError || !newCoupon) {
+      console.error("Failed to create reward coupon:", couponInsertError);
+      return NextResponse.json({ error: "Failed to generate reward coupon." }, { status: 500 });
+    }
+
+    // 6. Assign coupon to Referrer
+    const { error: assignError } = await supabaseAdmin
+      .from("user_coupons")
+      .insert({
+        user_id: referrerId,
+        coupon_id: newCoupon.id,
+        status: "active"
+      });
+
+    if (assignError) {
+      console.error("Failed to assign reward coupon to referrer:", assignError);
+      return NextResponse.json({ error: "Failed to assign reward coupon." }, { status: 500 });
+    }
+
+    // 7. Create a successful referral record directly using server admin client
     const { data: record, error: insertError } = await supabaseAdmin
       .from("referral_records")
       .insert({
         referrer_id: referrerId,
         referred_id: referredId,
-        status: "pending",
-        reward_status: "pending"
+        status: "successful",
+        reward_status: "rewarded"
       })
       .select()
       .single();
