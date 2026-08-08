@@ -228,9 +228,9 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                   )}
                 </button>
 
-                {/* Product Specifications Section */}
+                {/* Product Specifications & Trust Signals Section */}
                 <div className="pt-8 border-t border-white/10">
-                  <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4 font-semibold">Product Specifications</h2>
+                  <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4 font-semibold font-mono">Product Specifications</h2>
                   <dl className="grid grid-cols-2 gap-y-3 gap-x-6 text-xs font-mono mb-6">
                     <div>
                       <dt className="text-gray-500 uppercase">Category</dt>
@@ -239,7 +239,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                     <div>
                       <dt className="text-gray-500 uppercase">Availability</dt>
                       <dd className={product.stock_quantity > 0 ? "text-emerald-400 mt-0.5" : "text-rose-400 mt-0.5"}>
-                        {product.stock_quantity > 0 ? "In Stock" : "Out of Stock"}
+                        {product.stock_quantity > 0 ? "In Stock (Ready to Ship)" : "Out of Stock"}
                       </dd>
                     </div>
                     {product.category === "T-Shirts" && (
@@ -250,15 +250,19 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                         </div>
                         <div>
                           <dt className="text-gray-500 uppercase">Fabric Weight</dt>
-                          <dd className="text-white mt-0.5">240 GSM</dd>
+                          <dd className="text-white mt-0.5">240 GSM Heavyweight</dd>
                         </div>
                         <div>
                           <dt className="text-gray-500 uppercase">Fit Profile</dt>
-                          <dd className="text-white mt-0.5">Oversized / Boxy</dd>
+                          <dd className="text-white mt-0.5">Oversized / Relaxed Boxy</dd>
                         </div>
                         <div>
                           <dt className="text-gray-500 uppercase">Construction</dt>
                           <dd className="text-white mt-0.5">Drop Shoulder</dd>
+                        </div>
+                        <div>
+                          <dt className="text-gray-500 uppercase">Country of Origin</dt>
+                          <dd className="text-white mt-0.5">India (Indore)</dd>
                         </div>
                       </>
                     )}
@@ -266,15 +270,31 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                       <dt className="text-gray-500 uppercase">Available Sizes</dt>
                       <dd className="text-white mt-0.5">{(product.sizes || ["S", "M", "L", "XL"]).join(", ")}</dd>
                     </div>
-                    <div>
+                    <div className="col-span-2">
                       <dt className="text-gray-500 uppercase">Care Instructions</dt>
-                      <dd className="text-white mt-0.5">Wash Cold Inside-Out</dd>
+                      <dd className="text-white mt-0.5">Machine wash cold inside-out, air dry in shade, iron on reverse</dd>
                     </div>
                   </dl>
 
+                  {/* Trust Signals Card */}
+                  <div className="bg-zinc-950/60 border border-white/10 p-4 space-y-2.5 text-xs font-mono mb-6">
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full shrink-0"></span>
+                      <span><strong>Dispatch:</strong> Ships in 1–3 business days across India. <Link href="/shipping" className="text-gray-400 underline hover:text-white">Shipping Info</Link></span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full shrink-0"></span>
+                      <span><strong>Policy:</strong> Limited drop / all sales final. Defective piece support. <Link href="/refund" className="text-gray-400 underline hover:text-white">Refund Policy</Link></span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full shrink-0"></span>
+                      <span><strong>Fit Check:</strong> Built with intentional volume. <Link href="/sizing" className="text-gray-400 underline hover:text-white">View Size Guide</Link></span>
+                    </div>
+                  </div>
+
                   {/* Bullet Points */}
                   <ul className="space-y-2 text-sm text-gray-400">
-                    {(product.details || ["Premium Terry Cotton Fabric", "240 GSM Heavyweight Quality", "Oversized Relaxed Fit", "Soft & Breathable Material"]).map((detail: string, idx: number) => (
+                    {(product.details || ["100% Terry Cotton Fabric", "240 GSM Heavyweight Quality", "Oversized Relaxed Drop-Shoulder Fit", "Soft, Breathable & Structured"]).map((detail: string, idx: number) => (
                       <li key={idx} className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
                         {detail}

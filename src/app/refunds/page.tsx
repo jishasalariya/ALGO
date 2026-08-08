@@ -1,28 +1,28 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShieldAlert, CheckCircle2, HelpCircle } from "lucide-react";
 import type { Metadata } from "next";
 import { getBreadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | KYU? Streetwear",
-  description: "Terms and conditions of service for KYU? Streetwear. Overview of website use, order processing, pricing, and intellectual property rights.",
+  title: "Refunds Policy | KYU? Streetwear",
+  description: "KYU? Streetwear refunds and cancellation guidelines. Detailed information on return eligibility, damaged product support, and order cancellation.",
   alternates: {
-    canonical: "/terms",
+    canonical: "/refunds",
   },
   openGraph: {
-    title: "Terms & Conditions | KYU? Streetwear",
-    description: "Official terms of service and order agreements for KYU? Streetwear.",
-    url: "https://kyuwear.vercel.app/terms",
+    title: "Refunds Policy | KYU? Streetwear",
+    description: "All sales final policy and defective item replacement standards at KYU? Streetwear.",
+    url: "https://kyuwear.vercel.app/refunds",
   },
 };
 
-export default function TermsPage() {
+export default function RefundsPage() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyuwear.vercel.app';
 
   const breadcrumbJsonLd = getBreadcrumbSchema([
     { name: "Home", url: `${siteUrl}/` },
-    { name: "Terms & Conditions", url: `${siteUrl}/terms` }
+    { name: "Refunds Policy", url: `${siteUrl}/refunds` }
   ]);
 
   return (
@@ -46,28 +46,34 @@ export default function TermsPage() {
           <Link href="/" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gray-400 hover:text-white transition-colors mb-12">
             <ArrowLeft className="w-4 h-4" /> Back to Home
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase mb-4">Terms &amp; Conditions</h1>
-          <p className="text-gray-400 text-sm mb-12 font-light">Official conditions governing customer orders and use of the KYU? platform.</p>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase mb-4">Refund Policy</h1>
+          <p className="text-gray-400 text-sm mb-12 font-light">Official terms regarding refunds, replacements, and defective goods.</p>
           
           <div className="space-y-10 text-gray-300 leading-relaxed text-sm md:text-base">
             <section className="bg-[#111] border border-white/10 p-6 md:p-8 space-y-3">
-              <h2 className="text-white text-lg font-semibold uppercase tracking-wider">1. General</h2>
+              <h2 className="text-white text-lg font-semibold uppercase tracking-wider flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-gray-400" /> 1. Final Sale Policy
+              </h2>
               <p className="text-gray-400 text-sm">
-                By accessing this website or placing an order with KYU? (operated from Indore, India), you agree to be bound by these Terms and Conditions. These terms apply to all transactions and storefront interactions.
+                At KYU?, all sales are final. We do not provide monetary refunds or accept returns for change of mind. Please check garment details and our <Link href="/sizing" className="text-white underline underline-offset-4 hover:text-gray-300">Size Guide</Link> prior to ordering.
               </p>
             </section>
 
             <section className="bg-[#111] border border-white/10 p-6 md:p-8 space-y-3">
-              <h2 className="text-white text-lg font-semibold uppercase tracking-wider">2. Pricing and Payment</h2>
+              <h2 className="text-white text-lg font-semibold uppercase tracking-wider flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-gray-400" /> 2. Defective Goods Resolution
+              </h2>
               <p className="text-gray-400 text-sm">
-                All prices are stated in Indian Rupees (INR) inclusive of applicable taxes unless specified otherwise. Payment must be cleared in full through approved payment gateways before an order is dispatched.
+                In the rare instance that a garment arrives damaged or incorrect, email <a href="mailto:kyuwear.in@gmail.com" className="text-white underline font-mono">kyuwear.in@gmail.com</a> within 48 hours with proof for a prompt replacement.
               </p>
             </section>
 
             <section className="bg-[#111] border border-white/10 p-6 md:p-8 space-y-3">
-              <h2 className="text-white text-lg font-semibold uppercase tracking-wider">3. Intellectual Property</h2>
+              <h2 className="text-white text-lg font-semibold uppercase tracking-wider flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-gray-400" /> 3. Contact Support
+              </h2>
               <p className="text-gray-400 text-sm">
-                All graphic artwork, typography, logos, and digital editorial content on this website are the intellectual property of KYU? Streetwear. Unauthorized reproduction, commercial distribution, or imitation is prohibited.
+                For order support, contact <a href="mailto:kyuwear.in@gmail.com" className="text-white underline font-mono">kyuwear.in@gmail.com</a> or phone <a href="tel:+919001913162" className="text-white underline font-mono">+91 9001913162</a>.
               </p>
             </section>
           </div>

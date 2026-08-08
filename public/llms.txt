@@ -2,30 +2,38 @@
 
 > Premium oversized streetwear designed in India. Heavyweight 240 GSM cotton t-shirts featuring minimal fronts and bold back graphic designs.
 
-## Brand
+## Brand & Foundation
 
-KYU? Streetwear is an independent streetwear brand based in India. Built around the philosophy of inquiry and curiosity ("KYU?"), the brand creates heavyweight, oversized apparel with a focus on premium material quality, durable construction, and storytelling graphics. Season One focuses on 240 GSM drop-shoulder boxy fit t-shirts.
+- Brand Name: KYU? (KYU? Streetwear)
+- Category: Indian Streetwear
+- Founded: 2026
+- Founders: Jisha Salariya and Tanisha Joshi
+- Headquarters: Indore, Madhya Pradesh, India
+- Brand Manifesto: Built around the philosophy of inquiry and curiosity ("KYU?" / क्यों?), the label creates heavyweight, oversized apparel with a focus on premium material quality, durable construction, and storytelling graphics. Season One focuses on 240 GSM drop-shoulder boxy fit t-shirts.
 
 ## Important Pages
 
 - Homepage: https://kyuwear.vercel.app/
 - Shop: https://kyuwear.vercel.app/shop
+- Size Guide: https://kyuwear.vercel.app/sizing
+- FAQ: https://kyuwear.vercel.app/faq
 - About: https://kyuwear.vercel.app/about
 - Journal: https://kyuwear.vercel.app/blog
 - Contact: https://kyuwear.vercel.app/contact
 - Shipping & Delivery: https://kyuwear.vercel.app/shipping
 - Cancellation & Refund: https://kyuwear.vercel.app/refund
+- Returns & Exchanges: https://kyuwear.vercel.app/returns
 - Terms & Conditions: https://kyuwear.vercel.app/terms
 - Privacy Policy: https://kyuwear.vercel.app/privacy
 
-## Products
+## Products (Season One)
 
 - Vintage Torque Tee: https://kyuwear.vercel.app/product/vintage-torque-tee
-  - Description: A nod to raw horsepower and street heritage. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
+  - Description: A nod to raw horsepower and street heritage. 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
 - Spill the Tea: https://kyuwear.vercel.app/product/spill-the-tea
-  - Description: Features artistic Hindi typography with earthy aesthetic detailing. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
+  - Description: Features artistic Hindi typography with earthy aesthetic detailing. 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
 - Karikala Chola: https://kyuwear.vercel.app/product/karikala-chola
-  - Description: Built on legacy, designed for dominance. A tribute to the Chola empire where heritage meets bold streetwear. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
+  - Description: Built on legacy, designed for dominance. A tribute to the Chola empire where heritage meets bold streetwear. 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
 
 ## Specifications & Materials
 
@@ -33,8 +41,9 @@ KYU? Streetwear is an independent streetwear brand based in India. Built around 
 - Weight: 240 GSM (Grams per Square Meter) Heavyweight Quality
 - Fit: Oversized, relaxed drop-shoulder boxy fit
 - Available Sizes: S, M, L, XL
+- Origin: Indore, India
 
-## Journal
+## Journal & Guides
 
 - Oversized vs Regular Fit: Which One Actually Suits You?: https://kyuwear.vercel.app/blog/oversized-vs-regular-fit-which-one-actually-suits-you
   - Summary: A guide to silhouette differences, styling preferences, body types, and comfort considerations between regular and oversized fit tees.
@@ -47,4 +56,5 @@ KYU? Streetwear is an independent streetwear brand based in India. Built around 
 
 - Email: kyuwear.in@gmail.com
 - Phone: +91 9001913162 / +91 7566696374
+- Location: Indore, Madhya Pradesh, India
 - Support Hours: Mon-Fri, 10:00 AM - 7:00 PM IST

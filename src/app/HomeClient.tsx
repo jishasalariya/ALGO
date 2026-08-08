@@ -179,18 +179,19 @@ export default function HomeClient() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 md:gap-16 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium text-gray-500">
               <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
-                <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-                <Link href="/about" className="hover:text-white transition-colors">About</Link>
+                <Link href="/sizing" className="hover:text-white transition-colors">Size Guide</Link>
+                <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
+                <Link href="/blog" className="hover:text-white transition-colors">Journal</Link>
+                <Link href="/about" className="hover:text-white transition-colors">About KYU?</Link>
                 <Link href="/account" className="hover:text-white transition-colors">Account</Link>
-                <Link href="/coupons" className="hover:text-white transition-colors">My Coupons</Link>
-                <Link href="/refer-and-earn" className="hover:text-white transition-colors">Refer & Earn</Link>
               </div>
               <div className="flex flex-col gap-4 md:gap-6">
                 <Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link>
-                <Link href="/shipping" className="hover:text-white transition-colors">Shipping</Link>
-                <Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link>
-                <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-                <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                <Link href="/shipping" className="hover:text-white transition-colors">Shipping &amp; Delivery</Link>
+                <Link href="/refund" className="hover:text-white transition-colors">Cancellation &amp; Refund</Link>
+                <Link href="/returns" className="hover:text-white transition-colors">Returns Policy</Link>
+                <Link href="/terms" className="hover:text-white transition-colors">Terms &amp; Conditions</Link>
+                <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
               </div>
               <div className="flex flex-col gap-4 md:gap-6">
                 {/* TODO: Insert official KYU? Instagram URL (e.g. https://instagram.com/kyuwear) */}

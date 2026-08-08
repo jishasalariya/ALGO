@@ -46,19 +46,23 @@ export default function FAQPage() {
       items: [
         {
           question: "What is KYU?",
-          answer: "KYU? is an independent streetwear brand from India that creates premium heavyweight apparel focused on inquiry, bold visual identity, and cultural storytelling."
+          answer: "KYU? is an independent Indian streetwear brand founded in 2026 by Jisha Salariya and Tanisha Joshi in Indore. The brand creates heavyweight 240 GSM apparel centered around inquiry, bold visual identity, and cultural storytelling."
+        },
+        {
+          question: "Who founded KYU?",
+          answer: "KYU? was founded by Jisha Salariya and Tanisha Joshi in Indore, Madhya Pradesh, India."
         },
         {
           question: "What does KYU? mean?",
-          answer: "KYU? represents the question 'Why?' (Kyu?). It serves as our creative manifesto — asking why blend into the background when fashion can make a statement and spark conversation."
+          answer: "KYU? represents the question 'Why?' (क्यों?). It serves as our creative manifesto — asking why blend into the background when fashion can make a statement and spark conversation."
         },
         {
           question: "What kind of brand is KYU?",
-          answer: "KYU? is a modern streetwear label specializing in heavyweight fabrics, minimal front designs with bold back graphic prints, and structured oversized boxy silhouettes."
+          answer: "KYU? is an Indian oversized streetwear label specializing in heavyweight fabrics, minimal front designs with bold back graphic prints, and structured boxy silhouettes."
         },
         {
           question: "Where is KYU? based?",
-          answer: "KYU? is designed and based in India, shipping countrywide."
+          answer: "KYU? is based and headquartered in Indore, Madhya Pradesh, India, shipping nationwide."
         }
       ]
     },

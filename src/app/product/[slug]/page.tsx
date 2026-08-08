@@ -17,24 +17,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!product) return {};
 
-  let metaDescription = `${product.product_name} — Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. Kyu Season One. Buy oversized t-shirt online.`;
+  let metaDescription = `${product.product_name} — 240 GSM heavyweight cotton, drop-shoulder oversized fit from KYU? Season One. Buy oversized t-shirt online in India.`;
   if (slug === 'vintage-torque-tee') {
-    metaDescription = "Vintage Torque Tee — a nod to raw horsepower and street heritage. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. Kyu Season One. Buy online.";
+    metaDescription = "Vintage Torque Tee — a nod to raw horsepower and street heritage. 240 GSM heavyweight cotton, drop-shoulder oversized fit from KYU? Season One.";
   } else if (slug === 'karikala-chola') {
-    metaDescription = "Karikala Chola — inspired by the Northern Rise, bold graphic storytelling on 240 GSM heavyweight cotton. Oversized fit. Shop Kyu Season One now.";
+    metaDescription = "Karikala Chola — inspired by the Northern Rise, bold graphic storytelling on 240 GSM heavyweight cotton. Oversized fit from KYU? Season One.";
   } else if (slug === 'spill-the-tea') {
-    metaDescription = "Spill the Tea — bold Hindi typography meets streetwear attitude. 240 GSM heavyweight cotton, oversized fit. Shop Kyu Season One — buy oversized t-shirt online.";
+    metaDescription = "Spill the Tea — bold Hindi typography meets streetwear attitude. 240 GSM heavyweight cotton, oversized fit from KYU? Season One.";
   } else if (product.description) {
-    metaDescription = `${product.product_name} — ${product.description.slice(0, 120)}. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit.`;
+    metaDescription = `${product.product_name} — ${product.description.slice(0, 120)}. 240 GSM heavyweight cotton, drop-shoulder oversized fit from KYU?.`;
   }
 
-  let productKeywords = ["Kyu oversized t-shirt", "Kyu premium t-shirt", "240 GSM t-shirt"];
-  if (slug === 'karikala-chola') {
-    productKeywords = ["240 GSM t-shirt", "Heavyweight t-shirt", "premium cotton t-shirt", "Kyu oversized t-shirt"];
-  }
+  let productKeywords = ["KYU? oversized t-shirt", "KYU? streetwear", "240 GSM t-shirt India", "heavyweight cotton tee"];
 
   return {
-    title: `${product.product_name} — Kyu Oversized T-Shirt, 240 GSM Cotton`,
+    title: `${product.product_name} | KYU? — 240 GSM Oversized T-Shirt`,
     description: metaDescription,
     keywords: productKeywords,
     alternates: {

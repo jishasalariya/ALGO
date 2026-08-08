@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "KYU? Streetwear — Premium Oversized T-Shirts, India",
-  description: "Premium oversized streetwear by Kyu clothing. Heavyweight 240 GSM cotton tees featuring minimal fronts and bold back graphic designs. Shop Kyu Season One live now.",
-  keywords: ["Kyu streetwear", "Kyu clothing", "streetwear brand India"],
+  title: "KYU? Streetwear — Indian Oversized T-Shirts & Apparel",
+  description: "Indian oversized streetwear by KYU?. Heavyweight 240 GSM cotton tees featuring minimal fronts and bold back graphic designs. Shop Season One now.",
+  keywords: ["KYU?", "KYU? streetwear", "Indian streetwear", "oversized t-shirts India"],
   alternates: {
     canonical: "/",
   },

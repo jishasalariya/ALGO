@@ -14,9 +14,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyuwear.vercel.app'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "KYU? | Kyu Streetwear — Premium Oversized T-Shirts, India",
-  description: "Kyu clothing for the bold and curious. Premium oversized t-shirts, 240 GSM heavyweight cotton, minimal fronts, bold backs. Shop Kyu streetwear — Season One is live.",
-  keywords: ["streetwear", "kyu?", "fashion", "oversized", "premium streetwear"],
+  title: "KYU? — Indian Oversized Streetwear | 240 GSM Cotton T-Shirts",
+  description: "KYU? is an independent Indian streetwear brand founded in 2026 in Indore. Premium 240 GSM cotton oversized t-shirts with minimal fronts and bold graphic backs.",
+  keywords: ["KYU?", "KYU? Streetwear", "streetwear brand India", "oversized t-shirts India", "240 GSM cotton"],
   icons: {
     icon: "/favicon.ico",
     apple: "/favicon.ico",

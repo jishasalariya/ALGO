@@ -44,7 +44,32 @@ export function getOrganizationSchema() {
     "alternateName": "KYU? Streetwear",
     "url": SITE_URL,
     "logo": `${SITE_URL}/images/logo.png`,
-    "description": "Premium oversized streetwear designed in India. Heavyweight 240 GSM cotton t-shirts featuring minimal fronts and bold back graphic designs.",
+    "description": "Indian oversized streetwear brand founded in 2026 in Indore by Jisha Salariya and Tanisha Joshi. Creating heavyweight 240 GSM cotton t-shirts with minimal fronts and bold back graphic narratives.",
+    "foundingDate": "2026",
+    "founder": [
+      {
+        "@type": "Person",
+        "name": "Jisha Salariya"
+      },
+      {
+        "@type": "Person",
+        "name": "Tanisha Joshi"
+      }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Indore",
+      "addressRegion": "Madhya Pradesh",
+      "addressCountry": "IN"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-9001913162",
+      "contactType": "customer service",
+      "email": "kyuwear.in@gmail.com",
+      "areaServed": "IN",
+      "availableLanguage": ["English", "Hindi"]
+    },
     "sameAs": [
       // TODO: Add official KYU? Instagram URL here when available
       "https://x.com/KyuWear",
