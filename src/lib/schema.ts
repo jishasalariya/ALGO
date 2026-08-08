@@ -49,12 +49,30 @@ export function getOrganizationSchema() {
     "founder": [
       {
         "@type": "Person",
-        "name": "Jisha Salariya"
+        "name": "Jisha Salariya",
+        "jobTitle": "Co-Founder & Creative Director",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "KYU?"
+        },
+        "knowsAbout": ["Streetwear Design", "Textile Proportions", "Visual Storytelling"]
       },
       {
         "@type": "Person",
-        "name": "Tanisha Joshi"
+        "name": "Tanisha Joshi",
+        "jobTitle": "Co-Founder & Brand Strategist",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "KYU?"
+        },
+        "knowsAbout": ["Brand Strategy", "Streetwear Culture", "Product Operations"]
       }
+    ],
+    "knowsAbout": [
+      "Heavyweight Streetwear",
+      "240 GSM Cotton Knitwear",
+      "Oversized Apparel Construction",
+      "Indian Contemporary Fashion"
     ],
     "address": {
       "@type": "PostalAddress",

@@ -106,11 +106,11 @@ export default function SizingPage() {
               <ul className="space-y-3 pt-2">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-white mt-1 shrink-0" />
-                  <span><strong>Drop-Shoulder Silhouette:</strong> Lowered shoulder seams that create a natural, relaxed streetwear drape.</span>
+                  <span><strong>Drop-Shoulder Silhouette:</strong> Lowered shoulder seams placed 2–3 inches off the natural acromion line for an effortless streetwear drape.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-white mt-1 shrink-0" />
-                  <span><strong>Wider Chest & Body:</strong> Generous ease through the torso for unrestricted movement and airflow.</span>
+                  <span><strong>Wider Chest & Body:</strong> Generous ease through the torso for unrestricted movement and natural airflow.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-white mt-1 shrink-0" />
@@ -121,6 +121,33 @@ export default function SizingPage() {
                   <span><strong>Proportional Hem Length:</strong> Calibrated to complement wide-leg pants, cargos, and relaxed bottoms.</span>
                 </li>
               </ul>
+            </section>
+
+            {/* Section 1.5: Textile Science & GSM Standards (Authority & Trust) */}
+            <section className="space-y-6 pt-6 border-t border-white/10">
+              <h2 className="text-white text-xl md:text-2xl font-bold uppercase tracking-tight">
+                Textile Science: Why 240 GSM?
+              </h2>
+              <p>
+                In international textile metrology (standard test method <strong>ISO 3801 / ASTM D3776</strong>), <strong>GSM (Grams per Square Meter)</strong> measures the mass density of knitted fabric. This metric directly determines how a garment drapes, breathes, and resists mechanical deformation over time:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2 font-mono text-xs">
+                <div className="bg-[#111] border border-white/10 p-5 space-y-2">
+                  <span className="text-zinc-500 uppercase tracking-widest text-[10px]">120–160 GSM</span>
+                  <h3 className="text-white text-sm font-semibold">Lightweight</h3>
+                  <p className="text-gray-400 leading-relaxed">Commercial mass-market tees. Prone to fabric twisting, sheer transparency, and contour clinging.</p>
+                </div>
+                <div className="bg-[#111] border border-white/10 p-5 space-y-2">
+                  <span className="text-zinc-500 uppercase tracking-widest text-[10px]">170–200 GSM</span>
+                  <h3 className="text-white text-sm font-semibold">Midweight</h3>
+                  <p className="text-gray-400 leading-relaxed">Standard casual t-shirt weight. Moderate opacity with relaxed everyday drape.</p>
+                </div>
+                <div className="bg-zinc-950 border border-white/30 p-5 space-y-2 relative">
+                  <span className="text-emerald-400 uppercase tracking-widest text-[10px] font-bold">240 GSM (KYU? Standard)</span>
+                  <h3 className="text-white text-sm font-semibold">Heavyweight Knit</h3>
+                  <p className="text-gray-300 leading-relaxed">Engineered streetwear density. High tensile strength, zero sheer transparency, and a structured architectural boxy silhouette that holds shape without synthetic poly-blends.</p>
+                </div>
+              </div>
             </section>
 
             {/* Section 2: Available Sizes */}
