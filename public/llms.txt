@@ -1,0 +1,50 @@
+# KYU? Streetwear
+
+> Premium oversized streetwear designed in India. Heavyweight 240 GSM cotton t-shirts featuring minimal fronts and bold back graphic designs.
+
+## Brand
+
+KYU? Streetwear is an independent streetwear brand based in India. Built around the philosophy of inquiry and curiosity ("KYU?"), the brand creates heavyweight, oversized apparel with a focus on premium material quality, durable construction, and storytelling graphics. Season One focuses on 240 GSM drop-shoulder boxy fit t-shirts.
+
+## Important Pages
+
+- Homepage: https://kyuwear.vercel.app/
+- Shop: https://kyuwear.vercel.app/shop
+- About: https://kyuwear.vercel.app/about
+- Journal: https://kyuwear.vercel.app/blog
+- Contact: https://kyuwear.vercel.app/contact
+- Shipping & Delivery: https://kyuwear.vercel.app/shipping
+- Cancellation & Refund: https://kyuwear.vercel.app/refund
+- Terms & Conditions: https://kyuwear.vercel.app/terms
+- Privacy Policy: https://kyuwear.vercel.app/privacy
+
+## Products
+
+- Vintage Torque Tee: https://kyuwear.vercel.app/product/vintage-torque-tee
+  - Description: A nod to raw horsepower and street heritage. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
+- Spill the Tea: https://kyuwear.vercel.app/product/spill-the-tea
+  - Description: Features artistic Hindi typography with earthy aesthetic detailing. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
+- Karikala Chola: https://kyuwear.vercel.app/product/karikala-chola
+  - Description: Built on legacy, designed for dominance. A tribute to the Chola empire where heritage meets bold streetwear. Premium 240 GSM heavyweight cotton, drop-shoulder oversized fit. ₹699.
+
+## Specifications & Materials
+
+- Fabric: 100% Terry Cotton
+- Weight: 240 GSM (Grams per Square Meter) Heavyweight Quality
+- Fit: Oversized, relaxed drop-shoulder boxy fit
+- Available Sizes: S, M, L, XL
+
+## Journal
+
+- Oversized vs Regular Fit: Which One Actually Suits You?: https://kyuwear.vercel.app/blog/oversized-vs-regular-fit-which-one-actually-suits-you
+  - Summary: A guide to silhouette differences, styling preferences, body types, and comfort considerations between regular and oversized fit tees.
+- How to Style an Oversized T-Shirt for Every Occasion: https://kyuwear.vercel.app/blog/how-to-style-an-oversized-t-shirt-for-every-occasion
+  - Summary: Practical advice and outfit pairings for styling oversized graphic streetwear t-shirts across different settings.
+- How to Care for Your Oversized Cotton T-Shirts (Wash Guide): https://kyuwear.vercel.app/blog/how-to-care-for-your-oversized-cotton-t-shirts-wash-guide
+  - Summary: Step-by-step washing, drying, and care guidelines to preserve heavyweight cotton fabric integrity and graphic prints.
+
+## Contact Information
+
+- Email: kyuwear.in@gmail.com
+- Phone: +91 9001913162 / +91 7566696374
+- Support Hours: Mon-Fri, 10:00 AM - 7:00 PM IST

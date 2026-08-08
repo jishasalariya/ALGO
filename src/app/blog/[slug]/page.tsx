@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { Syne } from "next/font/google";
+import { getBlogPostingSchema, getBreadcrumbSchema } from "@/lib/schema";
 
 const syne = Syne({
   weight: ["800"],
@@ -84,8 +85,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyuwear.vercel.app';
+
+  const blogPostingJsonLd = getBlogPostingSchema(post);
+
+  const breadcrumbJsonLd = getBreadcrumbSchema([
+    { name: "Home", url: `${siteUrl}/` },
+    { name: "Journal", url: `${siteUrl}/blog` },
+    { name: post.title, url: `${siteUrl}/blog/${post.slug}` }
+  ]);
+
   return (
-    <div className="min-h-screen bg-black text-white pt-24 pb-32 font-sans selection:bg-white selection:text-black">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <div className="min-h-screen bg-black text-white pt-24 pb-32 font-sans selection:bg-white selection:text-black">
       {/* Navigation (simplified for inner pages) */}
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 md:py-6 bg-black/80 backdrop-blur-md border-b border-white/10">
         <Link href="/" className="text-lg md:text-2xl font-bold tracking-tighter uppercase">
@@ -208,6 +228,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           margin: 1.5rem 0;
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }

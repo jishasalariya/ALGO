@@ -1,5 +1,6 @@
 import HomeClient from "./HomeClient";
 import type { Metadata } from "next";
+import { getOrganizationSchema, getWebSiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "KYU? Streetwear — Premium Oversized T-Shirts, India",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "KYU? — Wear Your Curiosity",
     description: "Premium oversized streetwear from India. Season One is live — heavyweight 240 GSM tees built for the bold and the curious.",
-    url: "https://kyu-wear.vercel.app",
+    url: "https://kyuwear.vercel.app",
     siteName: "KYU?",
     images: [
       {
@@ -33,33 +34,8 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyu-wear.vercel.app';
-  
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "KYU?",
-    "url": siteUrl,
-    "logo": `${siteUrl}/images/logo.png`,
-    "sameAs": [
-      "https://instagram.com/algo.inn",
-      "https://x.com/KyuWear",
-      "https://www.linkedin.com/company/kyuwear/",
-      "https://www.facebook.com/profile.php?id=61591930839027"
-    ]
-  };
-
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "KYU?",
-    "url": siteUrl,
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${siteUrl}/shop?q={search_term_string}`,
-      "query-input": "required name=search_term_string"
-    }
-  };
+  const organizationJsonLd = getOrganizationSchema();
+  const websiteJsonLd = getWebSiteSchema();
 
   return (
     <>

@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       }
 
       // Generate the referral link
-      const origin = request.headers.get("origin") || "https://kyu-wear.vercel.app";
+      const origin = request.headers.get("origin") || "https://kyuwear.vercel.app";
       const referralLink = `${origin}/signup?ref=${uniqueCode}`;
 
       const { data: newCodeData, error: insertError } = await supabaseAdmin
@@ -74,10 +74,10 @@ export async function GET(request: Request) {
       referralCodeData = newCodeData;
     }
 
-    // Ensure the link is using the new kyu-wear.vercel.app domain
-    const activeOrigin = "https://kyu-wear.vercel.app";
+    // Ensure the link is using the current kyuwear.vercel.app domain
+    const activeOrigin = "https://kyuwear.vercel.app";
     let referralLink = referralCodeData.link;
-    if (referralLink && (referralLink.includes("algo-streetwear.vercel.app") || referralLink.includes("localhost"))) {
+    if (referralLink && (referralLink.includes("algo-streetwear.vercel.app") || referralLink.includes("kyu-wear.vercel.app") || referralLink.includes("localhost"))) {
       referralLink = `${activeOrigin}/signup?ref=${referralCodeData.code}`;
       // Update in database asynchronously
       supabaseAdmin

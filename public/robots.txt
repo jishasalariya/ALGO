@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /signup
+Disallow: /coupons
+Disallow: /refer-and-earn
+Disallow: /api/
 
-Sitemap: https://kyu-wear.vercel.app/sitemap.xml
+Sitemap: https://kyuwear.vercel.app/sitemap.xml

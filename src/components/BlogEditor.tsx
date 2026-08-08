@@ -61,7 +61,8 @@ export default function BlogEditor({ content, onChange }: BlogEditorProps) {
   const addImage = () => {
     const url = window.prompt("Enter image URL:");
     if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+      const alt = window.prompt("Enter image description / alt text (recommended for SEO):") || "";
+      editor.chain().focus().setImage({ src: url, alt }).run();
     }
   };
 

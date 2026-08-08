@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import ProductClient from "./ProductClient";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { getProductSchema, getBreadcrumbSchema } from "@/lib/schema";
 
 // Revalidate product cache every 15 seconds (Incremental Static Regeneration)
 export const revalidate = 15;
@@ -79,55 +80,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyu-wear.vercel.app';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kyuwear.vercel.app';
 
-  const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": product.product_name,
-    "image": product.images?.[0] || "",
-    "description": product.description || `Premium 240 GSM heavyweight cotton ${product.product_name} drop-shoulder oversized fit from KYU? Season One.`,
-    "sku": product.id,
-    "mpn": product.id,
-    "brand": {
-      "@type": "Brand",
-      "name": "KYU?"
-    },
-    "offers": {
-      "@type": "Offer",
-      "url": `${siteUrl}/product/${product.slug}`,
-      "priceCurrency": "INR",
-      "price": String(product.price),
-      "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      "priceValidUntil": "2027-12-31",
-      "itemCondition": "https://schema.org/NewCondition"
-    }
-  };
+  const productJsonLd = getProductSchema(product);
 
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": `${siteUrl}/`
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Shop",
-        "item": `${siteUrl}/shop`
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": product.product_name,
-        "item": `${siteUrl}/product/${product.slug}`
-      }
-    ]
-  };
+  const breadcrumbJsonLd = getBreadcrumbSchema([
+    { name: "Home", url: `${siteUrl}/` },
+    { name: "Shop", url: `${siteUrl}/shop` },
+    { name: product.product_name, url: `${siteUrl}/product/${product.slug}` }
+  ]);
 
   // Fetch up to 4 other published products for "You May Also Like"
   const { data: relatedProducts } = await supabase

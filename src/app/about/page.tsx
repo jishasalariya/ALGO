@@ -136,9 +136,14 @@ export default function AboutPage() {
         {/* Call to Action */}
         <div className="mt-24 text-center flex flex-col items-center gap-6">
           <h2 className="text-xl md:text-2xl uppercase tracking-widest font-medium">Explore Drop One</h2>
-          <Link href="/shop" className="group flex items-center gap-3 px-8 py-4 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-widest text-xs font-semibold">
-            View Collection <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Link href="/shop" className="group flex items-center gap-3 px-8 py-4 border border-white hover:bg-white hover:text-black transition-all uppercase tracking-widest text-xs font-semibold">
+              View Collection <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="/faq" className="px-8 py-4 border border-white/20 hover:border-white text-gray-400 hover:text-white transition-all uppercase tracking-widest text-xs font-semibold">
+              Have Questions? View FAQ
+            </Link>
+          </div>
         </div>
       </div>
     </div>

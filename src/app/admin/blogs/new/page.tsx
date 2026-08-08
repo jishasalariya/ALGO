@@ -42,15 +42,20 @@ export default function NewBlogPost() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.slug || !content) {
+    if (!formData.title.trim() || !formData.slug.trim() || !content.trim()) {
       alert("Please fill in the title, slug, and body content.");
       return;
     }
 
+    if (formData.status === "published" && !formData.cover_image) {
+      const confirmNoCover = window.confirm("Notice: Publishing without a cover image will use the default brand logo in SEO/OpenGraph previews. Proceed?");
+      if (!confirmNoCover) return;
+    }
+
     setSaving(true);
     const postData = {
-      title: formData.title,
-      slug: formData.slug,
+      title: formData.title.trim(),
+      slug: formData.slug.trim(),
       cover_image: formData.cover_image || null,
       body_content: content,
       status: formData.status,
@@ -109,6 +114,7 @@ export default function NewBlogPost() {
                 className="w-full bg-[#0e0e0e] border border-white/10 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-white transition-colors font-mono"
                 required
               />
+              <p className="text-[10px] text-zinc-500 font-mono">Public URL: https://kyuwear.vercel.app/blog/{formData.slug || "..."}</p>
             </div>
 
             <div className="space-y-2">

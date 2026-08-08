@@ -145,7 +145,15 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <h1 className="text-4xl lg:text-6xl font-bold tracking-tighter uppercase mb-4">{product.product_name}</h1>
-              <p className="text-2xl font-medium mb-8">₹{product.price}</p>
+              
+              {/* Price & Availability */}
+              <div className="flex items-center gap-4 mb-8">
+                <span className="text-2xl font-medium">₹{product.price}</span>
+                <span className="text-white/20">|</span>
+                <span className={`text-xs uppercase tracking-widest font-mono font-medium ${product.stock_quantity > 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                  {product.stock_quantity > 0 ? "In Stock" : "Out of Stock"}
+                </span>
+              </div>
               
               <div className="space-y-8">
                 {/* Description */}
@@ -165,6 +173,9 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <div className="uppercase tracking-widest text-sm font-medium">Select Size</div>
+                    <Link href="/sizing" className="text-xs uppercase tracking-widest text-gray-400 hover:text-white underline underline-offset-4 transition-colors font-mono">
+                      View Size Guide
+                    </Link>
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {(product.sizes || ["S", "M", "L", "XL"]).map((size: string) => (
@@ -217,9 +228,51 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                   )}
                 </button>
 
-                {/* Bullet Points */}
+                {/* Product Specifications Section */}
                 <div className="pt-8 border-t border-white/10">
-                  <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4 font-semibold">Fabric & Fit</h2>
+                  <h2 className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4 font-semibold">Product Specifications</h2>
+                  <dl className="grid grid-cols-2 gap-y-3 gap-x-6 text-xs font-mono mb-6">
+                    <div>
+                      <dt className="text-gray-500 uppercase">Category</dt>
+                      <dd className="text-white mt-0.5">{product.category || "T-Shirts"}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-gray-500 uppercase">Availability</dt>
+                      <dd className={product.stock_quantity > 0 ? "text-emerald-400 mt-0.5" : "text-rose-400 mt-0.5"}>
+                        {product.stock_quantity > 0 ? "In Stock" : "Out of Stock"}
+                      </dd>
+                    </div>
+                    {product.category === "T-Shirts" && (
+                      <>
+                        <div>
+                          <dt className="text-gray-500 uppercase">Material</dt>
+                          <dd className="text-white mt-0.5">100% Terry Cotton</dd>
+                        </div>
+                        <div>
+                          <dt className="text-gray-500 uppercase">Fabric Weight</dt>
+                          <dd className="text-white mt-0.5">240 GSM</dd>
+                        </div>
+                        <div>
+                          <dt className="text-gray-500 uppercase">Fit Profile</dt>
+                          <dd className="text-white mt-0.5">Oversized / Boxy</dd>
+                        </div>
+                        <div>
+                          <dt className="text-gray-500 uppercase">Construction</dt>
+                          <dd className="text-white mt-0.5">Drop Shoulder</dd>
+                        </div>
+                      </>
+                    )}
+                    <div>
+                      <dt className="text-gray-500 uppercase">Available Sizes</dt>
+                      <dd className="text-white mt-0.5">{(product.sizes || ["S", "M", "L", "XL"]).join(", ")}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-gray-500 uppercase">Care Instructions</dt>
+                      <dd className="text-white mt-0.5">Wash Cold Inside-Out</dd>
+                    </div>
+                  </dl>
+
+                  {/* Bullet Points */}
                   <ul className="space-y-2 text-sm text-gray-400">
                     {(product.details || ["Premium Terry Cotton Fabric", "240 GSM Heavyweight Quality", "Oversized Relaxed Fit", "Soft & Breathable Material"]).map((detail: string, idx: number) => (
                       <li key={idx} className="flex items-center gap-2">
@@ -228,6 +281,13 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                       </li>
                     ))}
                   </ul>
+
+                  <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-gray-400 font-mono">
+                    <span>Questions about fit, shipping, or care?</span>
+                    <Link href="/faq" className="text-white hover:text-gray-300 underline underline-offset-4 transition-colors">
+                      See our FAQ
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Social Share Options */}
@@ -235,7 +295,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                   <span className="text-[10px] tracking-[0.2em] uppercase text-gray-500 font-semibold font-mono">Share This Piece</span>
                   <div className="flex gap-4 text-xs font-mono">
                     <a 
-                      href={`https://wa.me/?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20on%20KYU?%20Streetwear:%20${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      href={`https://wa.me/?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20on%20KYU?%20Streetwear:%20${encodeURIComponent('https://kyuwear.vercel.app/product/' + product.slug)}`}
                       target="_blank" 
                       rel="noreferrer" 
                       className="text-gray-400 hover:text-white transition-colors"
@@ -244,7 +304,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                     </a>
                     <span className="text-white/10">|</span>
                     <a 
-                      href={`https://twitter.com/intent/tweet?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20from%20@KyuWear:%20${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      href={`https://twitter.com/intent/tweet?text=Check%20out%20the%20${encodeURIComponent(product.product_name)}%20from%20@KyuWear:%20${encodeURIComponent('https://kyuwear.vercel.app/product/' + product.slug)}`}
                       target="_blank" 
                       rel="noreferrer" 
                       className="text-gray-400 hover:text-white transition-colors"
@@ -253,7 +313,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                     </a>
                     <span className="text-white/10">|</span>
                     <a 
-                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://kyu-wear.vercel.app/product/' + product.slug)}`}
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://kyuwear.vercel.app/product/' + product.slug)}`}
                       target="_blank" 
                       rel="noreferrer" 
                       className="text-gray-400 hover:text-white transition-colors"
