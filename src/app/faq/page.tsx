@@ -80,7 +80,7 @@ export default function FAQPage() {
         },
         {
           question: "What fabric are KYU? T-shirts made from?",
-          answer: "KYU? t-shirts are constructed from 100% Terry Cotton, providing a soft interior touch, breathability, and structural durability."
+          answer: "KYU? Season One t-shirts are constructed from 240 GSM Terry Cotton, providing a comfortable interior loop knit texture, breathability, and structural durability."
         },
         {
           question: "Are KYU? T-shirts oversized?",

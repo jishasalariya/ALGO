@@ -124,7 +124,7 @@ export function getProductSchema(product: ProductData) {
     "@type": "Product",
     "name": product.product_name,
     "image": images,
-    "description": product.description || `Premium 240 GSM heavyweight cotton ${product.product_name} drop-shoulder oversized fit from KYU? Season One.`,
+    "description": product.description || `${product.product_name} — 240 GSM Terry Cotton drop-shoulder oversized streetwear t-shirt from KYU? Season One.`,
     "sku": product.id,
     "mpn": product.id,
     "brand": {

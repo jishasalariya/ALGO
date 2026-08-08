@@ -246,7 +246,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
                       <>
                         <div>
                           <dt className="text-gray-500 uppercase">Material</dt>
-                          <dd className="text-white mt-0.5">100% Terry Cotton</dd>
+                          <dd className="text-white mt-0.5">Terry Cotton</dd>
                         </div>
                         <div>
                           <dt className="text-gray-500 uppercase">Fabric Weight</dt>
@@ -294,7 +294,7 @@ export default function ProductClient({ product, relatedProducts = [] }: { produ
 
                   {/* Bullet Points */}
                   <ul className="space-y-2 text-sm text-gray-400">
-                    {(product.details || ["100% Terry Cotton Fabric", "240 GSM Heavyweight Quality", "Oversized Relaxed Drop-Shoulder Fit", "Soft, Breathable & Structured"]).map((detail: string, idx: number) => (
+                    {(product.details || ["240 GSM Terry Cotton Fabric", "Heavyweight Quality", "Oversized Relaxed Drop-Shoulder Fit", "Structured Boxy Drape"]).map((detail: string, idx: number) => (
                       <li key={idx} className="flex items-center gap-2">
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
                         {detail}
