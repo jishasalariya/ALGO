@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { validateCoupon } from "@/lib/coupons";
+import { supabaseAdmin } from "@/lib/supabaseServer";
 
 export async function POST(request: Request) {
   try {
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await validateCoupon(code, subtotal, userId);
+    const result = await validateCoupon(code, subtotal, userId, supabaseAdmin);
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {
     console.error("Coupon Validation API Error:", error);

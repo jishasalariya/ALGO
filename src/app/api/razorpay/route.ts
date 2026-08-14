@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { supabase } from "@/lib/supabase";
 import { validateCoupon } from "@/lib/coupons";
+import { supabaseAdmin } from "@/lib/supabaseServer";
 
 // Initialize Razorpay instance
 const razorpay = new Razorpay({
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
       // Validate and compute coupon discount
       let discount = 0;
       if (couponCode) {
-        const validation = await validateCoupon(couponCode, subtotal, userId);
+        const validation = await validateCoupon(couponCode, subtotal, userId, supabaseAdmin);
         if (validation.isValid) {
           discount = validation.discount;
         } else {
